@@ -482,6 +482,99 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
 .btn[disabled]{opacity:.6;cursor:progress}
 .mig p{color:var(--m-ink);margin-bottom:6px}
 .mig small{display:block;color:var(--m-muted);font-size:12.5px}
+
+/* schedule + trip record sheets: always light paper, so colours come from the card palette */
+.sheet.wide{max-width:640px;gap:6px}
+.sheet .btn{background:transparent;color:var(--card-ink);border:1px solid var(--card-ink);box-shadow:none}
+.sheet .btn:hover{background:var(--card-ink);color:var(--paper)}
+.sheet .empty .btn{margin-top:4px}
+.pl-head{display:flex;justify-content:space-between;align-items:center;gap:8px 12px;flex-wrap:wrap;padding-bottom:12px;margin-bottom:4px;border-bottom:1px dashed var(--paper-line)}
+.pl-head h2{font-family:var(--f-display);font-size:22px;color:var(--card-ink)}
+.pl-head p{font-size:13px;color:var(--card-muted)}
+.pl-day{display:grid;gap:8px;padding:12px 0 14px;border-bottom:1px dashed var(--paper-line)}
+.pl-day:last-child{border-bottom:0;padding-bottom:2px}
+.pl-day>header{display:flex;align-items:center;gap:10px;min-height:34px}
+.pl-day>header b{flex:none;font-family:var(--f-mono);font-size:12.5px;letter-spacing:.04em;background:var(--card-ink);color:var(--paper);padding:3px 9px;border-radius:3px;transform:rotate(-2deg)}
+.pl-day.loose>header b{background:transparent;color:var(--card-ink);border:1.5px dashed var(--card-ink);font-family:var(--f-body)}
+.pl-day>header span{flex:1;min-width:0;font-size:13px;color:var(--card-muted)}
+.pl-day>header .btn{flex:none;border-radius:999px}
+.pl-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.pl-none{font-size:13px;color:var(--card-muted);padding:2px 2px}
+.pl-item{width:100%;display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;
+  background:rgba(255,255,255,.7);border:1px solid var(--paper-line);border-radius:4px;padding:10px 12px;color:var(--card-ink);transition:border-color .15s ease}
+.pl-item:hover{border-color:var(--card-muted)}
+.pl-time{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--card-ink)}
+.pl-time.none{font-family:var(--f-body);font-size:11.5px;font-weight:500;color:var(--card-muted)}
+.pl-main{display:grid;gap:2px;min-width:0}
+.pl-main b{font-weight:600;font-size:14.5px;overflow-wrap:anywhere}
+.pl-main small{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--card-muted);min-width:0;overflow-wrap:anywhere}
+.pl-main small svg{width:11px;height:11px;flex:none}
+.pl-off{color:#A3392D!important}
+.pl-kind{font-size:11px;font-weight:700;padding:3px 8px;border-radius:3px;background:var(--sticky);color:#6B5212;transform:rotate(3deg)}
+.rmode{display:inline-flex;border:1px solid var(--card-ink);border-radius:999px;overflow:hidden}
+.rmode button{border:0;background:transparent;color:var(--card-ink);padding:6px 13px;font-size:13px;font-weight:600}
+.rmode button[aria-pressed="true"]{background:var(--card-ink);color:var(--paper)}
+.rc-sum{font-size:13px;color:var(--card-muted);padding:2px 0 4px}
+.rc-sum b{font-weight:700}
+.rc-sum .ok{color:#1F6B4A}.rc-sum .no{color:#A3392D}.rc-sum .sp{color:#7A5A10}
+.rc{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+.rc-main{grid-template-columns:62px minmax(0,1fr) auto}
+.rc.done .rc-main{border-color:#9BC8B1;background:rgba(232,245,238,.8)}
+.rc.skip .rc-main b{text-decoration:line-through;text-decoration-color:rgba(163,57,45,.6);color:var(--card-muted)}
+.rc-note{font-family:var(--f-pen);font-size:18px;line-height:1.15;color:var(--card-muted);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rc-thumb{width:44px;height:44px;object-fit:cover;border:3px solid #fff;box-shadow:0 3px 8px -4px rgba(20,30,50,.6);transform:rotate(3deg)}
+.rc-checks{display:flex;gap:4px}
+.rc-checks button{border:1px dashed var(--card-muted);background:transparent;color:var(--card-muted);border-radius:999px;padding:7px 11px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.rc-checks button:hover{color:var(--card-ink);border-color:var(--card-ink)}
+.rc-checks .done[aria-pressed="true"]{background:#1F6B4A;border:1px solid #1F6B4A;color:#fff}
+.rc-checks .skip[aria-pressed="true"]{background:#A3392D;border:1px solid #A3392D;color:#fff}
+.rc-tag{justify-self:end;font-size:12px;font-weight:700;padding:5px 10px;border-radius:3px;background:var(--sticky);color:#6B5212;transform:rotate(3deg);box-shadow:0 2px 6px -3px rgba(0,0,0,.35)}
+.rc-add{justify-self:start;border:1px dashed var(--card-muted);background:transparent;color:var(--card-ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600}
+.rc-add:hover{border-style:solid}
+.cmp-day{display:grid;gap:8px;padding:12px 0 14px;border-bottom:1px dashed var(--paper-line)}
+.cmp-day:last-child{border-bottom:0}
+.cmp-day>header{display:flex;gap:10px;align-items:center}
+.cmp-day>header b{font-family:var(--f-mono);font-size:12.5px;background:var(--card-ink);color:var(--paper);padding:3px 9px;border-radius:3px;transform:rotate(-2deg)}
+.cmp-day>header span{font-size:13px;color:var(--card-muted)}
+.cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp-col{min-width:0;border:1px dashed var(--paper-line);border-radius:4px;padding:10px;background:rgba(255,255,255,.55)}
+.cmp-col.real{border-style:solid;background:#fff;transform:rotate(.4deg);box-shadow:0 6px 14px -12px rgba(20,30,50,.6)}
+.cmp-col h4{margin:0 0 8px;font-size:11.5px;letter-spacing:.1em;color:var(--card-muted)}
+.cmp-col ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.cmp-col li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px;align-items:start;font-size:13.5px;line-height:1.4;color:var(--card-ink);overflow-wrap:anywhere}
+.cmp-col.real li{grid-template-columns:minmax(0,1fr)}
+.cmp-col small{display:block;font-family:var(--f-pen);font-size:17px;line-height:1.15;color:var(--card-muted)}
+.cmp-col em{font-style:normal;font-size:11px;font-weight:700;padding:1px 6px;border-radius:3px;background:var(--sticky);color:#6B5212}
+.cmp-col img{display:block;width:100%;max-height:150px;object-fit:cover;border:4px solid #fff;box-shadow:0 4px 10px -6px rgba(20,30,50,.6);transform:rotate(-1deg);margin-top:4px}
+.mk{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;font-size:11px;font-style:normal;font-weight:700;margin-top:1px}
+.mk.done{background:#1F6B4A;color:#fff}.mk.skip{background:#A3392D;color:#fff}.mk.none{border:1.5px dashed var(--card-muted)}
+/* forms used by the schedule and record */
+.memo select,.memo input[type=time]{width:100%;font:inherit;background:var(--m-field);color:var(--m-ink);border:1px solid var(--m-line-strong);border-radius:6px;padding:10px 12px;min-height:44px}
+.memo select:focus,.memo input[type=time]:focus{outline:none;border-color:var(--m-ink);box-shadow:0 0 0 3px rgba(28,38,57,.12);background:#FFFFFF}
+.pk-list{list-style:none;margin:0;padding:2px;display:grid;gap:6px;max-height:min(42vh,340px);overflow:auto}
+.pk{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border:1px dashed var(--m-line-strong);border-radius:6px;background:var(--m-field);cursor:pointer;color:var(--m-ink)}
+.pk:has(input:checked){border:1px solid var(--m-ink);background:#FFFFFF}
+.pk input{width:18px;height:18px;margin:0;accent-color:var(--m-ink)}
+.pk-t{display:grid;min-width:0}
+.pk-t b{font-weight:600;overflow-wrap:anywhere}
+.pk-k{font-size:11.5px;color:var(--m-muted)}
+.pk small{font-size:11.5px;color:var(--m-muted);white-space:nowrap}
+.pk-empty{font-size:13px;color:var(--m-muted);padding:8px 0}
+.pm-link button{background:none;border:0;padding:4px 0;font:inherit;font-size:13.5px;font-weight:600;color:var(--m-ink);text-decoration:underline;text-underline-offset:3px}
+.pm-plan{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--m-muted);margin:-6px 0 14px}
+.pm-plan span{display:inline-flex;gap:4px;align-items:center}
+.pm-plan svg{width:11px;height:11px}
+.memo .imps .pick-done input:checked + .body{border:1px solid #1F6B4A;background:#1F6B4A;color:#fff;transform:rotate(-1.5deg)}
+.memo .imps .pick-skip input:checked + .body{border:1px solid #A3392D;background:#A3392D;color:#fff;transform:rotate(1.5deg)}
+.memo .imps .pick-none input:checked + .body{border:1.5px dashed var(--m-ink);background:#FFFFFF;color:var(--m-ink)}
+@media (max-width:520px){
+  .rc{grid-template-columns:1fr}
+  .rc-checks,.rc-tag{justify-self:end;margin-top:-2px}
+  .pl-item,.rc-main{grid-template-columns:52px minmax(0,1fr) auto;padding:9px 10px;gap:8px}
+  .cmp-cols{gap:6px}
+  .cmp-col{padding:8px}
+  .cmp-col li{font-size:13px}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -561,7 +654,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   }
   function roomFromRow(d){
     return { id:d.id, owner:d.owner_id, dest:d.dest, name:d.name, type:d.type, start:d.start_date||'', end:d.end_date||'',
-      ideas:(d.bf_ideas||[]).map(ideaFromRow), createdAt:ms(d.created_at), updatedAt:ms(d.updated_at) };
+      ideas:(d.bf_ideas||[]).map(ideaFromRow), plans:(d.bf_plans||[]).map(planFromRow), createdAt:ms(d.created_at), updatedAt:ms(d.updated_at) };
   }
   // turn photo paths into short-lived links the browser can show (the photo folder is private)
   async function signPhotos(ideas){
@@ -743,32 +836,37 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     car.go(Math.abs(dx) > 50 ? from + (dx < 0 ? 1 : -1) : from);
   });
 
-  function renderCreate(first){
+  // the same paper memo makes a new room (ed = null) or fixes an existing one (ed = the room)
+  function renderCreate(first, ed){
+    const val = v => ed ? ' value="'+esc(v||'')+'"' : '';
+    const group = ed ? ed.type==='group' : false;
+    const cancel = ed ? 'back-room' : 'home';
     root.innerHTML = '<div class="view create-view">'
-      + (first ? '' : '<button type="button" class="back" data-act="home">← 방 목록</button>')
+      + (first ? '' : '<button type="button" class="back" data-act="'+cancel+'">'+(ed ? '← '+esc(ed.dest)+' 방으로' : '← 방 목록')+'</button>')
       + '<div class="memo create-memo"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:-2deg"></span><div class="modal">'
-      +   '<div class="modal-head"><h1>'+(first ? '첫 아이디어 방을 만들어 볼까요?' : '새 아이디어 방 만들기')+'</h1></div>'
-      +   '<p class="c-lede">가고 싶은 여행지 하나만 정하면 돼요. 날짜는 몰라도 괜찮아요.</p>'
+      +   '<div class="modal-head"><h1>'+(ed ? '방 정보 고치기' : first ? '첫 아이디어 방을 만들어 볼까요?' : '새 아이디어 방 만들기')+'</h1></div>'
+      +   '<p class="c-lede">'+(ed ? '바꾸고 싶은 것만 고치면 돼요. 모아 둔 아이디어는 그대로예요.' : '가고 싶은 여행지 하나만 정하면 돼요. 날짜는 몰라도 괜찮아요.')+'</p>'
       +   '<form id="room-form" novalidate>'
-      +     '<div class="field"><label for="r-dest">여행지</label><input type="text" id="r-dest" maxlength="30" placeholder="예: 오사카" autocomplete="off"><p class="err" id="e-r-dest" hidden></p></div>'
-      +     '<div class="field"><label for="r-name">방 이름 <span class="opt">(선택)</span></label><input type="text" id="r-name" maxlength="40" placeholder="비워 두면 “오사카 여행”처럼 지어져요" autocomplete="off"></div>'
+      +     '<div class="field"><label for="r-dest">여행지</label><input type="text" id="r-dest" maxlength="30" placeholder="예: 오사카" autocomplete="off"'+val(ed&&ed.dest)+'><p class="err" id="e-r-dest" hidden></p></div>'
+      +     '<div class="field"><label for="r-name">방 이름 <span class="opt">(선택)</span></label><input type="text" id="r-name" maxlength="40" placeholder="비워 두면 “오사카 여행”처럼 지어져요" autocomplete="off"'+val(ed&&ed.name)+'></div>'
       +     '<fieldset class="field"><legend>누구와 모으나요?</legend><div class="seg who">'
-      +       '<label><input type="radio" name="r-type" id="r-solo" value="solo" checked><span class="body"><b>혼자</b><small>나만의 위시리스트</small></span></label>'
-      +       '<label><input type="radio" name="r-type" id="r-group" value="group"><span class="body"><b>함께</b><small>친구들과 추천 모으기</small></span></label>'
+      +       '<label><input type="radio" name="r-type" id="r-solo" value="solo"'+(group?'':' checked')+'><span class="body"><b>혼자</b><small>나만의 위시리스트</small></span></label>'
+      +       '<label><input type="radio" name="r-type" id="r-group" value="group"'+(group?' checked':'')+'><span class="body"><b>함께</b><small>친구들과 추천 모으기</small></span></label>'
       +     '</div></fieldset>'
       +     '<fieldset class="field"><legend>여행 날짜 <span class="opt">(선택)</span></legend>'
-      +       '<div class="row2"><div class="field"><label for="r-start" class="sub">가는 날</label><input type="date" id="r-start"><p class="err" id="e-r-start" hidden></p></div>'
-      +       '<div class="field"><label for="r-end" class="sub">오는 날</label><input type="date" id="r-end"><p class="err" id="e-r-end" hidden></p></div></div>'
+      +       '<div class="row2"><div class="field"><label for="r-start" class="sub">가는 날</label><input type="date" id="r-start"'+val(ed&&ed.start)+'><p class="err" id="e-r-start" hidden></p></div>'
+      +       '<div class="field"><label for="r-end" class="sub">오는 날</label><input type="date" id="r-end"'+val(ed&&ed.end)+'><p class="err" id="e-r-end" hidden></p></div></div>'
+      +       (ed ? '<p class="hint-s">두 칸을 모두 비우면 ‘날짜 미정’으로 돌아가요.</p>' : '')
       +     '</fieldset>'
-      +     '<div class="actions"><div class="right">'+(first?'':'<button type="button" class="btn" data-act="home">취소</button>')+'<button type="submit" class="btn primary">방 만들기</button></div></div>'
+      +     '<div class="actions"><div class="right">'+(first?'':'<button type="button" class="btn" data-act="'+cancel+'">취소</button>')+'<button type="submit" class="btn primary">'+(ed ? '저장' : '방 만들기')+'</button></div></div>'
       +   '</form>'
       + '</div></div>'+(first ? acctLine() : '')+'</div>';
-    document.getElementById('room-form').addEventListener('submit', onCreateRoom);
+    document.getElementById('room-form').addEventListener('submit', ev => onSaveRoom(ev, ed));
     ['r-dest','r-start','r-end'].forEach(id => document.getElementById(id).addEventListener('input', () => setErr(id, '')));
     if(!first) document.getElementById('r-dest').focus();
   }
 
-  async function onCreateRoom(ev){
+  async function onSaveRoom(ev, ed){
     ev.preventDefault();
     const btn = ev.target.querySelector('button[type=submit]');
     if(btn.disabled) return;
@@ -786,10 +884,23 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
     if(first){ document.getElementById(first).focus(); return; }
 
+    const row = { dest, name, type, start_date: start || null, end_date: end || null };
+    if(ed){
+      // nothing changed: just go back
+      if(ed.dest===dest && ed.name===name && ed.type===type && ed.start===(start||'') && ed.end===(end||'')){
+        view = { name:'room', id:ed.id, tab: view.from || 'ideas', kind:'all' }; render(); return;
+      }
+      btn.disabled = true; const label = btn.textContent; btn.textContent = '저장 중…';
+      const { data, error } = await sb.from('bf_rooms').update(row).eq('id', ed.id).select().single();
+      if(error || !data){ btn.disabled = false; btn.textContent = label; toast('방 정보를 고치지 못했어요. '+errText(error)); return; }
+      const fresh = roomFromRow(data);
+      Object.assign(ed, { dest:fresh.dest, name:fresh.name, type:fresh.type, start:fresh.start, end:fresh.end, updatedAt:fresh.updatedAt });
+      view = { name:'room', id:ed.id, tab: view.from || 'ideas', kind:'all' }; render();
+      toast('방 정보를 고쳤어요.');
+      return;
+    }
     btn.disabled = true; const label = btn.textContent; btn.textContent = '만드는 중…';
-    const { data, error } = await sb.from('bf_rooms')
-      .insert({ dest, name, type, start_date: start || null, end_date: end || null })
-      .select().single();
+    const { data, error } = await sb.from('bf_rooms').insert(row).select().single();
     if(error || !data){ btn.disabled = false; btn.textContent = label; toast('방을 만들지 못했어요. '+errText(error)); return; }
     const room = roomFromRow(data);
     rooms.push(room);
@@ -1018,20 +1129,8 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
         ? '<div class="cv-sizer" id="cv-sizer"><ul class="cv" id="cv">'+r.ideas.slice().sort((a,b)=> IMP_RANK[a.imp]-IMP_RANK[b.imp] || b.createdAt-a.createdAt).map(cardHtml).join('')+'</ul></div>'
         : emptyBoard();
     } else {
-      let panel;
-      if(view.tab==='plan'){
-        if(st==='idea'){
-          panel = '<div class="empty"><strong>아직 날짜를 정하지 않았어요</strong><span>날짜를 정하면 날짜별 칸이 생기고, 모은 아이디어를 옮겨 일정을 짤 수 있어요.</span><span class="soon">다음 단계에서 추가</span></div>';
-        } else {
-          const total = diff(r.start,r.end)+1, show = Math.min(total,10);
-          let rows=''; for(let i=0;i<show;i++){ rows += '<li><span class="d">DAY '+(i+1)+'<span>'+fmt(addDays(r.start,i))+'</span></span><span class="e">아직 일정이 없어요</span></li>'; }
-          panel = '<ul class="days">'+rows+'</ul>'+(total>show?'<p class="hint" style="text-align:center">그 밖에 '+(total-show)+'일 더 있어요</p>':'')
-            + '<div class="empty"><strong>모은 아이디어를 날짜로 옮기는 기능은 준비 중이에요</strong><span class="soon">다음 단계에서 추가</span></div>';
-        }
-      } else {
-        panel = '<div class="empty"><strong>아직 남긴 기록이 없어요</strong><span>여행 중에는 했어요·못 했어요를 체크하고, 다녀와서는 사진과 감상을 남기는 곳이에요.</span><span class="soon">다음 단계에서 추가</span></div>';
-      }
-      body = '<div class="sheet-wrap"><div class="sheet" role="tabpanel" aria-labelledby="tab-'+view.tab+'">'+panel+'</div></div>';
+      const panel = view.tab==='plan' ? planPanel(r) : recordPanel(r);
+      body = '<div class="sheet-wrap"><div class="sheet wide" role="tabpanel" aria-labelledby="tab-'+view.tab+'">'+panel+'</div></div>';
     }
 
     const counts = { all:r.ideas.length }; Object.keys(KINDS).forEach(k=>counts[k]=0); r.ideas.forEach(i=>counts[i.kind]++);
@@ -1043,10 +1142,10 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
         + '</div>' : '';
 
     const menu = !view.menu ? '' : view.confirmRoom
-      ? '<div class="rmenu"><p>“'+esc(r.name)+'” 방과 아이디어 '+r.ideas.length+'개를 모두 지울까요? 되돌릴 수 없어요.</p><div class="row"><button type="button" class="btn small" data-act="keep-room">취소</button><button type="button" class="btn small danger" data-act="del-room">삭제</button></div></div>'
-      : '<div class="rmenu"><button type="button" class="btn small ghost-danger" data-act="ask-room">이 방 삭제</button></div>';
+      ? '<div class="rmenu"><p>“'+esc(r.name)+'” 방과 아이디어 '+r.ideas.length+'개, 일정·기록을 모두 지울까요? 되돌릴 수 없어요.</p><div class="row"><button type="button" class="btn small" data-act="keep-room">취소</button><button type="button" class="btn small danger" data-act="del-room">삭제</button></div></div>'
+      : '<div class="rmenu">'+(isOwner(r) ? '<button type="button" class="btn small" data-act="edit-room">방 정보 고치기</button><button type="button" class="btn small ghost-danger" data-act="ask-room">이 방 삭제</button>' : '<p>방 정보는 방을 만든 사람만 고칠 수 있어요.</p>')+'</div>';
 
-    const tabs = [['ideas','아이디어', r.ideas.length],['plan','일정'],['record','여행 기록']];
+    const tabs = [['ideas','아이디어', r.ideas.length],['plan','일정', plansReady ? r.plans.filter(p => !p.spont).length : undefined],['record','여행 기록']];
     root.innerHTML = '<div class="view room-view">'
       + '<div class="cv-scroll" id="cv-scroll">'+body+'</div>'
       + '<header class="prop rlabel"><span class="tape" style="--tape-tilt:3deg"></span>'
@@ -1062,6 +1161,309 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       + stickers
       + '</div>';
     mountCanvas(r);
+  }
+
+  // ---------- schedule + trip record: one row in bf_plans is one schedule entry and, later, its record ----------
+  let plansReady = true;   // false until 02_butterflight_plans.sql has been run on the server
+  function planFromRow(d){
+    return { id:d.id, ideaId:d.idea_id||'', title:d.title, day:d.day||'', time:d.at_time||'', place:d.place||'',
+      sort:d.sort||0, status:d.status||'', spont:!!d.spontaneous, note:d.note||'',
+      photoPath:d.photo_path||'', photo:'', ratio:d.photo_ratio||0, by:d.created_by, createdAt:ms(d.created_at) };
+  }
+  const dayList = r => { if(!r.start || !r.end) return []; const n = diff(r.start, r.end) + 1; return Array.from({ length:n }, (_, i) => addDays(r.start, i)); };
+  const inTrip = (r, day) => !!day && !!r.start && day >= r.start && day <= r.end;
+  const byTime = (a, b) => (a.time||'99:99').localeCompare(b.time||'99:99') || a.sort - b.sort || a.createdAt - b.createdAt;
+  const dayTag = (r, day) => 'DAY '+(diff(r.start, day) + 1);
+  const curRoom = () => rooms.find(x => x.id===view.id);
+  const keepScroll = () => { const sc0 = document.getElementById('cv-scroll'); if(sc0) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop }; };
+
+  function setupNote(){
+    return '<div class="empty"><strong>일정 표가 아직 서버에 없어요</strong><span>Supabase SQL Editor에서 02_butterflight_plans.sql 을 한 번 실행하면 바로 쓸 수 있어요.</span></div>';
+  }
+  function noDates(r, what){
+    return '<div class="empty"><strong>아직 여행 날짜가 없어요</strong><span>'+what+'</span>'
+      + (isOwner(r) ? '<button type="button" class="btn small" data-act="edit-room">날짜 정하기</button>' : '') + '</div>';
+  }
+  const timeChip = p => '<span class="pl-time'+(p.time?'':' none')+'">'+(p.time || '시간 미정')+'</span>';
+
+  // ----- 일정 tab -----
+  function planPanel(r){
+    if(!plansReady) return setupNote();
+    const days = dayList(r), planned = r.plans.filter(p => !p.spont);
+    let h = '<div class="pl-head"><h2>일정</h2><p>'+whenText(r)+'</p></div>';
+    if(!days.length) h += noDates(r, '날짜를 정하면 날짜별 칸이 생겨요. 그전에는 ‘날짜 미정’ 칸에 먼저 담아 둘 수 있어요.');
+    const row = p => {
+      const idea = p.ideaId && r.ideas.find(i => i.id===p.ideaId);
+      const off = p.day && !inTrip(r, p.day) ? '<small class="pl-off">'+fmt(p.day)+' · 여행 날짜 밖</small>' : '';
+      return '<li><button type="button" class="pl-item" data-act="plan-edit" data-id="'+p.id+'">' + timeChip(p)
+        + '<span class="pl-main"><b>'+esc(p.title)+'</b>'+(p.place ? '<small>'+PIN+esc(p.place)+'</small>' : '')+off+'</span>'
+        + (idea ? '<span class="pl-kind">'+KINDS[idea.kind]+'</span>' : '') + '</button></li>';
+    };
+    const section = (day, label, sub, items, loose) => '<section class="pl-day'+(loose?' loose':'')+'"><header><b>'+label+'</b><span>'+sub+'</span>'
+      + '<button type="button" class="btn small" data-act="plan-pick" data-day="'+day+'" aria-label="'+label+'에 일정 넣기">+ 넣기</button></header>'
+      + (items.length ? '<ol class="pl-list">'+items.map(row).join('')+'</ol>' : '<p class="pl-none">'+(loose ? '날짜를 아직 못 정한 일정은 여기에 둬요' : '아직 비어 있어요')+'</p>')
+      + '</section>';
+    days.forEach(day => { h += section(day, dayTag(r, day), fmt(day), planned.filter(p => p.day===day).sort(byTime)); });
+    h += section('', '날짜 미정', '', planned.filter(p => !inTrip(r, p.day)).sort(byTime), true);
+    return h;
+  }
+
+  // ----- 여행 기록 tab -----
+  function tally(r){
+    const planned = r.plans.filter(p => !p.spont);
+    return { plan: planned.length, done: planned.filter(p => p.status==='done').length, skip: planned.filter(p => p.status==='skip').length,
+             spont: r.plans.filter(p => p.spont).length };
+  }
+  function recordPanel(r){
+    if(!plansReady) return setupNote();
+    const days = dayList(r);
+    let h = '<div class="pl-head"><h2>여행 기록</h2>'
+      + '<div class="rmode" role="group" aria-label="보는 방법"><button type="button" data-act="rmode" data-mode="check" aria-pressed="'+(view.rmode!=='compare')+'">체크하기</button>'
+      + '<button type="button" data-act="rmode" data-mode="compare" aria-pressed="'+(view.rmode==='compare')+'">계획과 실제</button></div></div>';
+    if(!days.length) return h + noDates(r, '날짜를 정하면 날마다 했어요·못 했어요를 체크하고, 사진과 감상을 남길 수 있어요.');
+    const t = tally(r);
+    h += '<p class="rc-sum">계획 '+t.plan+'개 중 <b class="ok">했어요 '+t.done+'</b> · <b class="no">못 했어요 '+t.skip+'</b> · <b class="sp">즉흥 '+t.spont+'</b></p>';
+    if(status(r)==='plan') h += '<p class="pl-none">여행이 시작되면 여기서 하나씩 체크해 보세요. 미리 둘러봐도 괜찮아요.</p>';
+    if(view.rmode==='compare') return h + comparePanel(r, days);
+
+    const row = p => {
+      const thumb = p.photo ? '<img class="rc-thumb" src="'+esc(p.photo)+'" alt="">' : '';
+      return '<li class="rc '+(p.status||'none')+(p.spont?' spont':'')+'">'
+        + '<button type="button" class="pl-item rc-main" data-act="rec-edit" data-id="'+p.id+'" aria-label="'+esc(p.title)+' 기록 남기기">' + timeChip(p)
+        +   '<span class="pl-main"><b>'+esc(p.title)+'</b>'+(p.note ? '<span class="rc-note">'+esc(p.note)+'</span>' : (p.place ? '<small>'+PIN+esc(p.place)+'</small>' : ''))+'</span>'+thumb+'</button>'
+        + (p.spont ? '<span class="rc-tag">즉흥</span>'
+          : '<span class="rc-checks" role="group" aria-label="'+esc(p.title)+'">'
+            + '<button type="button" class="done" data-act="rec-mark" data-id="'+p.id+'" data-st="done" aria-pressed="'+(p.status==='done')+'">했어요</button>'
+            + '<button type="button" class="skip" data-act="rec-mark" data-id="'+p.id+'" data-st="skip" aria-pressed="'+(p.status==='skip')+'">못 했어요</button></span>')
+        + '</li>';
+    };
+    days.forEach(day => {
+      const items = r.plans.filter(p => p.day===day).sort(byTime);
+      h += '<section class="pl-day"><header><b>'+dayTag(r, day)+'</b><span>'+fmt(day)+'</span></header>'
+        + (items.length ? '<ol class="pl-list">'+items.map(row).join('')+'</ol>' : '<p class="pl-none">이날 넣어 둔 일정이 없어요</p>')
+        + '<button type="button" class="rc-add" data-act="rec-spont" data-day="'+day+'">+ 계획에 없던 일 기록하기</button></section>';
+    });
+    const loose = r.plans.filter(p => !p.spont && !inTrip(r, p.day)).sort(byTime);
+    if(loose.length) h += '<section class="pl-day loose"><header><b>날짜 미정</b><span>일정에서 날짜를 정하지 않은 것</span></header><ol class="pl-list">'+loose.map(row).join('')+'</ol></section>';
+    return h;
+  }
+  function comparePanel(r, days){
+    const mark = p => '<i class="mk '+(p.status||'none')+'" aria-label="'+(p.status==='done'?'했어요':p.status==='skip'?'못 했어요':'아직')+'">'+(p.status==='done'?'✓':p.status==='skip'?'✕':'')+'</i>';
+    const planLi = p => '<li>'+mark(p)+'<span>'+esc(p.title)+(p.status==='skip' && p.note ? '<small>'+esc(p.note)+'</small>' : '')+'</span></li>';
+    const realLi = p => '<li class="'+(p.spont?'sp':'')+'"><span>'+(p.spont?'<em>즉흥</em> ':'')+esc(p.title)+(p.note ? '<small>'+esc(p.note)+'</small>' : '')+'</span>'
+      + (p.photo ? '<img src="'+esc(p.photo)+'" alt="'+esc(p.title)+' 사진">' : '') + '</li>';
+    const block = (label, sub, planned, real) => '<section class="cmp-day"><header><b>'+label+'</b><span>'+sub+'</span></header><div class="cmp-cols">'
+      + '<div class="cmp-col"><h4>계획</h4>'+(planned.length ? '<ul>'+planned.map(planLi).join('')+'</ul>' : '<p class="pl-none">계획 없음</p>')+'</div>'
+      + '<div class="cmp-col real"><h4>실제</h4>'+(real.length ? '<ul>'+real.map(realLi).join('')+'</ul>' : '<p class="pl-none">아직 기록 없음</p>')+'</div>'
+      + '</div></section>';
+    let h = '';
+    days.forEach(day => {
+      const all = r.plans.filter(p => p.day===day).sort(byTime);
+      h += block(dayTag(r, day), fmt(day), all.filter(p => !p.spont), all.filter(p => p.status==='done'));
+    });
+    const loose = r.plans.filter(p => !p.spont && !inTrip(r, p.day)).sort(byTime);
+    if(loose.length) h += block('날짜 미정', '', loose, loose.filter(p => p.status==='done'));
+    return h;
+  }
+
+  // ----- sheet modals (pick ideas / edit an entry / write a record) -----
+  let pm = null;   // { type, id, day, ideaId, photo, photoPath, blob, ratio, busy, confirmDel }
+  function openPM(state, title, formHtml, onSubmit){
+    closeDetail(false);
+    pm = Object.assign({ busy:false, confirmDel:false, opener: document.activeElement }, state);
+    const wrap = document.createElement('div');
+    wrap.className = 'scrim'; wrap.id = 'scrim';
+    wrap.innerHTML = '<div class="memo" role="dialog" aria-modal="true" aria-labelledby="m-title"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:-2deg"></span><div class="modal">'
+      + '<div class="modal-head"><h2 id="m-title">'+title+'</h2><button type="button" class="x" data-act="close-pm" aria-label="닫기">×</button></div>'
+      + '<form id="pm-form" novalidate>'+formHtml+'<p class="form-err" id="form-err" hidden></p><div class="actions" id="m-actions"></div></form></div></div>';
+    document.body.appendChild(wrap);
+    document.body.style.overflow = 'hidden';
+    wrap.addEventListener('mousedown', e => { if(e.target===wrap) closePM(); });
+    document.getElementById('pm-form').addEventListener('submit', e => { e.preventDefault(); if(pm && !pm.busy) onSubmit(); });
+    renderPMActions();
+    if(document.getElementById('photo-slot')) renderPhotoSlot();
+    const first = wrap.querySelector('input:not([type=hidden]):not([type=checkbox]):not([type=radio]),select,textarea');
+    (first || wrap.querySelector('.x')).focus();
+  }
+  function closePM(force){
+    if(!pm || (pm.busy && !force)) return;
+    const w = document.getElementById('scrim'); if(w) w.remove();
+    document.body.style.overflow = '';
+    const o = pm.opener; pm = null;
+    if(o && document.body.contains(o)) o.focus();
+  }
+  function renderPMActions(){
+    const a = document.getElementById('m-actions'); if(!a || !pm) return;
+    const delWords = { item:['일정에서 빼기','이 일정을 뺄까요? 남긴 기록도 같이 지워져요.'], rec:['기록 지우기','이 즉흥 기록을 지울까요? 되돌릴 수 없어요.'] };
+    const canDel = pm.id && (pm.type==='item' || (pm.type==='rec' && pm.spont));
+    if(pm.confirmDel){
+      a.innerHTML = '<div class="confirm"><p>'+delWords[pm.type][1]+'</p><button type="button" class="btn" data-act="pm-keep">취소</button><button type="button" class="btn danger" data-act="pm-del">지우기</button></div>';
+      return;
+    }
+    const save = pm.type==='pick' ? '일정에 넣기' : pm.type==='item' && !pm.id ? '일정에 넣기' : '저장';
+    a.innerHTML = (canDel ? '<button type="button" class="btn ghost-danger" data-act="pm-ask-del">'+delWords[pm.type][0]+'</button>' : '')
+      + '<div class="right"><button type="button" class="btn" data-act="close-pm">취소</button><button type="submit" class="btn primary">'+save+'</button></div>';
+  }
+  const dayOptions = (r, cur) => {
+    const opts = dayList(r).map(d => '<option value="'+d+'"'+(d===cur?' selected':'')+'>'+dayTag(r, d)+' · '+fmt(d)+'</option>');
+    if(cur && !inTrip(r, cur)) opts.push('<option value="'+cur+'" selected>'+fmt(cur)+' (여행 날짜 밖)</option>');
+    return '<option value=""'+(!cur?' selected':'')+'>날짜 미정</option>' + opts.join('');
+  };
+
+  // pick ideas (and/or write one) into a day
+  function openPick(day){
+    const r = curRoom(); if(!r) return;
+    const label = day ? dayTag(r, day)+' · '+fmt(day) : '날짜 미정';
+    const where = {}; r.plans.forEach(p => { if(p.ideaId && !p.spont) (where[p.ideaId] = where[p.ideaId] || []).push(p.day && inTrip(r, p.day) ? dayTag(r, p.day) : '미정'); });
+    const ideas = r.ideas.slice().sort((a,b) => IMP_RANK[a.imp]-IMP_RANK[b.imp] || b.createdAt-a.createdAt);
+    const list = ideas.length
+      ? '<ul class="pk-list">'+ideas.map(i => '<li><label class="pk"><input type="checkbox" name="pk" value="'+i.id+'">'
+          + '<span class="pk-t"><span class="pk-k">'+KINDS[i.kind]+' · '+IMP[i.imp]+'</span><b>'+esc(i.title)+'</b></span>'
+          + (where[i.id] ? '<small>이미 '+where[i.id].join(', ')+'</small>' : '') + '</label></li>').join('')+'</ul>'
+      : '<p class="pk-empty">아직 모은 아이디어가 없어요. 아래에 직접 적어도 돼요.</p>';
+    openPM({ type:'pick', day }, esc(label)+'에 넣기',
+      '<fieldset class="field"><legend>모은 아이디어에서 고르기</legend>'+list+'</fieldset>'
+      + '<div class="field"><label for="p-free">직접 적기 <span class="opt">(선택)</span></label><input type="text" id="p-free" maxlength="50" placeholder="예: 공항에서 숙소로 이동" autocomplete="off"></div>',
+      savePick);
+    document.getElementById('pm-form').addEventListener('input', () => formErr(''));
+  }
+  async function savePick(){
+    const r = curRoom(); if(!r) return;
+    const day = pm.day || null;
+    const picked = [...document.querySelectorAll('input[name=pk]:checked')].map(c => r.ideas.find(i => i.id===c.value)).filter(Boolean);
+    const free = document.getElementById('p-free').value.trim();
+    if(!picked.length && !free){ formErr('넣을 아이디어를 고르거나, 직접 적어 주세요.'); return; }
+    let sort = r.plans.filter(p => (p.day||null)===day).reduce((m,p) => Math.max(m, p.sort), 0);
+    const rows = picked.map(i => ({ room_id:r.id, idea_id:i.id, title:i.title, place:i.place||'', day, sort: ++sort }));
+    if(free) rows.push({ room_id:r.id, title:free, day, sort: ++sort });
+    formErr(''); setBusy(true, '넣는 중…');
+    const { data, error } = await sb.from('bf_plans').insert(rows).select();
+    if(error || !data){ setBusy(false); formErr('일정에 넣지 못했어요. '+errText(error)); return; }
+    data.forEach(d => r.plans.push(planFromRow(d)));
+    r.updatedAt = Date.now();
+    pm.busy = false; closePM(); keepScroll(); render();
+    toast(rows.length+'개를 일정에 넣었어요.');
+  }
+
+  // one schedule entry: new (from an idea's detail view) or existing
+  function openPlanItem(id, ideaId){
+    const r = curRoom(); if(!r) return;
+    const p = id ? r.plans.find(x => x.id===id) : null;
+    if(id && !p) return;
+    const idea = r.ideas.find(i => i.id===(p ? p.ideaId : ideaId));
+    const v = p || { title: idea ? idea.title : '', day:'', time:'', place: idea ? idea.place : '' };
+    openPM({ type:'item', id: p ? p.id : null, ideaId: p ? p.ideaId : (ideaId||'') }, p ? '일정 고치기' : '일정에 넣기',
+      '<div class="field"><label for="p-title">일정 이름</label><input type="text" id="p-title" maxlength="50" autocomplete="off" value="'+esc(v.title)+'"><p class="err" id="e-p-title" hidden></p></div>'
+      + '<div class="row2"><div class="field"><label for="p-day">날짜</label><select id="p-day">'+dayOptions(r, v.day)+'</select></div>'
+      + '<div class="field"><label for="p-time">시간 <span class="opt">(선택)</span></label><input type="time" id="p-time" value="'+esc(v.time)+'"></div></div>'
+      + '<div class="field"><label for="p-place">장소 <span class="opt">(선택)</span></label><input type="text" id="p-place" maxlength="60" autocomplete="off" value="'+esc(v.place)+'"></div>'
+      + (idea ? '<p class="pm-link"><button type="button" data-act="plan-idea" data-id="'+idea.id+'">원래 아이디어 보기 →</button></p>' : ''),
+      savePlanItem);
+  }
+  async function savePlanItem(){
+    const r = curRoom(); if(!r) return;
+    const title = document.getElementById('p-title').value.trim();
+    setErr('p-title', title ? '' : '일정 이름을 적어 주세요.');
+    if(!title){ document.getElementById('p-title').focus(); return; }
+    const day = document.getElementById('p-day').value || null;
+    const time = (document.getElementById('p-time').value || '').slice(0,5) || null;
+    const place = document.getElementById('p-place').value.trim();
+    const row = { title, day, at_time: time, place };
+    formErr(''); setBusy(true, '저장 중…');
+    let res;
+    if(pm.id){
+      res = await sb.from('bf_plans').update(row).eq('id', pm.id).select().single();
+    } else {
+      const sort = r.plans.filter(p => (p.day||null)===day).reduce((m,p) => Math.max(m, p.sort), 0) + 1;
+      res = await sb.from('bf_plans').insert(Object.assign(row, { room_id:r.id, idea_id: pm.ideaId || null, sort })).select().single();
+    }
+    if(res.error || !res.data){ setBusy(false); formErr('저장하지 못했어요. '+errText(res.error)); return; }
+    const saved = planFromRow(res.data), i = r.plans.findIndex(p => p.id===saved.id);
+    if(i >= 0){ saved.photo = r.plans[i].photo; r.plans[i] = saved; } else r.plans.push(saved);
+    r.updatedAt = Date.now();
+    const wasNew = !pm.id;
+    pm.busy = false; closePM(); keepScroll(); render();
+    toast(wasNew ? (day && inTrip(r, day) ? dayTag(r, day)+' 일정에 넣었어요.' : '‘날짜 미정’ 일정에 넣었어요.') : '일정을 고쳤어요.');
+  }
+
+  // a record: check, photo and a few words for a planned entry, or a spontaneous one
+  function openRecord(id, day){
+    const r = curRoom(); if(!r) return;
+    const p = id ? r.plans.find(x => x.id===id) : null;
+    if(id && !p) return;
+    const spont = p ? p.spont : true;
+    const st = p ? p.status : 'done';
+    let f = '';
+    if(spont){
+      f += '<div class="field"><label for="p-title">무엇을 했나요?</label><input type="text" id="p-title" maxlength="50" placeholder="예: 골목에서 우연히 찾은 카페" autocomplete="off" value="'+esc(p ? p.title : '')+'"><p class="err" id="e-p-title" hidden></p></div>'
+        +  '<div class="field"><label for="p-place">장소 <span class="opt">(선택)</span></label><input type="text" id="p-place" maxlength="60" autocomplete="off" value="'+esc(p ? p.place : '')+'"></div>';
+    } else {
+      f += '<p class="pm-plan">'+timeChip(p)+(p.place ? ' <span>'+PIN+esc(p.place)+'</span>' : '')+'</p>'
+        +  '<fieldset class="field"><legend>어떻게 됐나요?</legend><div class="seg imps" style="--cols:3">'
+        +  [['done','했어요'],['skip','못 했어요'],['','아직']].map(([k,l]) => '<label class="pick-'+(k||'none')+'"><input type="radio" name="p-st" value="'+k+'"'+(k===st?' checked':'')+'><span class="body"><b>'+l+'</b></span></label>').join('')
+        +  '</div></fieldset>';
+    }
+    f += '<div class="field"><span class="field-title">사진 <span class="opt">(선택)</span></span><div id="photo-slot"></div><p class="err" id="e-i-photo" hidden></p></div>'
+      +  '<div class="field"><label for="p-note" id="p-note-l">'+noteLabel(st)+' <span class="opt">(선택)</span></label><textarea id="p-note" maxlength="300" placeholder="'+notePh(st)+'">'+esc(p ? p.note : '')+'</textarea></div>';
+    openPM({ type:'rec', id: p ? p.id : null, spont, day: p ? p.day : day, photo: p ? p.photo : '', photoPath: p ? p.photoPath : '', blob:null, ratio: p ? p.ratio : 0 },
+      spont ? (p ? '즉흥 기록' : '계획에 없던 일 기록하기') : esc(p.title), f, saveRecord);
+    document.querySelectorAll('input[name=p-st]').forEach(x => x.addEventListener('change', () => {
+      document.getElementById('p-note-l').innerHTML = noteLabel(x.value)+' <span class="opt">(선택)</span>';
+      document.getElementById('p-note').placeholder = notePh(x.value);
+    }));
+  }
+  const noteLabel = st => st==='skip' ? '왜 못 했나요?' : '어땠나요?';
+  const notePh = st => st==='skip' ? '예: 비가 와서 다음으로 미뤘어요' : '예: 줄이 길었지만 기다린 보람이 있었어요';
+  async function saveRecord(){
+    const r = curRoom(); if(!r) return;
+    const m = pm;
+    const note = document.getElementById('p-note').value.trim();
+    const row = { note };
+    if(m.spont){
+      const title = document.getElementById('p-title').value.trim();
+      setErr('p-title', title ? '' : '무엇을 했는지 적어 주세요.');
+      if(!title){ document.getElementById('p-title').focus(); return; }
+      Object.assign(row, { title, place: document.getElementById('p-place').value.trim() });
+    } else {
+      row.status = (document.querySelector('input[name=p-st]:checked') || {}).value || null;
+    }
+    formErr(''); setBusy(true, m.blob ? '사진 올리는 중…' : '저장 중…');
+    let newPath = '';
+    if(m.blob){
+      try{ newPath = await uploadPhoto(r.id, m.blob); }
+      catch(err){ setBusy(false); formErr('사진을 올리지 못했어요. '+errText(err)); return; }
+    }
+    const hasPhoto = !!(newPath || m.photoPath);
+    Object.assign(row, { photo_path: newPath || m.photoPath || null, photo_ratio: hasPhoto ? m.ratio : null });
+    const res = m.id
+      ? await sb.from('bf_plans').update(row).eq('id', m.id).select().single()
+      : await sb.from('bf_plans').insert(Object.assign(row, { room_id:r.id, day:m.day||null, spontaneous:true, status:'done' })).select().single();
+    if(res.error || !res.data){ dropUpload(newPath); setBusy(false); formErr('저장하지 못했어요. '+errText(res.error)); return; }
+    const saved = planFromRow(res.data); saved.photo = hasPhoto ? m.photo : '';
+    const i = r.plans.findIndex(p => p.id===saved.id); if(i >= 0) r.plans[i] = saved; else r.plans.push(saved);
+    r.updatedAt = Date.now();
+    m.busy = false; closePM(); keepScroll(); render();
+    toast(m.id ? '기록을 저장했어요.' : '즉흥 기록을 남겼어요.');
+  }
+
+  // quick 했어요 / 못 했어요 straight from the list (tap again to undo)
+  async function markPlan(id, st){
+    const r = curRoom(), p = r && r.plans.find(x => x.id===id); if(!p) return;
+    const before = p.status, next = p.status===st ? '' : st;
+    p.status = next; keepScroll(); render();
+    const { error } = await sb.from('bf_plans').update({ status: next || null }).eq('id', id);
+    if(error){ p.status = before; keepScroll(); render(); toast('체크를 저장하지 못했어요. '+errText(error)); }
+  }
+
+  async function deletePM(){
+    const r = curRoom(); if(!r || !pm || !pm.id) return;
+    setBusy(true, '지우는 중…');
+    const { error } = await sb.from('bf_plans').delete().eq('id', pm.id);
+    if(error){ setBusy(false); pm.confirmDel = false; renderPMActions(); formErr('지우지 못했어요. '+errText(error)); return; }
+    const type = pm.type;
+    r.plans = r.plans.filter(p => p.id!==pm.id); r.updatedAt = Date.now();
+    pm.busy = false; closePM(); keepScroll(); render();
+    toast(type==='item' ? '일정에서 뺐어요.' : '기록을 지웠어요.');
   }
 
   // ---------- add / edit modal ----------
@@ -1126,10 +1528,11 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
         + '<div class="right"><button type="button" class="btn" data-act="close-modal">취소</button><button type="submit" class="btn primary">'+(modal.mode==='edit'?'저장':'게시판에 붙이기')+'</button></div>';
     }
   }
+  const ps = () => pm || modal;   // whichever form is open owns the photo slot
   function renderPhotoSlot(){
-    const slot = document.getElementById('photo-slot'); if(!slot || !modal) return;
-    if(modal.photo || modal.photoPath){
-      slot.innerHTML = '<div class="photo-has"><figure class="pola">'+(modal.photo ? '<img src="'+esc(modal.photo)+'" alt="고른 사진 미리보기">' : '')+'</figure>'
+    const m = ps(), slot = document.getElementById('photo-slot'); if(!slot || !m) return;
+    if(m.photo || m.photoPath){
+      slot.innerHTML = '<div class="photo-has"><figure class="pola">'+(m.photo ? '<img src="'+esc(m.photo)+'" alt="고른 사진 미리보기">' : '')+'</figure>'
         + '<div class="acts"><label class="btn small" for="i-photo">사진 바꾸기</label><button type="button" class="btn small" data-act="drop-photo">사진 빼기</button>'
         + '<input type="file" id="i-photo" accept="image/*"></div></div>';
     } else {
@@ -1162,16 +1565,16 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   function takePhoto(file){
     const e = document.getElementById('e-i-photo');
     readPhoto(file).then(res => {
-      if(!modal) return;
-      modal.photo = res.src; modal.blob = res.blob; modal.photoPath = ''; modal.ratio = res.ratio; e.hidden = true; renderPhotoSlot();
+      const m = ps(); if(!m) return;
+      m.photo = res.src; m.blob = res.blob; m.photoPath = ''; m.ratio = res.ratio; e.hidden = true; renderPhotoSlot();
     }).catch(() => { e.textContent = '이 파일은 사진으로 읽을 수 없어요. JPG나 PNG 사진을 골라 주세요.'; e.hidden = false; });
   }
 
   function setBusy(on, text){
-    if(!modal) return;
-    modal.busy = on;
+    const m = ps(); if(!m) return;
+    m.busy = on;
     document.querySelectorAll('#m-actions button').forEach(b => { b.disabled = on; });
-    const sub = document.querySelector('#m-actions button[type=submit], #m-actions [data-act=del-idea]');
+    const sub = document.querySelector('#m-actions button[type=submit], #m-actions [data-act=del-idea], #m-actions [data-act=pm-del]');
     if(sub){ if(on){ sub.dataset.label = sub.textContent; sub.textContent = text; } else if(sub.dataset.label){ sub.textContent = sub.dataset.label; } }
   }
   function formErr(msg){ const fe = document.getElementById('form-err'); if(fe){ fe.textContent = msg; fe.hidden = !msg; } }
@@ -1247,6 +1650,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     const { error } = await sb.from('bf_ideas').delete().eq('id', m.id);
     if(error){ if(modal===m){ setBusy(false); m.confirmDel = false; renderModalActions(); formErr('지우지 못했어요. '+errText(error)); } return; }
     r.ideas = r.ideas.filter(i => i.id!==m.id); r.updatedAt = Date.now();
+    r.plans.forEach(p => { if(p.ideaId===m.id) p.ideaId = ''; });   // the server keeps the entry and just drops the link
     if(modal!==m){ render(); return; }
     const sc0 = document.getElementById('cv-scroll'); if(sc0) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop };
     closeModal(false); render(); toast('아이디어를 지웠어요.');
@@ -1254,7 +1658,8 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
 
   document.addEventListener('keydown', e => {
     if(e.key!=='Escape') return;
-    if(modal){ e.preventDefault(); closeModal(); }
+    if(pm){ e.preventDefault(); closePM(); }
+    else if(modal){ e.preventDefault(); closeModal(); }
     else if(detail){ e.preventDefault(); closeDetail(); }
   });
 
@@ -1281,7 +1686,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       +   (rows.length ? '<dl class="dv-meta">'+rows.join('')+'</dl>' : '')
       +   (it.createdAt ? '<p class="dv-date">'+longDate(it.createdAt)+'에 붙였어요</p>' : '')
       + '</div>'
-      + '<div class="actions"><div class="right"><button type="button" class="btn" data-act="close-detail">닫기</button><button type="button" class="btn primary" data-act="edit-from-detail">수정하기</button></div></div>'
+      + '<div class="actions"><div class="right"><button type="button" class="btn" data-act="close-detail">닫기</button>'+(plansReady ? '<button type="button" class="btn" data-act="plan-add">일정에 넣기</button>' : '')+'<button type="button" class="btn primary" data-act="edit-from-detail">수정하기</button></div></div>'
       + '</div></div>';
     document.body.appendChild(wrap);
     document.body.style.overflow = 'hidden';
@@ -1298,6 +1703,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   }
 
   // ---------- sign in / sign up ----------
+  const isOwner = r => !!(user && r && r.owner===user.id);
   function acctLine(){
     return user ? '<p class="acct"><span>'+esc(user.email||'')+'</span><button type="button" data-act="logout">로그아웃</button></p>' : '';
   }
@@ -1357,10 +1763,13 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
 
   async function loadRooms(){
     view = { name:'loading', msg:'아이디어 방을 불러오는 중…' }; render();
-    const { data, error } = await sb.from('bf_rooms').select('*, bf_ideas(*)');
+    let { data, error } = await sb.from('bf_rooms').select('*, bf_ideas(*), bf_plans(*)');
+    plansReady = !error;
+    // the schedule table may not exist yet (SQL 02 not run): still open the rooms and ideas
+    if(error && /bf_plans|relationship|schema cache/i.test(error.message||'')) ({ data, error } = await sb.from('bf_rooms').select('*, bf_ideas(*)'));
     if(error || !data){ view = { name:'fail', msg:'방을 불러오지 못했어요. '+errText(error) }; render(); return; }
     rooms = data.map(roomFromRow);
-    await signPhotos(rooms.flatMap(r => r.ideas)).catch(()=>{});
+    await signPhotos(rooms.flatMap(r => r.ideas.concat(r.plans))).catch(()=>{});
     view = { name:'home' }; render();
     offerMove();
   }
@@ -1371,7 +1780,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   }
   function signedOut(){
     user = null; rooms = []; homeRoomId = null;
-    closeModal(false); closeDetail(false); closeMove();
+    closePM(true); closeModal(false); closeDetail(false); closeMove();
     view = { name:'login', mode:'login' }; render();
   }
 
@@ -1440,11 +1849,13 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     car = null; canvasRoom = null;
     if(!user && view.name!=='loading' && view.name!=='fail') view = { name:'login', mode: view.mode||'login', email: view.email };
     document.body.classList.toggle('room-mode', view.name==='room');
-    document.body.classList.toggle('paper-mode', ['new-room','login','loading','fail'].includes(view.name) || (view.name==='home' && !rooms.length));
+    if(view.name==='edit-room' && !rooms.some(x => x.id===view.id)) view = { name:'home' };
+    document.body.classList.toggle('paper-mode', ['new-room','edit-room','login','loading','fail'].includes(view.name) || (view.name==='home' && !rooms.length));
     if(view.name==='loading') renderLoading(view.msg);
     else if(view.name==='fail') renderFail();
     else if(view.name==='login') renderLogin();
     else if(view.name==='new-room') renderCreate(false);
+    else if(view.name==='edit-room') renderCreate(false, rooms.find(x => x.id===view.id));
     else if(view.name==='room') renderRoom();
     else renderHome();
   }
@@ -1468,11 +1879,13 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     const act = el.dataset.act;
     if(act==='home'){ view = { name:'home' }; render(); top(); }
     else if(act==='new-room'){ view = { name:'new-room' }; render(); top(); }
+    else if(act==='edit-room'){ view = { name:'edit-room', id:view.id, from: view.tab || 'ideas' }; render(); top(); }
+    else if(act==='back-room'){ view = { name:'room', id:view.id, tab: view.from || 'ideas', kind:'all' }; render(); top(); }
     else if(act==='add-idea'){ openModal('add'); }
     else if(act==='close-modal'){ closeModal(); }
     else if(act==='close-detail'){ closeDetail(); }
     else if(act==='edit-from-detail'){ if(detail){ const id = detail.id; closeDetail(false); openModal('edit', id, { fromDetail:true }); } }
-    else if(act==='drop-photo'){ if(modal){ modal.photo = ''; modal.ratio = 0; renderPhotoSlot(); } }
+    else if(act==='drop-photo'){ const m = ps(); if(m){ m.photo = ''; m.photoPath = ''; m.blob = null; m.ratio = 0; renderPhotoSlot(); } }
     else if(act==='ask-del-idea'){ if(modal){ modal.confirmDel = true; renderModalActions(); } }
     else if(act==='keep-idea'){ if(modal){ modal.confirmDel = false; renderModalActions(); } }
     else if(act==='del-idea'){ deleteIdea(); }
@@ -1489,6 +1902,18 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
         toast('방을 지웠어요.');
       });
     }
+    else if(act==='plan-pick'){ openPick(el.dataset.day || ''); }
+    else if(act==='plan-edit'){ openPlanItem(el.dataset.id); }
+    else if(act==='plan-add'){ if(detail){ const id = detail.id; closeDetail(false); openPlanItem(null, id); } }
+    else if(act==='plan-idea'){ closePM(true); openDetail(el.dataset.id); }
+    else if(act==='rec-edit'){ openRecord(el.dataset.id); }
+    else if(act==='rec-spont'){ openRecord(null, el.dataset.day); }
+    else if(act==='rec-mark'){ markPlan(el.dataset.id, el.dataset.st); }
+    else if(act==='rmode'){ keepScroll(); view.rmode = el.dataset.mode; render(); }
+    else if(act==='close-pm'){ closePM(); }
+    else if(act==='pm-ask-del'){ if(pm){ pm.confirmDel = true; renderPMActions(); } }
+    else if(act==='pm-keep'){ if(pm){ pm.confirmDel = false; renderPMActions(); } }
+    else if(act==='pm-del'){ deletePM(); }
     else if(act==='auth-login' || act==='auth-signup'){
       const em = document.getElementById('a-email');
       view = { name:'login', mode: act==='auth-signup' ? 'signup' : 'login', email: em ? em.value.trim() : '' }; render();
