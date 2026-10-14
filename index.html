@@ -300,6 +300,47 @@ body.room-mode .foot-brand{display:none}
 .kraft .sc-body{padding:26px 14px 16px}
 .sticky .sc-card{background:var(--sticky);border-radius:2px 2px 2px 18px}
 .sticky .sc-body{padding:18px 14px 20px}
+/* chosen card shapes. The shape is cut on an inner layer, so the sticker, the focus ring and the click area on the card are never clipped. */
+/* stamp: cream paper with deep round perforations; bold title and a small red line on top, the photo below (like a postage stamp) */
+.perf .sc-card{isolation:isolate;display:flex;flex-direction:column;padding:22px 20px 24px;background:none;box-shadow:none;color:#16181D;
+  filter:drop-shadow(0 1px 1px rgba(20,30,50,.16)) drop-shadow(0 8px 10px rgba(20,30,50,.24))}
+.sc.dragging.perf .sc-card{box-shadow:none;filter:drop-shadow(0 2px 2px rgba(20,30,50,.16)) drop-shadow(0 18px 16px rgba(20,30,50,.32))}
+.perf .sc-card::before,.pv-stamp{--r:6.5px;
+  -webkit-mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5 * var(--r)) calc(-1.5 * var(--r)) / calc(3 * var(--r)) calc(3 * var(--r)),linear-gradient(#000 0 0) no-repeat 50% / calc(100% - 3 * var(--r)) calc(100% - 3 * var(--r));
+  mask:radial-gradient(var(--r),#0000 97%,#000) round calc(-1.5 * var(--r)) calc(-1.5 * var(--r)) / calc(3 * var(--r)) calc(3 * var(--r)),linear-gradient(#000 0 0) no-repeat 50% / calc(100% - 3 * var(--r)) calc(100% - 3 * var(--r))}
+.perf .sc-card::before{content:"";position:absolute;inset:0;z-index:-1;background:#F2EEE5}
+.perf .sc-body{order:-1;display:grid;gap:3px;padding:0 0 12px}
+.perf .sc-title{order:0;font-family:var(--f-body);font-weight:700;font-size:19px;line-height:1.18;letter-spacing:-.02em;color:#16181D}
+.perf .sc-kind{order:1;font-size:11px;font-weight:700;letter-spacing:.14em;color:#C8203A}
+.perf .ph{aspect-ratio:1;background:#E6E1D6}
+.perf:not(.has-ph) .sc-body::after{content:"";order:2;display:block;height:72px;margin-top:10px;background:radial-gradient(circle,rgba(200,32,58,.42) 1.1px,transparent 1.5px) 0 0/5px 5px,#ECE7DC}
+/* puzzle: the photo is cut into a jigsaw piece (soft shadow like the other cards, no outline); no text on photo pieces (the detail view has it) */
+.puzzle .sc-card{isolation:isolate;aspect-ratio:1;padding:0;background:none;box-shadow:none}
+.sc.dragging.puzzle .sc-card{box-shadow:none}
+.pz{position:absolute;inset:0;filter:drop-shadow(0 1px 1px rgba(20,30,50,.16)) drop-shadow(0 8px 10px rgba(20,30,50,.24))}
+.sc.dragging .pz{filter:drop-shadow(0 2px 2px rgba(20,30,50,.16)) drop-shadow(0 18px 16px rgba(20,30,50,.32))}
+.pz-cut{position:absolute;inset:0;background:var(--paper);-webkit-mask:var(--piece) 0 0 / 100% 100% no-repeat;mask:var(--piece) 0 0 / 100% 100% no-repeat}
+.pz-cut img{display:block;width:100%;height:100%;object-fit:cover}
+.puzzle .sc-body{position:absolute;inset:30%;padding:0;display:grid;place-content:center;text-align:center}
+.puzzle .sc-kind{display:none}
+.puzzle .sc-title{font-size:14.5px;-webkit-line-clamp:4}
+.puzzle .sc-card .sticker{top:10%;right:9%}
+.puzzle .sc-hit:focus-visible,.perf .sc-hit:focus-visible{outline-offset:2px}
+/* card shape picker in the add / edit memo: a tiny preview of each shape */
+.memo .tpl .body{display:grid;justify-items:center;align-content:start;gap:8px;padding:12px 6px 10px;border:1px dashed var(--m-line-strong);border-radius:6px;background:var(--m-field);color:var(--m-muted);text-align:center;transition:transform .15s ease}
+.memo .tpl .body b{font-size:13px;color:var(--m-ink);white-space:nowrap}
+.memo .tpl label:hover input:not(:checked) + .body{border-color:var(--m-ink)}
+.memo .tpl input:checked + .body{border:1.5px solid var(--m-ink);background:#FFFFFF;box-shadow:0 4px 10px -6px rgba(20,30,50,.5);transform:rotate(-1deg)}
+.tpl-pv-w{display:grid;place-items:center;height:58px;filter:drop-shadow(0 1px 1px rgba(20,30,50,.2)) drop-shadow(0 3px 4px rgba(20,30,50,.18))}
+.tpl-pv{position:relative;display:block;width:44px;height:52px;background:#FFFFFF}
+.tpl-pv i{position:absolute;background:linear-gradient(160deg,#9DB3DA,#E9C99B)}
+.pv-polaroid{transform:rotate(-3deg)}
+.pv-polaroid i{inset:4px 4px 14px}
+.pv-stamp{--r:3px;width:42px;height:52px;background:#F2EEE5;transform:rotate(2deg)}
+.pv-stamp::before{content:"";position:absolute;left:8px;top:8px;width:18px;height:4px;border-radius:1px;background:#16181D;box-shadow:0 6px 0 -1px #C8203A}
+.pv-stamp i{left:8px;right:8px;top:20px;bottom:8px}
+.pv-puzzle{width:54px;height:54px;background:none}
+.pv-puzzle i{inset:0;-webkit-mask:var(--piece) 0 0 / 100% 100% no-repeat;mask:var(--piece) 0 0 / 100% 100% no-repeat}
 .tape{position:absolute;top:-10px;left:50%;width:68px;height:20px;margin-left:-34px;transform:rotate(var(--tape-tilt,-4deg));background:var(--tape-a);z-index:2;pointer-events:none;
   clip-path:polygon(0 8%,5% 0,10% 9%,16% 1%,84% 4%,90% 0,95% 8%,100% 2%,100% 92%,95% 100%,89% 92%,84% 100%,15% 96%,9% 100%,4% 92%,0 100%)}
 .tape.b{background:var(--tape-b)}
@@ -643,6 +684,8 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   const KINDS = { place:'장소', food:'음식', activity:'활동', etc:'기타' };
   const IMP = { must:'꼭 하기', nice:'하면 좋음', maybe:'후보' };
   const IMP_RANK = { must:0, nice:1, maybe:2 };
+  const TEMPLATES = { polaroid:'폴라로이드', stamp:'우표', puzzle:'퍼즐 조각' };
+  let templatesReady = true;   // false until 04_butterflight_card_shape.sql has been run
 
   // ---------- helpers ----------
   const pad = n => String(n).padStart(2,'0');
@@ -688,6 +731,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   function ideaFromRow(d){
     return { id:d.id, kind:d.kind, title:d.title, memo:d.memo||'', place:d.place||'', link:d.link||'', imp:d.imp,
       photoPath:d.photo_path||'', photo: photoLinks[d.photo_path] || '', ratio:d.photo_ratio||0,
+      template: TEMPLATES[d.template] ? d.template : 'polaroid',   // cards saved before shapes existed are polaroids
       x: typeof d.x==='number' ? d.x : undefined, y: typeof d.y==='number' ? d.y : undefined, z:d.z||1,
       by:d.created_by, createdAt:ms(d.created_at),
       likes:(d.bf_likes||[]).map(l => l.user_id),
@@ -968,35 +1012,55 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   const LINK = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M5 7l2-2M4.2 5.6L3 6.8a1.8 1.8 0 0 0 2.5 2.5l1.2-1.2M7.8 6.4L9 5.2a1.8 1.8 0 0 0-2.5-2.5L5.3 3.9" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
 
   // every card gets a stable look and width from its id, so the board doesn't reshuffle on each visit
-  const WIDTHS = { polaroid:210, print:240, stamp:190, paper:215, sticky:190, grid:215, kraft:195 };
+  const WIDTHS = { polaroid:210, print:240, stamp:190, paper:215, sticky:190, grid:215, kraft:195, perf:216, puzzle:214 };
   function cardLook(it){
     const h = hash(it.id), tilt = TILTS[h % TILTS.length];
+    if(it.template==='stamp') return { tilt, look:'perf', w: WIDTHS.perf, tape:false };
+    if(it.template==='puzzle') return { tilt, look:'puzzle', w: WIDTHS.puzzle, tape:false };
     if(it.photo || it.photoPath){
-      const look = ['polaroid','print','stamp'][h % 3];
+      const look = ['polaroid','print','polaroid'][h % 3];
       return { tilt, look, w: WIDTHS[look], tape: look==='print' || (look==='polaroid' && h%2===0) };
     }
     const look = ['paper','sticky','grid','kraft'][h % 4];
     return { tilt, look, w: WIDTHS[look], tape: look==='paper' || look==='grid' };
   }
 
+  // a jigsaw piece in a 120x120 box: square body with a tab on each side, poking out or in (picked from the card id)
+  function piecePathD(id){
+    const S = 120, b = 20, th = 17, hv = hash(id + '#piece');
+    const C = [[b,b],[S-b,b],[S-b,S-b],[b,S-b]], N = [[0,-1],[1,0],[0,1],[-1,0]];
+    let d = 'M'+b+' '+b;
+    for(let e = 0; e < 4; e++){
+      const [x0,y0] = C[e], [x1,y1] = C[(e+1)%4], [nx,ny] = N[e], s = ((hv >> e) & 1 ? 1 : -1) * th;
+      const P = (u,v) => (x0+(x1-x0)*u+nx*v*s).toFixed(1)+' '+(y0+(y1-y0)*u+ny*v*s).toFixed(1);
+      d += ' L'+P(.36,0)+' C'+P(.42,0)+' '+P(.43,.25)+' '+P(.39,.45)+' C'+P(.33,.8)+' '+P(.4,1)+' '+P(.5,1)
+        +  ' C'+P(.6,1)+' '+P(.67,.8)+' '+P(.61,.45)+' C'+P(.57,.25)+' '+P(.58,0)+' '+P(.64,0)+' L'+P(1,0);
+    }
+    return d + ' Z';
+  }
+  const pieceUrl = id => "url('data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><path d="'+piecePathD(id)+'"/></svg>') + "')";
+
   function cardHtml(it){
     const L = cardLook(it), h = hash(it.id);
     const ratio = Math.min(1.6, Math.max(0.75, it.ratio || 4/3));
-    const photo = (it.photo || it.photoPath) ? '<span class="ph" style="--ratio:'+ratio.toFixed(3)+'">'+(it.photo ? '<img src="'+esc(it.photo)+'" alt="" draggable="false">' : '')+'</span>' : '';
+    const hasPh = !!(it.photo || it.photoPath), img = it.photo ? '<img src="'+esc(it.photo)+'" alt="" draggable="false">' : '';
+    // puzzle: the photo itself is cut into the piece; without a photo the piece is plain paper with the title
+    const photo = L.look==='puzzle' ? '<span class="pz" aria-hidden="true"><span class="pz-cut" style="--piece:'+pieceUrl(it.id)+'">'+img+'</span></span>'
+      : hasPh ? '<span class="ph" style="--ratio:'+ratio.toFixed(3)+'">'+img+'</span>' : '';
+    const body = L.look==='puzzle' && hasPh ? '' : '<div class="sc-body">'
+      +   '<p class="sc-kind">'+KINDS[it.kind]+'</p>'
+      +   '<h3 class="sc-title">'+esc(it.title)+'</h3>'
+      + '</div>';
     const place = it.place ? '<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(it.place)+'" target="_blank" rel="noopener noreferrer">'+PIN+'<span>'+esc(it.place)+'</span></a>' : '';
     const link = it.link && /^https?:\/\//i.test(it.link) ? '<a href="'+esc(it.link)+'" target="_blank" rel="noopener noreferrer">'+LINK+'<span>'+esc(it.link.replace(/^https?:\/\/(www\.)?/i,'').replace(/\/$/,''))+'</span></a>' : '';
     const dim = view.kind!=='all' && it.kind!==view.kind;
     const placed = typeof it.x === 'number';
-    return '<li class="sc '+L.look+(dim?' dim':'')+'" data-id="'+it.id+'" style="--w:'+L.w+'px;'+(placed?'left:'+it.x+'px;top:'+it.y+'px;':'visibility:hidden;')+'z-index:'+(it.z||1)+'"'+(dim?' aria-hidden="true"':'')+'>'
+    return '<li class="sc '+L.look+(it.photo || it.photoPath ? ' has-ph' : '')+(dim?' dim':'')+'" data-id="'+it.id+'" style="--w:'+L.w+'px;'+(placed?'left:'+it.x+'px;top:'+it.y+'px;':'visibility:hidden;')+'z-index:'+(it.z||1)+'"'+(dim?' aria-hidden="true"':'')+'>'
       + '<article class="sc-card" style="--tilt:'+L.tilt+'deg">'
       +   (L.tape ? '<span class="tape'+(h%3===0?' b':'')+'" style="--tape-tilt:'+((h%7)-3)+'deg"></span>' : '')
       +   '<span class="sticker '+it.imp+'">'+IMP[it.imp]+'</span>'
       +   '<button type="button" class="sc-hit" data-view="'+it.id+'" aria-label="'+esc(it.title)+' 자세히 보기. Alt와 방향키로 옮길 수 있어요"'+(dim?' tabindex="-1"':'')+'></button>'
-      +   photo
-      +   '<div class="sc-body">'
-      +     '<p class="sc-kind">'+KINDS[it.kind]+'</p>'
-      +     '<h3 class="sc-title">'+esc(it.title)+'</h3>'
-      +   '</div>'
+      +   photo + body
       + '</article></li>';
   }
 
@@ -1548,6 +1612,10 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       + '<div class="modal-head"><h2 id="m-title">'+(mode==='edit'?'아이디어 수정하기':'아이디어 붙이기')+'</h2><button type="button" class="x" data-act="close-modal" aria-label="닫기">×</button></div>'
       + '<form id="idea-form" novalidate>'
       +   '<div class="field"><span class="field-title">사진 <span class="opt">(선택)</span></span><div id="photo-slot"></div><p class="err" id="e-i-photo" hidden></p></div>'
+      +   '<fieldset class="field"><legend>카드 모양</legend><div class="seg tpl" style="--cols:3">'
+      +     Object.keys(TEMPLATES).map(k => '<label><input type="radio" name="i-tpl" id="i-tpl-'+k+'" value="'+k+'"'+(k===(it ? it.template : 'polaroid')?' checked':'')+'>'
+              + '<span class="body"><span class="tpl-pv-w" aria-hidden="true"><span class="tpl-pv pv-'+k+'"><i'+(k==='puzzle' ? ' style="--piece:'+pieceUrl('preview-piece')+'"' : '')+'></i></span></span><b>'+TEMPLATES[k]+'</b></span></label>').join('')
+      +   '</div></fieldset>'
       +   '<div class="field"><label for="i-title">아이디어 제목</label><input type="text" id="i-title" maxlength="50" placeholder="예: 도톤보리 글리코 간판 앞에서 사진" autocomplete="off" value="'+esc(v('title'))+'"><p class="err" id="e-i-title" hidden></p></div>'
       +   '<fieldset class="field"><legend>종류</legend><div class="seg tags kinds" style="--cols:4">'
       +     Object.keys(KINDS).map(k=>'<label><input type="radio" name="i-kind" id="i-kind-'+k+'" value="'+k+'"'+(k===kind?' checked':'')+'><span class="body"><b>'+KINDS[k]+'</b></span></label>').join('')
@@ -1673,7 +1741,9 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       if(modal===m) setBusy(true, '저장 중…');
     }
     const hasPhoto = !!(newPath || m.photoPath);
+    const template = (document.querySelector('input[name="i-tpl"]:checked')||{}).value || 'polaroid';
     const row = { kind, title, memo, place, link, imp, photo_path: newPath || m.photoPath || null, photo_ratio: hasPhoto ? m.ratio : null };
+    if(templatesReady) row.template = template;
     // 2) then the card itself
     let res;
     if(m.mode==='edit'){
@@ -1682,6 +1752,12 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       const spot = freeSpot();
       Object.assign(row, { room_id: r.id, x: spot.x, y: spot.y, z: maxZ(r) + 1 });
       res = await sb.from('bf_ideas').insert(row).select().single();
+    }
+    if(res.error && row.template && /template/i.test(res.error.message||'')){
+      // 04 SQL not run yet: keep the card, just without its shape
+      templatesReady = false; delete row.template;
+      res = m.mode==='edit' ? await sb.from('bf_ideas').update(row).eq('id', m.id).select().single() : await sb.from('bf_ideas').insert(row).select().single();
+      if(!res.error) m.tplNote = ' (카드 모양은 04번 SQL을 실행한 뒤부터 저장돼요)';
     }
     if(res.error || !res.data){
       dropUpload(newPath);
@@ -1707,7 +1783,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     view.tab = 'ideas'; if(!wasEdit) view.kind = 'all';
     render();
     if(fromDetail) openDetail(savedId);   // show the saved changes right away
-    toast(wasEdit ? '아이디어를 고쳤어요.' : '게시판에 붙였어요.');
+    toast((wasEdit ? '아이디어를 고쳤어요.' : '게시판에 붙였어요.') + (m.tplNote || ''));
   }
 
   async function deleteIdea(){
@@ -2068,10 +2144,12 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     const cards = [...cv.querySelectorAll('.sc')].map(li => {
       const it = r.ideas.find(i => i.id===li.dataset.id); if(!it) return null;
       const art = li.querySelector('.sc-card'), ph = li.querySelector('.ph'), kind = li.querySelector('.sc-kind'), title = li.querySelector('.sc-title');
+      const tx = el => el && el.offsetWidth ? Object.assign(offsetIn(el, art), { w: el.offsetWidth, font: getComputedStyle(el).font, lh: parseFloat(getComputedStyle(el).lineHeight)||18, color: getComputedStyle(el).color }) : null;
       return { it, look: cardLook(it), x: li.offsetLeft, y: li.offsetTop, w: art.offsetWidth, h: art.offsetHeight, z: it.z||1,
         ph: ph ? Object.assign(offsetIn(ph, art), { w: ph.offsetWidth, h: ph.offsetHeight }) : null,
-        kind: Object.assign(offsetIn(kind, art), { w: kind.offsetWidth, font: getComputedStyle(kind).font, lh: parseFloat(getComputedStyle(kind).lineHeight)||16 }),
-        title: Object.assign(offsetIn(title, art), { w: title.offsetWidth, font: getComputedStyle(title).font, lh: parseFloat(getComputedStyle(title).lineHeight)||22 }) };
+        kind: tx(kind), title: tx(title),
+        // the dotted "picture" block of a stamp without a photo
+        dots: li.classList.contains('perf') && !ph && li.querySelector('.sc-body') ? (b => Object.assign(offsetIn(b, art), { w: b.offsetWidth, h: b.offsetHeight }))(li.querySelector('.sc-body')) : null };
     }).filter(Boolean).sort((a,b) => a.z-b.z);
     const PAD = 70, HEAD = 170, FOOT = 70;
     const minX = Math.min(...cards.map(c => c.x)), minY = Math.min(...cards.map(c => c.y));
@@ -2099,7 +2177,23 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     cards.forEach((cd, n) => {
       g.save(); g.translate(ox + cd.x + cd.w/2, oy + cd.y + cd.h/2); g.rotate(cd.look.tilt*Math.PI/180); g.translate(-cd.w/2, -cd.h/2);
       g.shadowColor = 'rgba(20,30,50,.28)'; g.shadowBlur = 16; g.shadowOffsetY = 8;
-      g.fillStyle = LOOK_BG[cd.look.look] || '#FFFDF6'; g.fillRect(0, 0, cd.w, cd.h); g.shadowColor = 'transparent';
+      const lk = cd.look.look, BOARD = '#E3E8F0';
+      g.fillStyle = (lk==='perf' || lk==='puzzle') ? (cd.ph ? '#FFFFFF' : '#FFFDF6') : (LOOK_BG[lk] || '#FFFDF6');
+      if(lk==='puzzle'){
+        // the same jigsaw path as on the board, with the photo (or paper) clipped into it
+        const k = cd.w/120, path = new Path2D(piecePathD(cd.it.id)), im = cd.it.photo ? imgs[n] : null;
+        g.save(); g.scale(k, k); g.fillStyle = '#FFFDF6'; g.fill(path); g.shadowColor = 'transparent'; g.clip(path);
+        if(im){ const sr = im.width/im.height; let sw = im.width, sh = im.height, sx = 0, sy = 0;
+          if(sr > 1){ sw = sh; sx = (im.width-sw)/2; } else { sh = sw; sy = (im.height-sh)/2; }
+          g.drawImage(im, sx, sy, sw, sh, 0, 0, 120, 120); }
+        g.restore();
+      } else if(lk==='perf'){
+        g.fillStyle = '#F2EEE5'; g.fillRect(0, 0, cd.w, cd.h); g.shadowColor = 'transparent'; g.fillStyle = BOARD;
+        const r = 6.5, nx = Math.max(1, Math.round(cd.w/19.5)), ny = Math.max(1, Math.round(cd.h/19.5));
+        for(let k = 0; k <= nx; k++){ const x = k*cd.w/nx; [0, cd.h].forEach(y => { g.beginPath(); g.arc(x, y, r, 0, Math.PI*2); g.fill(); }); }
+        for(let k = 0; k <= ny; k++){ const y = k*cd.h/ny; [0, cd.w].forEach(x => { g.beginPath(); g.arc(x, y, r, 0, Math.PI*2); g.fill(); }); }
+      } else { g.fillRect(0, 0, cd.w, cd.h); }
+      g.shadowColor = 'transparent';
       if(cd.look.look==='grid'){ g.strokeStyle = '#E7E2D3'; g.lineWidth = 1; for(let q = 14; q < cd.w; q += 14){ g.beginPath(); g.moveTo(q, 0); g.lineTo(q, cd.h); g.stroke(); } for(let q = 14; q < cd.h; q += 14){ g.beginPath(); g.moveTo(0, q); g.lineTo(cd.w, q); g.stroke(); } }
       if(cd.ph){
         const im = imgs[n];
@@ -2109,11 +2203,15 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
         else { g.fillStyle = '#D6DDE8'; g.fillRect(cd.ph.x, cd.ph.y, cd.ph.w, cd.ph.h); }
       }
       g.textBaseline = 'top';
-      g.font = cd.kind.font; g.fillStyle = '#5A6376'; g.fillText(KINDS[cd.it.kind], cd.kind.x, cd.kind.y + (cd.kind.lh - 12)/2);
-      g.font = cd.title.font; g.fillStyle = '#1C2639';
-      wrapLines(g, cd.it.title, cd.title.w + 1).forEach((ln, i) => g.fillText(ln, cd.title.x, cd.title.y + i*cd.title.lh + (cd.title.lh - 17)/2));
+      if(cd.dots){ const y0 = cd.dots.y + cd.dots.h - 72; g.fillStyle = '#ECE7DC'; g.fillRect(cd.dots.x, y0, cd.dots.w, 72); g.fillStyle = 'rgba(200,32,58,.42)';
+        for(let yy = y0 + 2.5; yy < y0 + 72; yy += 5) for(let xx = cd.dots.x + 2.5; xx < cd.dots.x + cd.dots.w; xx += 5){ g.beginPath(); g.arc(xx, yy, 1.1, 0, Math.PI*2); g.fill(); } }
+      if(cd.kind){ g.font = cd.kind.font; g.fillStyle = cd.kind.color || '#5A6376'; g.fillText(KINDS[cd.it.kind], cd.kind.x, cd.kind.y + (cd.kind.lh - 12)/2); }
+      if(cd.title){ g.font = cd.title.font; g.fillStyle = cd.title.color || '#1C2639';
+        const lines = wrapLines(g, cd.it.title, cd.title.w + 1), center = lk==='puzzle';
+        lines.slice(0, 4).forEach((ln, i) => g.fillText(ln, center ? cd.title.x + (cd.title.w - g.measureText(ln).width)/2 : cd.title.x, cd.title.y + i*cd.title.lh + (cd.title.lh - 17)/2)); }
       if(cd.look.tape){ g.fillStyle = cd.look.look==='print' ? 'rgba(246,214,150,.78)' : 'rgba(169,195,255,.72)'; g.save(); g.translate(cd.w/2, 0); g.rotate(-3*Math.PI/180); g.fillRect(-34, -9, 68, 18); g.restore(); }
       const [bg, fg] = IMP_STYLE[cd.it.imp]; g.font = '700 12px '+body; const sw = g.measureText(IMP[cd.it.imp]).width + 18;
+      if(lk==='puzzle') g.translate(-cd.w*.09 - 8, cd.h*.1 + 10);   // sits on the piece's corner, as on the board
       g.save(); g.translate(cd.w - sw + 8, -10); g.rotate(-5*Math.PI/180); g.fillStyle = bg; g.fillRect(0, 0, sw, 22);
       if(cd.it.imp==='maybe'){ g.strokeStyle = fg; g.setLineDash([3,2]); g.strokeRect(0.5, 0.5, sw-1, 21); g.setLineDash([]); }
       g.fillStyle = fg; g.fillText(IMP[cd.it.imp], 9, 5); g.restore();
@@ -2187,8 +2285,8 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
         const { error } = await sb.storage.from(BUCKET).copy(i.photoPath, to);
         if(!error){ path = to; room--; copied[to] = i.photo; } else noPhoto++;
       } else if(i.photoPath) noPhoto++;
-      rows.push({ room_id: target.id, kind: i.kind, title: i.title, memo: i.memo, place: i.place, link: i.link, imp: i.imp,
-        photo_path: path, photo_ratio: path ? i.ratio : null });
+      rows.push(Object.assign({ room_id: target.id, kind: i.kind, title: i.title, memo: i.memo, place: i.place, link: i.link, imp: i.imp,
+        photo_path: path, photo_ratio: path ? i.ratio : null }, templatesReady && i.template!=='polaroid' ? { template: i.template } : {}));
       const b = document.querySelector('#m-actions button[type=submit]'); if(b) b.textContent = '담는 중… ('+(++n)+'/'+picked.length+')';
     }
     const { data, error } = await sb.from('bf_ideas').insert(rows).select();
