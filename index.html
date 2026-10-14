@@ -467,7 +467,23 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   .ticket::before,.ticket::after{right:74px}
   .seg.kinds{--cols:2!important}
 }
+/* sign-in memo, loading note, account line */
+.memo input[type=email],.memo input[type=password]{width:100%;font:inherit;background:var(--m-field);color:var(--m-ink);border:1px solid var(--m-line-strong);border-radius:6px;padding:10px 12px;min-height:44px}
+.memo input[type=email]:focus,.memo input[type=password]:focus{outline:none;border-color:var(--m-ink);box-shadow:0 0 0 3px rgba(28,38,57,.12);background:#FFFFFF}
+.auth-switch{margin-top:14px;font-size:13.5px;color:var(--m-muted);text-align:center}
+.auth-switch button{background:none;border:0;padding:4px 2px;font:inherit;font-weight:700;color:var(--m-ink);text-decoration:underline;text-underline-offset:3px}
+.field .hint-s{font-size:12px;color:var(--m-muted);margin-top:4px}
+.loading-note{margin:auto;font-family:var(--f-pen);font-size:24px;color:var(--muted);text-align:center;display:grid;gap:14px;justify-items:center}
+.loading-note .btn{font-family:var(--f-body);font-size:14px}
+.acct{margin-top:18px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 8px;justify-content:center;align-items:center}
+.acct span{overflow-wrap:anywhere}
+.acct button{background:none;border:0;padding:6px 4px;font:inherit;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.acct button:hover{color:var(--ink)}
+.btn[disabled]{opacity:.6;cursor:progress}
+.mig p{color:var(--m-ink);margin-bottom:6px}
+.mig small{display:block;color:var(--m-muted);font-size:12.5px}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -525,15 +541,73 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     return n===0 ? 'D-DAY' : 'D-'+n;
   }
 
-  // ---------- storage ----------
-  function load(){
-    try{ const raw = localStorage.getItem(KEY); if(raw){ const v = JSON.parse(raw); if(Array.isArray(v)) return v; } }catch(e){}
-    return [];
-  }
-  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(rooms)); return true; }catch(e){ return false; } }
+  // ---------- server (Supabase) ----------
+  // the anon key is meant to be public: what each person may see is decided by the database's security rules
+  const SUPABASE_URL = 'https://lqdxjbnpcugyiyfsknxq.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxxZHhqYm5wY3VneWl5ZnNrbnhxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyMzM5NTksImV4cCI6MjEwNTgwOTk1OX0.I46DfnKE4hoKEjM3J1itT4B7lBEDXSpA-pakhparirA';
+  const BUCKET = 'butterflight';
+  const SIGN_FOR = 60*60*24;           // photo links stay valid for a day
+  let sb = null;
+  try{ if(window.supabase) sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }catch(e){ sb = null; }
 
-  let rooms = load();
-  let view = { name:'home' };
+  const ms = t => t ? Date.parse(t) : Date.now();
+  const newId = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+    : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c==='x'?r:(r&3|8)).toString(16); });
+  function ideaFromRow(d){
+    return { id:d.id, kind:d.kind, title:d.title, memo:d.memo||'', place:d.place||'', link:d.link||'', imp:d.imp,
+      photoPath:d.photo_path||'', photo:'', ratio:d.photo_ratio||0,
+      x: typeof d.x==='number' ? d.x : undefined, y: typeof d.y==='number' ? d.y : undefined, z:d.z||1,
+      by:d.created_by, createdAt:ms(d.created_at) };
+  }
+  function roomFromRow(d){
+    return { id:d.id, owner:d.owner_id, dest:d.dest, name:d.name, type:d.type, start:d.start_date||'', end:d.end_date||'',
+      ideas:(d.bf_ideas||[]).map(ideaFromRow), createdAt:ms(d.created_at), updatedAt:ms(d.updated_at) };
+  }
+  // turn photo paths into short-lived links the browser can show (the photo folder is private)
+  async function signPhotos(ideas){
+    const todo = ideas.filter(i => i.photoPath && !i.photo);
+    if(!todo.length) return;
+    const { data, error } = await sb.storage.from(BUCKET).createSignedUrls(todo.map(i => i.photoPath), SIGN_FOR);
+    if(error || !data) return;
+    const byPath = {}; data.forEach(s => { if(s && s.signedUrl) byPath[s.path] = s.signedUrl; });
+    todo.forEach(i => { if(byPath[i.photoPath]) i.photo = byPath[i.photoPath]; });
+  }
+  async function uploadPhoto(roomId, blob){
+    const path = roomId + '/' + newId() + '.jpg';
+    const { error } = await sb.storage.from(BUCKET).upload(path, blob, { contentType:'image/jpeg', upsert:false });
+    if(error) throw error;
+    return path;
+  }
+  // a photo that went up but whose card failed to save shouldn't linger in storage
+  function dropUpload(path){ if(path) sb.storage.from(BUCKET).remove([path]).then(()=>{}, ()=>{}); }
+
+  // positions are saved quietly; a burst of key nudges becomes one save
+  const posTimers = {};
+  function savePos(it, wait){
+    clearTimeout(posTimers[it.id]);
+    posTimers[it.id] = setTimeout(async () => {
+      delete posTimers[it.id];
+      const { error } = await sb.from('bf_ideas').update({ x:it.x, y:it.y, z:it.z||1 }).eq('id', it.id);
+      if(error) toast('카드 위치를 저장하지 못했어요. 인터넷 연결을 확인해 주세요.');
+    }, wait||0);
+  }
+
+  function errText(error){
+    const m = String((error && (error.message || error.error_description)) || error || '');
+    if(/invalid login credentials/i.test(m)) return '이메일이나 비밀번호가 맞지 않아요.';
+    if(/already registered|already been registered|already exists/i.test(m)) return '이미 가입한 이메일이에요. 로그인해 주세요.';
+    if(/password.*(6|least)/i.test(m)) return '비밀번호는 6자 이상으로 정해 주세요.';
+    if(/email.*not.*confirmed/i.test(m)) return '이메일 확인이 아직 안 됐어요. 메일함을 확인해 주세요.';
+    if(/invalid.*email|email.*invalid|unable to validate email/i.test(m)) return '이메일 주소가 맞는지 확인해 주세요.';
+    if(/rate limit|too many/i.test(m)) return '시도가 너무 많았어요. 잠시 뒤에 다시 해 주세요.';
+    if(/fetch|network|failed to|load failed/i.test(m)) return '서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.';
+    if(/payload too large|maximum allowed size|exceeded/i.test(m)) return '사진 파일이 너무 커요. 다른 사진을 골라 주세요.';
+    return '잠시 문제가 생겼어요. 다시 해 주세요.';
+  }
+
+  let user = null;
+  let rooms = [];
+  let view = { name:'loading' };
   const root = document.getElementById('view');
 
   let toastTimer;
@@ -582,6 +656,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       + '</div>'
       + dots
       + '<button type="button" class="new-room" data-act="new-room">+ 새 방 만들기</button>'
+      + acctLine()
       + '</div>';
 
     if(multi) setupCarousel(list.length, idx);
@@ -687,14 +762,16 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       +     '</fieldset>'
       +     '<div class="actions"><div class="right">'+(first?'':'<button type="button" class="btn" data-act="home">취소</button>')+'<button type="submit" class="btn primary">방 만들기</button></div></div>'
       +   '</form>'
-      + '</div></div></div>';
+      + '</div></div>'+(first ? acctLine() : '')+'</div>';
     document.getElementById('room-form').addEventListener('submit', onCreateRoom);
     ['r-dest','r-start','r-end'].forEach(id => document.getElementById(id).addEventListener('input', () => setErr(id, '')));
     if(!first) document.getElementById('r-dest').focus();
   }
 
-  function onCreateRoom(ev){
+  async function onCreateRoom(ev){
     ev.preventDefault();
+    const btn = ev.target.querySelector('button[type=submit]');
+    if(btn.disabled) return;
     const dest = document.getElementById('r-dest').value.trim();
     const name = document.getElementById('r-name').value.trim() || (dest ? dest+' 여행' : '');
     const start = document.getElementById('r-start').value;
@@ -709,12 +786,17 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
     if(first){ document.getElementById(first).focus(); return; }
 
-    const room = { id:uid('r'), dest, name, type, start:start||'', end:end||'', ideas:[], createdAt:Date.now(), updatedAt:Date.now() };
+    btn.disabled = true; const label = btn.textContent; btn.textContent = '만드는 중…';
+    const { data, error } = await sb.from('bf_rooms')
+      .insert({ dest, name, type, start_date: start || null, end_date: end || null })
+      .select().single();
+    if(error || !data){ btn.disabled = false; btn.textContent = label; toast('방을 만들지 못했어요. '+errText(error)); return; }
+    const room = roomFromRow(data);
     rooms.push(room);
-    const ok = save();
-    view = { name:'room', id:room.id, tab:'ideas', kind:'all', adding:true };
+    homeRoomId = room.id;
+    view = { name:'room', id:room.id, tab:'ideas', kind:'all' };
     render();
-    toast(ok ? '방을 만들었어요. 첫 아이디어를 담아 보세요.' : '방을 만들었지만, 이 브라우저에서는 저장이 안 돼서 새로고침하면 사라져요.');
+    toast('방을 만들었어요. 첫 아이디어를 담아 보세요.');
   }
 
   // ---------- room: scrapbook board ----------
@@ -727,7 +809,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   const WIDTHS = { polaroid:210, print:240, stamp:190, paper:215, sticky:190, grid:215, kraft:195 };
   function cardLook(it){
     const h = hash(it.id), tilt = TILTS[h % TILTS.length];
-    if(it.photo){
+    if(it.photo || it.photoPath){
       const look = ['polaroid','print','stamp'][h % 3];
       return { tilt, look, w: WIDTHS[look], tape: look==='print' || (look==='polaroid' && h%2===0) };
     }
@@ -738,7 +820,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   function cardHtml(it){
     const L = cardLook(it), h = hash(it.id);
     const ratio = Math.min(1.6, Math.max(0.75, it.ratio || 4/3));
-    const photo = it.photo ? '<span class="ph" style="--ratio:'+ratio.toFixed(3)+'"><img src="'+it.photo+'" alt="" draggable="false"></span>' : '';
+    const photo = (it.photo || it.photoPath) ? '<span class="ph" style="--ratio:'+ratio.toFixed(3)+'">'+(it.photo ? '<img src="'+esc(it.photo)+'" alt="" draggable="false">' : '')+'</span>' : '';
     const place = it.place ? '<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(it.place)+'" target="_blank" rel="noopener noreferrer">'+PIN+'<span>'+esc(it.place)+'</span></a>' : '';
     const link = it.link && /^https?:\/\//i.test(it.link) ? '<a href="'+esc(it.link)+'" target="_blank" rel="noopener noreferrer">'+LINK+'<span>'+esc(it.link.replace(/^https?:\/\/(www\.)?/i,'').replace(/\/$/,''))+'</span></a>' : '';
     const dim = view.kind!=='all' && it.kind!==view.kind;
@@ -808,8 +890,8 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       it.z = ++z;
       li.style.left = it.x+'px'; li.style.top = it.y+'px'; li.style.zIndex = it.z; li.style.visibility = '';
       colY[c] += li.offsetHeight + 34;
+      savePos(it);
     });
-    save();
   }
   const maxZ = r => r.ideas.reduce((m,i)=>Math.max(m, i.z||0), 0);
 
@@ -905,7 +987,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     d.li.classList.remove('dragging');
     suppressClickUntil = Date.now() + 350;
     const r = canvasRoom, it = r && r.ideas.find(i => i.id===d.id);
-    if(it){ it.x = d.li.offsetLeft; it.y = d.li.offsetTop; it.z = parseInt(d.li.style.zIndex,10) || 1; save(); }
+    if(it){ it.x = d.li.offsetLeft; it.y = d.li.offsetTop; it.z = parseInt(d.li.style.zIndex,10) || 1; savePos(it); }
     sizeCanvas();
   }
   window.addEventListener('pointerup', endDrag);
@@ -922,7 +1004,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     if(e.key==='ArrowRight') it.x += step;
     if(e.key==='ArrowUp') it.y = Math.max(0, it.y - step);
     if(e.key==='ArrowDown') it.y += step;
-    li.style.left = it.x+'px'; li.style.top = it.y+'px'; save(); sizeCanvas();
+    li.style.left = it.x+'px'; li.style.top = it.y+'px'; savePos(it, 600); sizeCanvas();
   }
 
   function renderRoom(){
@@ -989,7 +1071,8 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     const r = rooms.find(x => x.id===view.id); if(!r) return;
     const it = mode==='edit' ? r.ideas.find(i => i.id===id) : null;
     if(mode==='edit' && !it) return;
-    modal = { mode, id, photo: it ? (it.photo||'') : '', ratio: it ? (it.ratio||0) : 0, confirmDel:false, opener: document.activeElement, fromDetail: !!opts.fromDetail };
+    modal = { mode, id, photo: it ? (it.photo||'') : '', photoPath: it ? (it.photoPath||'') : '', blob:null, ratio: it ? (it.ratio||0) : 0,
+              confirmDel:false, busy:false, opener: document.activeElement, fromDetail: !!opts.fromDetail };
     const v = (k, dflt) => it ? (it[k]||'') : (dflt||'');
     const kind = it ? it.kind : (view.kind!=='all' ? view.kind : 'place');
     const imp = it ? it.imp : 'nice';
@@ -1026,6 +1109,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   // back = true: cancelling an edit that started from the detail view goes back to that detail view
   function closeModal(back){
     if(back===undefined) back = true;
+    if(modal && modal.busy && back) return;   // wait until the save finishes
     const w = document.getElementById('scrim'); if(w) w.remove();
     document.body.style.overflow = '';
     const m = modal; modal = null;
@@ -1044,8 +1128,8 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   }
   function renderPhotoSlot(){
     const slot = document.getElementById('photo-slot'); if(!slot || !modal) return;
-    if(modal.photo){
-      slot.innerHTML = '<div class="photo-has"><figure class="pola"><img src="'+modal.photo+'" alt="고른 사진 미리보기"></figure>'
+    if(modal.photo || modal.photoPath){
+      slot.innerHTML = '<div class="photo-has"><figure class="pola">'+(modal.photo ? '<img src="'+esc(modal.photo)+'" alt="고른 사진 미리보기">' : '')+'</figure>'
         + '<div class="acts"><label class="btn small" for="i-photo">사진 바꾸기</label><button type="button" class="btn small" data-act="drop-photo">사진 빼기</button>'
         + '<input type="file" id="i-photo" accept="image/*"></div></div>';
     } else {
@@ -1068,7 +1152,8 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
         const c = document.createElement('canvas'); c.width = Math.round(w*k); c.height = Math.round(h*k);
         const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.drawImage(img, 0, 0, c.width, c.height);
         URL.revokeObjectURL(url);
-        resolve({ src: c.toDataURL('image/jpeg', 0.8), ratio: w / h });
+        const src = c.toDataURL('image/jpeg', 0.8);
+        c.toBlob(blob => blob ? resolve({ src, blob, ratio: w / h }) : reject(new Error('blob')), 'image/jpeg', 0.8);
       };
       img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('load')); };
       img.src = url;
@@ -1078,13 +1163,22 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     const e = document.getElementById('e-i-photo');
     readPhoto(file).then(res => {
       if(!modal) return;
-      modal.photo = res.src; modal.ratio = res.ratio; e.hidden = true; renderPhotoSlot();
+      modal.photo = res.src; modal.blob = res.blob; modal.photoPath = ''; modal.ratio = res.ratio; e.hidden = true; renderPhotoSlot();
     }).catch(() => { e.textContent = '이 파일은 사진으로 읽을 수 없어요. JPG나 PNG 사진을 골라 주세요.'; e.hidden = false; });
   }
 
-  function onSaveIdea(ev){
+  function setBusy(on, text){
+    if(!modal) return;
+    modal.busy = on;
+    document.querySelectorAll('#m-actions button').forEach(b => { b.disabled = on; });
+    const sub = document.querySelector('#m-actions button[type=submit], #m-actions [data-act=del-idea]');
+    if(sub){ if(on){ sub.dataset.label = sub.textContent; sub.textContent = text; } else if(sub.dataset.label){ sub.textContent = sub.dataset.label; } }
+  }
+  function formErr(msg){ const fe = document.getElementById('form-err'); if(fe){ fe.textContent = msg; fe.hidden = !msg; } }
+
+  async function onSaveIdea(ev){
     ev.preventDefault();
-    const r = rooms.find(x => x.id===view.id); if(!r || !modal) return;
+    const r = rooms.find(x => x.id===view.id); if(!r || !modal || modal.busy) return;
     const title = document.getElementById('i-title').value.trim();
     const memo = document.getElementById('i-memo').value.trim();
     const place = document.getElementById('i-place').value.trim();
@@ -1100,38 +1194,60 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
     if(first){ document.getElementById(first).focus(); return; }
 
-    const data = { kind, title, memo, place, link, imp, photo: modal.photo || '', ratio: modal.photo ? modal.ratio : 0 };
-    let undo;
-    if(modal.mode==='edit'){
-      const it = r.ideas.find(i => i.id===modal.id); if(!it) return;
-      const before = Object.assign({}, it); Object.assign(it, data);
-      undo = () => { Object.keys(it).forEach(k => delete it[k]); Object.assign(it, before); };
+    formErr('');
+    setBusy(true, modal.blob ? '사진 올리는 중…' : '저장 중…');
+    const m = modal;
+    // 1) a newly picked photo goes to the photo folder first; the card only keeps where it is
+    let newPath = '';
+    if(m.blob){
+      try{ newPath = await uploadPhoto(r.id, m.blob); }
+      catch(err){ if(modal===m){ setBusy(false); formErr('사진을 올리지 못했어요. '+errText(err)); } return; }
+      if(modal===m) setBusy(true, '저장 중…');
+    }
+    const hasPhoto = !!(newPath || m.photoPath);
+    const row = { kind, title, memo, place, link, imp, photo_path: newPath || m.photoPath || null, photo_ratio: hasPhoto ? m.ratio : null };
+    // 2) then the card itself
+    let res;
+    if(m.mode==='edit'){
+      res = await sb.from('bf_ideas').update(row).eq('id', m.id).select().single();
     } else {
       const spot = freeSpot();
-      r.ideas.push(Object.assign({ id: uid('i'), createdAt: Date.now(), x: spot.x, y: spot.y, z: maxZ(r) + 1 }, data));
-      undo = () => r.ideas.pop();
+      Object.assign(row, { room_id: r.id, x: spot.x, y: spot.y, z: maxZ(r) + 1 });
+      res = await sb.from('bf_ideas').insert(row).select().single();
     }
-    const prevUpdated = r.updatedAt; r.updatedAt = Date.now();
-    const ok = save();
-    if(!ok && data.photo){
-      // most likely the browser's storage is full of photos: keep the board as it was and say so
-      undo(); r.updatedAt = prevUpdated;
-      const fe = document.getElementById('form-err');
-      fe.textContent = '사진 저장 공간이 꽉 차서 붙이지 못했어요. 사진을 빼고 붙이거나, 다른 아이디어의 사진을 지운 뒤 다시 해 주세요.';
-      fe.hidden = false; return;
+    if(res.error || !res.data){
+      dropUpload(newPath);
+      if(modal===m){ setBusy(false); formErr('저장하지 못했어요. '+errText(res.error)); }
+      return;
     }
-    const wasEdit = modal.mode==='edit', fromDetail = modal.fromDetail, savedId = modal.id;
+    const saved = ideaFromRow(res.data);
+    saved.photo = hasPhoto ? m.photo : '';   // show the photo already on screen, no need to ask for a new link
+    if(m.mode==='edit'){
+      const i = r.ideas.findIndex(x => x.id===m.id);
+      if(i>=0) r.ideas[i] = saved; else r.ideas.push(saved);
+    } else {
+      r.ideas.push(saved);
+    }
+    r.updatedAt = Date.now();
+    m.busy = false;
+    if(modal!==m){ render(); return; }
+    const wasEdit = m.mode==='edit', fromDetail = m.fromDetail, savedId = saved.id;
     const sc0 = document.getElementById('cv-scroll'); if(sc0 && document.getElementById('cv')) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop };
     closeModal(false);
     view.tab = 'ideas'; if(!wasEdit) view.kind = 'all';
     render();
     if(fromDetail) openDetail(savedId);   // show the saved changes right away
-    toast(!ok ? '붙였지만 이 브라우저에서는 저장이 안 돼서 새로고침하면 사라져요.' : wasEdit ? '아이디어를 고쳤어요.' : '게시판에 붙였어요.');
+    toast(wasEdit ? '아이디어를 고쳤어요.' : '게시판에 붙였어요.');
   }
 
-  function deleteIdea(){
-    const r = rooms.find(x => x.id===view.id); if(!r || !modal) return;
-    r.ideas = r.ideas.filter(i => i.id!==modal.id); r.updatedAt = Date.now(); save();
+  async function deleteIdea(){
+    const r = rooms.find(x => x.id===view.id); if(!r || !modal || modal.busy) return;
+    const m = modal;
+    setBusy(true, '지우는 중…');
+    const { error } = await sb.from('bf_ideas').delete().eq('id', m.id);
+    if(error){ if(modal===m){ setBusy(false); m.confirmDel = false; renderModalActions(); formErr('지우지 못했어요. '+errText(error)); } return; }
+    r.ideas = r.ideas.filter(i => i.id!==m.id); r.updatedAt = Date.now();
+    if(modal!==m){ render(); return; }
     const sc0 = document.getElementById('cv-scroll'); if(sc0) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop };
     closeModal(false); render(); toast('아이디어를 지웠어요.');
   }
@@ -1181,11 +1297,154 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     if(focusBack){ const b = document.querySelector('.sc-hit[data-view="'+id+'"]'); if(b) b.focus({ preventScroll:true }); }
   }
 
+  // ---------- sign in / sign up ----------
+  function acctLine(){
+    return user ? '<p class="acct"><span>'+esc(user.email||'')+'</span><button type="button" data-act="logout">로그아웃</button></p>' : '';
+  }
+  function renderLogin(){
+    const up = view.mode==='signup';
+    root.innerHTML = '<div class="view create-view">'
+      + '<div class="memo create-memo"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:2deg"></span><div class="modal">'
+      +   '<div class="modal-head"><h1>'+(up ? '처음이라면, 가입부터 해요' : '다시 만나서 반가워요')+'</h1></div>'
+      +   '<p class="c-lede">'+(up ? '이메일과 비밀번호만 있으면 돼요. 다른 기기에서도 같은 방이 보여요.' : '로그인하면 모아 둔 아이디어 방이 그대로 있어요.')+'</p>'
+      +   '<form id="auth-form" novalidate>'
+      +     '<div class="field"><label for="a-email">이메일</label><input type="email" id="a-email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="'+esc(view.email||'')+'"><p class="err" id="e-a-email" hidden></p></div>'
+      +     '<div class="field"><label for="a-pw">비밀번호</label><input type="password" id="a-pw" autocomplete="'+(up?'new-password':'current-password')+'" minlength="6">'
+      +       (up ? '<p class="hint-s">6자 이상. 비밀번호 찾기는 아직 없으니 꼭 기억해 두세요.</p>' : '')
+      +       '<p class="err" id="e-a-pw" hidden></p></div>'
+      +     '<p class="form-err" id="form-err" hidden></p>'
+      +     '<div class="actions"><div class="right"><button type="submit" class="btn primary">'+(up ? '가입하고 시작하기' : '로그인')+'</button></div></div>'
+      +   '</form>'
+      +   '<p class="auth-switch">'+(up ? '이미 가입했나요? <button type="button" data-act="auth-login">로그인</button>' : '처음인가요? <button type="button" data-act="auth-signup">가입하기</button>')+'</p>'
+      + '</div></div></div>';
+    document.getElementById('auth-form').addEventListener('submit', onAuth);
+    ['a-email','a-pw'].forEach(id => document.getElementById(id).addEventListener('input', () => { setErr(id, ''); formErr(''); }));
+  }
+  async function onAuth(ev){
+    ev.preventDefault();
+    const btn = ev.target.querySelector('button[type=submit]'); if(btn.disabled) return;
+    const email = document.getElementById('a-email').value.trim();
+    const password = document.getElementById('a-pw').value;
+    const up = view.mode==='signup';
+    const errs = {
+      'a-email': !email ? '이메일을 적어 주세요.' : (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '이메일 주소가 맞는지 확인해 주세요.' : ''),
+      'a-pw': !password ? '비밀번호를 적어 주세요.' : (up && password.length < 6 ? '비밀번호는 6자 이상으로 정해 주세요.' : '')
+    };
+    let first = null;
+    Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
+    if(first){ document.getElementById(first).focus(); return; }
+    view.email = email;
+    btn.disabled = true; const label = btn.textContent; btn.textContent = up ? '가입하는 중…' : '로그인 중…';
+    let res;
+    try{ res = up ? await sb.auth.signUp({ email, password }) : await sb.auth.signInWithPassword({ email, password }); }
+    catch(err){ res = { error: err }; }
+    if(res.error){ btn.disabled = false; btn.textContent = label; formErr(errText(res.error)); return; }
+    if(up && !res.data.session){
+      // only happens if email confirmation is switched on in Supabase
+      btn.disabled = false; btn.textContent = label;
+      formErr('메일함에서 확인 링크를 누른 뒤 로그인해 주세요.'); view.mode = 'login'; return;
+    }
+    await signedIn(res.data.session.user);
+  }
+
+  function renderLoading(msg){
+    root.innerHTML = '<div class="view create-view"><p class="loading-note" role="status">'+esc(msg||'불러오는 중…')+'</p></div>';
+  }
+  function renderFail(){
+    root.innerHTML = '<div class="view create-view"><div class="loading-note" role="alert"><span>'+esc(view.msg||'잠시 문제가 생겼어요.')+'</span>'
+      + (sb ? '<button type="button" class="btn" data-act="retry">다시 불러오기</button>' : '') + '</div></div>';
+  }
+
+  async function loadRooms(){
+    view = { name:'loading', msg:'아이디어 방을 불러오는 중…' }; render();
+    const { data, error } = await sb.from('bf_rooms').select('*, bf_ideas(*)');
+    if(error || !data){ view = { name:'fail', msg:'방을 불러오지 못했어요. '+errText(error) }; render(); return; }
+    rooms = data.map(roomFromRow);
+    await signPhotos(rooms.flatMap(r => r.ideas)).catch(()=>{});
+    view = { name:'home' }; render();
+    offerMove();
+  }
+  async function signedIn(u){
+    if(user && u && user.id===u.id) return;
+    user = u; homeRoomId = null;
+    await loadRooms();
+  }
+  function signedOut(){
+    user = null; rooms = []; homeRoomId = null;
+    closeModal(false); closeDetail(false); closeMove();
+    view = { name:'login', mode:'login' }; render();
+  }
+
+  // ---------- one-time move: rooms made in this browser before the server existed ----------
+  const MOVED = KEY + '.moved';
+  function localRooms(){
+    try{
+      if(localStorage.getItem(MOVED)) return [];
+      const v = JSON.parse(localStorage.getItem(KEY) || '[]');
+      return Array.isArray(v) ? v.filter(r => r && r.dest) : [];
+    }catch(e){ return []; }
+  }
+  let moveBox = null;
+  function offerMove(){
+    const list = localRooms(); if(!list.length || moveBox) return;
+    const n = list.reduce((s,r)=>s + (r.ideas||[]).length, 0);
+    moveBox = document.createElement('div');
+    moveBox.className = 'scrim'; moveBox.id = 'move-scrim';
+    moveBox.innerHTML = '<div class="memo mig" role="dialog" aria-modal="true" aria-labelledby="mv-title"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:-2deg"></span><div class="modal">'
+      + '<div class="modal-head"><h2 id="mv-title">예전에 만든 방이 있어요</h2></div>'
+      + '<p>이 브라우저에만 저장된 방 '+list.length+'개(아이디어 '+n+'개)를 내 계정으로 옮길까요?</p>'
+      + '<small>옮기면 다른 기기에서도 보여요. 이 브라우저에 있던 원본은 그대로 남아 있어요.</small>'
+      + '<p class="form-err" id="mv-err" hidden></p>'
+      + '<div class="actions" id="mv-actions"><div class="right"><button type="button" class="btn" data-act="move-skip">안 옮길래요</button><button type="button" class="btn primary" data-act="move-go">옮기기</button></div></div>'
+      + '</div></div>';
+    document.body.appendChild(moveBox);
+    document.body.style.overflow = 'hidden';
+    moveBox.querySelector('[data-act=move-go]').focus();
+  }
+  function closeMove(){ if(moveBox){ moveBox.remove(); moveBox = null; document.body.style.overflow = ''; } }
+  async function moveLocal(){
+    const list = localRooms(); const btns = moveBox.querySelectorAll('button');
+    btns.forEach(b => b.disabled = true);
+    const go = moveBox.querySelector('[data-act=move-go]');
+    let done = 0, failed = 0;
+    for(const lr of list){
+      go.textContent = '옮기는 중… ('+(done+1)+'/'+list.length+')';
+      const start = lr.start && lr.end ? lr.start : null, end = lr.start && lr.end ? lr.end : null;
+      const { data: rd, error } = await sb.from('bf_rooms').insert({
+        dest: String(lr.dest).slice(0,30), name: String(lr.name || lr.dest+' 여행').slice(0,40),
+        type: lr.type==='group' ? 'group' : 'solo', start_date: start, end_date: end
+      }).select().single();
+      if(error || !rd){ failed++; continue; }
+      for(const li of (lr.ideas||[])){
+        let path = null;
+        if(li.photo && /^data:image\//.test(li.photo)){
+          try{ const blob = await (await fetch(li.photo)).blob(); path = await uploadPhoto(rd.id, blob); }catch(e){ path = null; }
+        }
+        const { error: ie } = await sb.from('bf_ideas').insert({
+          room_id: rd.id, kind: KINDS[li.kind] ? li.kind : 'etc', title: String(li.title||'아이디어').slice(0,50),
+          memo: String(li.memo||'').slice(0,200), place: String(li.place||'').slice(0,60), link: String(li.link||'').slice(0,300),
+          imp: IMP[li.imp] ? li.imp : 'nice', photo_path: path, photo_ratio: path ? (li.ratio||null) : null,
+          x: typeof li.x==='number' ? Math.round(li.x) : null, y: typeof li.y==='number' ? Math.round(li.y) : null, z: li.z||1
+        });
+        if(ie){ failed++; dropUpload(path); }
+      }
+      done++;
+    }
+    try{ localStorage.setItem(MOVED, String(Date.now())); }catch(e){}
+    closeMove();
+    await loadRooms();
+    toast(failed ? '옮겼지만 '+failed+'개는 옮기지 못했어요.' : '방 '+done+'개를 내 계정으로 옮겼어요.');
+  }
+
   function render(){
     car = null; canvasRoom = null;
+    if(!user && view.name!=='loading' && view.name!=='fail') view = { name:'login', mode: view.mode||'login', email: view.email };
     document.body.classList.toggle('room-mode', view.name==='room');
-    document.body.classList.toggle('paper-mode', view.name==='new-room' || (view.name==='home' && !rooms.length));
-    if(view.name==='new-room') renderCreate(false);
+    document.body.classList.toggle('paper-mode', ['new-room','login','loading','fail'].includes(view.name) || (view.name==='home' && !rooms.length));
+    if(view.name==='loading') renderLoading(view.msg);
+    else if(view.name==='fail') renderFail();
+    else if(view.name==='login') renderLogin();
+    else if(view.name==='new-room') renderCreate(false);
     else if(view.name==='room') renderRoom();
     else renderHome();
   }
@@ -1221,13 +1480,44 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     else if(act==='ask-room'){ view.menu = true; view.confirmRoom = true; render(); }
     else if(act==='keep-room'){ view.confirmRoom = false; view.menu = false; render(); }
     else if(act==='del-room'){
-      rooms = rooms.filter(r => r.id!==view.id); save();
-      view = { name:'home' }; render(); top(); toast('방을 지웠어요.');
+      const id = view.id;
+      el.disabled = true; el.textContent = '지우는 중…';
+      sb.from('bf_rooms').delete().eq('id', id).then(({ error }) => {
+        if(error){ toast('방을 지우지 못했어요. '+errText(error)); view.confirmRoom = false; view.menu = false; render(); return; }
+        rooms = rooms.filter(r => r.id!==id);
+        if(view.name==='room' && view.id===id){ view = { name:'home' }; render(); top(); }
+        toast('방을 지웠어요.');
+      });
     }
+    else if(act==='auth-login' || act==='auth-signup'){
+      const em = document.getElementById('a-email');
+      view = { name:'login', mode: act==='auth-signup' ? 'signup' : 'login', email: em ? em.value.trim() : '' }; render();
+      document.getElementById(view.email ? 'a-pw' : 'a-email').focus();
+    }
+    else if(act==='logout'){ sb.auth.signOut().then(()=>{}, ()=>{}); signedOut(); top(); }
+    else if(act==='retry'){ if(user) loadRooms(); else boot(); }
+    else if(act==='move-go'){ moveLocal(); }
+    else if(act==='move-skip'){ try{ localStorage.setItem(MOVED, 'skip'); }catch(e){} closeMove(); }
   });
 
-  render();
+  async function boot(){
+    if(!sb){ view = { name:'fail', msg:'서버에 연결하는 도구를 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.' }; render(); return; }
+    view = { name:'loading' }; render();
+    let session = null;
+    try{ const { data } = await sb.auth.getSession(); session = data && data.session; }catch(e){}
+    if(session) await signedIn(session.user);
+    else { view = { name:'login', mode:'login' }; render(); }
+  }
+  if(sb) sb.auth.onAuthStateChange((event, session) => {
+    // run outside the callback: supabase asks not to await its own calls in here
+    setTimeout(() => {
+      if(event==='SIGNED_OUT' && user) signedOut();
+      else if(event==='SIGNED_IN' && session && user && session.user.id!==user.id) { user = null; signedIn(session.user); }
+    }, 0);
+  });
+  boot();
 })();
 </script>
+
 </body>
 </html>
