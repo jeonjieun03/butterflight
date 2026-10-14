@@ -567,7 +567,46 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
 .memo .imps .pick-done input:checked + .body{border:1px solid #1F6B4A;background:#1F6B4A;color:#fff;transform:rotate(-1.5deg)}
 .memo .imps .pick-skip input:checked + .body{border:1px solid #A3392D;background:#A3392D;color:#fff;transform:rotate(1.5deg)}
 .memo .imps .pick-none input:checked + .body{border:1.5px dashed var(--m-ink);background:#FFFFFF;color:var(--m-ink)}
+/* friends, likes, comments, room menu extras */
+.join-link{margin-top:10px;background:none;border:0;padding:8px 6px;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.create-view .join-link{align-self:center;margin-top:14px}
+.rm-hint{font-size:12px;line-height:1.45;color:var(--card-muted)}
+.rmenu .btn.small{justify-content:flex-start;text-align:left}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.linkish{background:none;border:0;padding:2px 0;font:inherit;font-size:13px;font-weight:600;color:var(--m-ink);text-decoration:underline;text-underline-offset:3px}
+.linkish.danger{color:var(--m-red)}
+.pm-note{font-size:13px;line-height:1.5;color:var(--m-muted)}
+.memo .code-in{font-family:var(--f-mono);font-size:20px;letter-spacing:.25em;text-transform:uppercase}
+.invite{display:grid;gap:8px;justify-items:start;padding:14px 16px;margin-bottom:18px;background:#FFFFFF;border:1.5px dashed var(--m-line-strong);border-radius:6px;transform:rotate(-.5deg)}
+.invite-l{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--m-muted)}
+.invite-code{font-family:var(--f-mono);font-size:32px;font-weight:600;letter-spacing:.22em;color:var(--m-ink);line-height:1.1}
+.invite-acts{display:flex;flex-wrap:wrap;gap:8px}
+.people{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.people li{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;border:1px dashed var(--m-line-strong);border-radius:6px;background:var(--m-field)}
+.people .who-n{font-weight:600;color:var(--m-ink);overflow-wrap:anywhere}
+.people .tag{font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--m-ink);color:#FFFDF6}
+.people .tag.me{background:transparent;color:var(--m-ink);border:1px solid var(--m-ink)}
+.people .linkish{margin-left:auto}
+.dv-date b{color:var(--m-ink);font-weight:700}
+.dv-social{display:grid;gap:12px;padding-top:12px;border-top:1px dashed var(--m-line-strong)}
+.likes{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.like{border:1px solid var(--m-line-strong);background:#FFFFFF;color:var(--m-ink);border-radius:999px;padding:7px 14px;font-weight:700;font-size:13.5px}
+.like[aria-pressed="true"]{background:#B4321F;border-color:#B4321F;color:#FFF8F0}
+.like-who{font-size:12.5px;color:var(--m-muted);overflow-wrap:anywhere}
+.comments{display:grid;gap:8px}
+.cm-h{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--m-muted)}
+.comments ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.comments li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;padding:8px 10px;background:#FFFFFF;border-radius:4px;box-shadow:0 1px 0 var(--m-line)}
+.comments li b{font-size:13px;color:var(--m-ink)}
+.cm-body{flex:1 1 160px;font-size:14px;color:var(--m-ink);overflow-wrap:anywhere;white-space:pre-wrap}
+.comments li small{font-size:11.5px;color:var(--m-muted)}
+.memo form.cm-form{display:flex;flex-wrap:nowrap;align-items:center;gap:8px}
+.memo form.cm-form input{width:auto}
+.memo form.cm-form .btn{flex:none;width:auto}
+.memo .cm-form input{flex:1;min-width:0;background:var(--m-field);color:var(--m-ink);border:1px solid var(--m-line-strong);border-radius:6px;padding:9px 12px;font:inherit}
+.memo .cm-form input:focus{outline:none;border-color:var(--m-ink);background:#fff}
 @media (max-width:520px){
+  .invite-code{font-size:28px}
   .rc{grid-template-columns:1fr}
   .rc-checks,.rc-tag{justify-self:end;margin-top:-2px}
   .pl-item,.rc-main{grid-template-columns:52px minmax(0,1fr) auto;padding:9px 10px;gap:8px}
@@ -648,21 +687,26 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c==='x'?r:(r&3|8)).toString(16); });
   function ideaFromRow(d){
     return { id:d.id, kind:d.kind, title:d.title, memo:d.memo||'', place:d.place||'', link:d.link||'', imp:d.imp,
-      photoPath:d.photo_path||'', photo:'', ratio:d.photo_ratio||0,
+      photoPath:d.photo_path||'', photo: photoLinks[d.photo_path] || '', ratio:d.photo_ratio||0,
       x: typeof d.x==='number' ? d.x : undefined, y: typeof d.y==='number' ? d.y : undefined, z:d.z||1,
-      by:d.created_by, createdAt:ms(d.created_at) };
+      by:d.created_by, createdAt:ms(d.created_at),
+      likes:(d.bf_likes||[]).map(l => l.user_id),
+      comments:(d.bf_comments||[]).map(c => ({ id:c.id, uid:c.user_id, body:c.body, at:ms(c.created_at) })) };
   }
   function roomFromRow(d){
-    return { id:d.id, owner:d.owner_id, dest:d.dest, name:d.name, type:d.type, start:d.start_date||'', end:d.end_date||'',
+    return { id:d.id, owner:d.owner_id, dest:d.dest, name:d.name, type:d.type, start:d.start_date||'', end:d.end_date||'', code:d.invite_code||'',
+      members:(d.bf_room_members||[]).map(m => ({ uid:m.user_id, role:m.role, nick:m.nickname || (m.role==='owner' ? '방장' : '친구'), joined:ms(m.joined_at) })),
       ideas:(d.bf_ideas||[]).map(ideaFromRow), plans:(d.bf_plans||[]).map(planFromRow), createdAt:ms(d.created_at), updatedAt:ms(d.updated_at) };
   }
   // turn photo paths into short-lived links the browser can show (the photo folder is private)
+  const photoLinks = {};   // path -> link, kept so a refresh doesn't ask again
   async function signPhotos(ideas){
     const todo = ideas.filter(i => i.photoPath && !i.photo);
     if(!todo.length) return;
     const { data, error } = await sb.storage.from(BUCKET).createSignedUrls(todo.map(i => i.photoPath), SIGN_FOR);
     if(error || !data) return;
     const byPath = {}; data.forEach(s => { if(s && s.signedUrl) byPath[s.path] = s.signedUrl; });
+    Object.assign(photoLinks, byPath);
     todo.forEach(i => { if(byPath[i.photoPath]) i.photo = byPath[i.photoPath]; });
   }
   async function uploadPhoto(roomId, blob){
@@ -687,6 +731,11 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
 
   function errText(error){
     const m = String((error && (error.message || error.error_description)) || error || '');
+    if(typeof navigator!=='undefined' && navigator.onLine===false) return '인터넷 연결이 끊겼어요. 연결되면 다시 해 주세요.';
+    if(/photo limit/i.test(m)) return '이 방은 사진을 '+60+'장까지 붙일 수 있어요. 다른 카드의 사진을 빼고 다시 해 주세요.';
+    if(/quota|insufficient.?storage|read.?only|storage.*(full|limit exceeded)|exceed.*(quota|storage|limit)|507/i.test(m)) return '서버 저장 공간이 꽉 찼어요. 오래된 방을 이미지로 저장한 뒤 지우면 다시 쓸 수 있어요.';
+    if(/paused|service unavailable|upstream|\b503\b|\b502\b|\b504\b/i.test(m)) return '서버가 잠시 쉬고 있어요. 조금 뒤에 다시 해 주세요.';
+    if(/jwt expired|invalid jwt|refresh token|not signed in/i.test(m)) return '로그인이 풀렸어요. 새로고침한 뒤 다시 로그인해 주세요.';
     if(/invalid login credentials/i.test(m)) return '이메일이나 비밀번호가 맞지 않아요.';
     if(/already registered|already been registered|already exists/i.test(m)) return '이미 가입한 이메일이에요. 로그인해 주세요.';
     if(/password.*(6|least)/i.test(m)) return '비밀번호는 6자 이상으로 정해 주세요.';
@@ -694,7 +743,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     if(/invalid.*email|email.*invalid|unable to validate email/i.test(m)) return '이메일 주소가 맞는지 확인해 주세요.';
     if(/rate limit|too many/i.test(m)) return '시도가 너무 많았어요. 잠시 뒤에 다시 해 주세요.';
     if(/fetch|network|failed to|load failed/i.test(m)) return '서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.';
-    if(/payload too large|maximum allowed size|exceeded/i.test(m)) return '사진 파일이 너무 커요. 다른 사진을 골라 주세요.';
+    if(/payload too large|maximum allowed size|object exceeded|file size/i.test(m)) return '사진 파일이 너무 커요. 다른 사진을 골라 주세요.';
     return '잠시 문제가 생겼어요. 다시 해 주세요.';
   }
 
@@ -749,6 +798,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       + '</div>'
       + dots
       + '<button type="button" class="new-room" data-act="new-room">+ 새 방 만들기</button>'
+      + '<button type="button" class="join-link" data-act="join">초대 코드로 들어가기</button>'
       + acctLine()
       + '</div>';
 
@@ -860,7 +910,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       +     '</fieldset>'
       +     '<div class="actions"><div class="right">'+(first?'':'<button type="button" class="btn" data-act="'+cancel+'">취소</button>')+'<button type="submit" class="btn primary">'+(ed ? '저장' : '방 만들기')+'</button></div></div>'
       +   '</form>'
-      + '</div></div>'+(first ? acctLine() : '')+'</div>';
+      + '</div></div>'+(first ? '<button type="button" class="join-link" data-act="join">초대받았나요? 초대 코드로 들어가기</button>'+acctLine() : '')+'</div>';
     document.getElementById('room-form').addEventListener('submit', ev => onSaveRoom(ev, ed));
     ['r-dest','r-start','r-end'].forEach(id => document.getElementById(id).addEventListener('input', () => setErr(id, '')));
     if(!first) document.getElementById('r-dest').focus();
@@ -903,6 +953,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     const { data, error } = await sb.from('bf_rooms').insert(row).select().single();
     if(error || !data){ btn.disabled = false; btn.textContent = label; toast('방을 만들지 못했어요. '+errText(error)); return; }
     const room = roomFromRow(data);
+    if(!room.members.length) room.members = [selfMember()];
     rooms.push(room);
     homeRoomId = room.id;
     view = { name:'room', id:room.id, tab:'ideas', kind:'all' };
@@ -1141,9 +1192,19 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
             '<button type="button" class="kst" data-kind="'+k+'" aria-pressed="'+(view.kind===k)+'" style="--r:'+ROT[k]+'deg"'+(k!=='all'&&!counts[k]?' disabled':'')+'>'+l+(k!=='all'&&counts[k]?'<span class="n">'+counts[k]+'</span>':'')+'</button>').join('')
         + '</div>' : '';
 
+    const own = isOwner(r), mi = (label, act, cls) => '<button type="button" class="btn small'+(cls?' '+cls:'')+'" data-act="'+act+'">'+label+'</button>';
     const menu = !view.menu ? '' : view.confirmRoom
-      ? '<div class="rmenu"><p>“'+esc(r.name)+'” 방과 아이디어 '+r.ideas.length+'개, 일정·기록을 모두 지울까요? 되돌릴 수 없어요.</p><div class="row"><button type="button" class="btn small" data-act="keep-room">취소</button><button type="button" class="btn small danger" data-act="del-room">삭제</button></div></div>'
-      : '<div class="rmenu">'+(isOwner(r) ? '<button type="button" class="btn small" data-act="edit-room">방 정보 고치기</button><button type="button" class="btn small ghost-danger" data-act="ask-room">이 방 삭제</button>' : '<p>방 정보는 방을 만든 사람만 고칠 수 있어요.</p>')+'</div>';
+      ? '<div class="rmenu"><p>“'+esc(r.name)+'” 방과 아이디어 '+r.ideas.length+'개, 일정·기록, 사진을 모두 지울까요? 되돌릴 수 없어요.</p>'
+        + (r.ideas.length ? '<p class="rm-hint">지우기 전에 게시판을 이미지로 저장해 두면 추억은 남아요.</p>'+mi('먼저 이미지로 저장','export') : '')
+        + '<div class="row"><button type="button" class="btn small" data-act="keep-room">취소</button><button type="button" class="btn small danger" data-act="del-room">삭제</button></div></div>'
+      : view.confirmLeave
+      ? '<div class="rmenu"><p>“'+esc(r.name)+'” 방에서 나갈까요? 내가 붙인 아이디어는 방에 남아요. 다시 들어오려면 초대 코드가 필요해요.</p><div class="row"><button type="button" class="btn small" data-act="keep-room">취소</button><button type="button" class="btn small danger" data-act="leave">나가기</button></div></div>'
+      : '<div class="rmenu">'
+        + mi('함께하는 사람'+((r.members||[]).length > 1 ? ' '+r.members.length+'명' : ''), 'people')
+        + mi('이미지로 저장', 'export') + mi('못 간 후보 다른 방에 담기', 'carry')
+        + (own ? mi('방 정보 고치기', 'edit-room') + (status(r)==='done' ? '<p class="rm-hint">여행이 끝난 방이에요. 이미지로 저장한 뒤 지우면 서버 공간을 아낄 수 있어요.</p>' : '') + mi('이 방 삭제', 'ask-room', 'ghost-danger')
+               : mi('방 나가기', 'ask-leave', 'ghost-danger'))
+        + '</div>';
 
     const tabs = [['ideas','아이디어', r.ideas.length],['plan','일정', plansReady ? r.plans.filter(p => !p.spont).length : undefined],['record','여행 기록']];
     root.innerHTML = '<div class="view room-view">'
@@ -1168,7 +1229,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
   function planFromRow(d){
     return { id:d.id, ideaId:d.idea_id||'', title:d.title, day:d.day||'', time:d.at_time||'', place:d.place||'',
       sort:d.sort||0, status:d.status||'', spont:!!d.spontaneous, note:d.note||'',
-      photoPath:d.photo_path||'', photo:'', ratio:d.photo_ratio||0, by:d.created_by, createdAt:ms(d.created_at) };
+      photoPath:d.photo_path||'', photo: photoLinks[d.photo_path] || '', ratio:d.photo_ratio||0, by:d.created_by, createdAt:ms(d.created_at) };
   }
   const dayList = r => { if(!r.start || !r.end) return []; const n = diff(r.start, r.end) + 1; return Array.from({ length:n }, (_, i) => addDays(r.start, i)); };
   const inTrip = (r, day) => !!day && !!r.start && day >= r.start && day <= r.end;
@@ -1300,9 +1361,9 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       a.innerHTML = '<div class="confirm"><p>'+delWords[pm.type][1]+'</p><button type="button" class="btn" data-act="pm-keep">취소</button><button type="button" class="btn danger" data-act="pm-del">지우기</button></div>';
       return;
     }
-    const save = pm.type==='pick' ? '일정에 넣기' : pm.type==='item' && !pm.id ? '일정에 넣기' : '저장';
+    const save = pm.saveLabel!==undefined ? pm.saveLabel : pm.type==='pick' ? '일정에 넣기' : pm.type==='item' && !pm.id ? '일정에 넣기' : '저장';
     a.innerHTML = (canDel ? '<button type="button" class="btn ghost-danger" data-act="pm-ask-del">'+delWords[pm.type][0]+'</button>' : '')
-      + '<div class="right"><button type="button" class="btn" data-act="close-pm">취소</button><button type="submit" class="btn primary">'+save+'</button></div>';
+      + '<div class="right"><button type="button" class="btn" data-act="close-pm">'+(pm.cancelLabel||'취소')+'</button>'+(save ? '<button type="submit" class="btn primary">'+save+'</button>' : '')+'</div>';
   }
   const dayOptions = (r, cur) => {
     const opts = dayList(r).map(d => '<option value="'+d+'"'+(d===cur?' selected':'')+'>'+dayTag(r, d)+' · '+fmt(d)+'</option>');
@@ -1405,7 +1466,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     }
     f += '<div class="field"><span class="field-title">사진 <span class="opt">(선택)</span></span><div id="photo-slot"></div><p class="err" id="e-i-photo" hidden></p></div>'
       +  '<div class="field"><label for="p-note" id="p-note-l">'+noteLabel(st)+' <span class="opt">(선택)</span></label><textarea id="p-note" maxlength="300" placeholder="'+notePh(st)+'">'+esc(p ? p.note : '')+'</textarea></div>';
-    openPM({ type:'rec', id: p ? p.id : null, spont, day: p ? p.day : day, photo: p ? p.photo : '', photoPath: p ? p.photoPath : '', blob:null, ratio: p ? p.ratio : 0 },
+    openPM({ type:'rec', id: p ? p.id : null, spont, day: p ? p.day : day, photo: p ? p.photo : '', photoPath: p ? p.photoPath : '', origPath: p ? p.photoPath : '', blob:null, ratio: p ? p.ratio : 0 },
       spont ? (p ? '즉흥 기록' : '계획에 없던 일 기록하기') : esc(p.title), f, saveRecord);
     document.querySelectorAll('input[name=p-st]').forEach(x => x.addEventListener('change', () => {
       document.getElementById('p-note-l').innerHTML = noteLabel(x.value)+' <span class="opt">(선택)</span>';
@@ -1427,6 +1488,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     } else {
       row.status = (document.querySelector('input[name=p-st]:checked') || {}).value || null;
     }
+    if(m.blob && !m.origPath && photoCount(r, m.id) >= PHOTO_CAP){ formErr(errText('photo limit')); return; }
     formErr(''); setBusy(true, m.blob ? '사진 올리는 중…' : '저장 중…');
     let newPath = '';
     if(m.blob){
@@ -1439,6 +1501,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       ? await sb.from('bf_plans').update(row).eq('id', m.id).select().single()
       : await sb.from('bf_plans').insert(Object.assign(row, { room_id:r.id, day:m.day||null, spontaneous:true, status:'done' })).select().single();
     if(res.error || !res.data){ dropUpload(newPath); setBusy(false); formErr('저장하지 못했어요. '+errText(res.error)); return; }
+    if(m.origPath && m.origPath!==(newPath || m.photoPath)) removePhotos([m.origPath]);
     const saved = planFromRow(res.data); saved.photo = hasPhoto ? m.photo : '';
     const i = r.plans.findIndex(p => p.id===saved.id); if(i >= 0) r.plans[i] = saved; else r.plans.push(saved);
     r.updatedAt = Date.now();
@@ -1460,7 +1523,8 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     setBusy(true, '지우는 중…');
     const { error } = await sb.from('bf_plans').delete().eq('id', pm.id);
     if(error){ setBusy(false); pm.confirmDel = false; renderPMActions(); formErr('지우지 못했어요. '+errText(error)); return; }
-    const type = pm.type;
+    const type = pm.type, gone = r.plans.find(p => p.id===pm.id);
+    if(gone) removePhotos([gone.photoPath]);
     r.plans = r.plans.filter(p => p.id!==pm.id); r.updatedAt = Date.now();
     pm.busy = false; closePM(); keepScroll(); render();
     toast(type==='item' ? '일정에서 뺐어요.' : '기록을 지웠어요.');
@@ -1473,7 +1537,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     const r = rooms.find(x => x.id===view.id); if(!r) return;
     const it = mode==='edit' ? r.ideas.find(i => i.id===id) : null;
     if(mode==='edit' && !it) return;
-    modal = { mode, id, photo: it ? (it.photo||'') : '', photoPath: it ? (it.photoPath||'') : '', blob:null, ratio: it ? (it.ratio||0) : 0,
+    modal = { mode, id, photo: it ? (it.photo||'') : '', photoPath: it ? (it.photoPath||'') : '', origPath: it ? (it.photoPath||'') : '', blob:null, ratio: it ? (it.ratio||0) : 0,
               confirmDel:false, busy:false, opener: document.activeElement, fromDetail: !!opts.fromDetail };
     const v = (k, dflt) => it ? (it[k]||'') : (dflt||'');
     const kind = it ? it.kind : (view.kind!=='all' ? view.kind : 'place');
@@ -1545,18 +1609,18 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     }
     document.getElementById('i-photo').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if(f) takePhoto(f); });
   }
-  // shrink the photo before storing it: longest side 960px, JPEG
+  // shrink the photo before storing it: longest side 720px, JPEG (about 50-120KB)
   function readPhoto(file){
     return new Promise((resolve, reject) => {
       if(!/^image\//.test(file.type||'')) return reject(new Error('type'));
       const url = URL.createObjectURL(file), img = new Image();
       img.onload = () => {
-        const w = img.naturalWidth, h = img.naturalHeight, k = Math.min(1, 960 / Math.max(w, h));
+        const w = img.naturalWidth, h = img.naturalHeight, k = Math.min(1, 720 / Math.max(w, h));
         const c = document.createElement('canvas'); c.width = Math.round(w*k); c.height = Math.round(h*k);
         const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.drawImage(img, 0, 0, c.width, c.height);
         URL.revokeObjectURL(url);
-        const src = c.toDataURL('image/jpeg', 0.8);
-        c.toBlob(blob => blob ? resolve({ src, blob, ratio: w / h }) : reject(new Error('blob')), 'image/jpeg', 0.8);
+        const src = c.toDataURL('image/jpeg', 0.78);
+        c.toBlob(blob => blob ? resolve({ src, blob, ratio: w / h }) : reject(new Error('blob')), 'image/jpeg', 0.78);
       };
       img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('load')); };
       img.src = url;
@@ -1597,6 +1661,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
     if(first){ document.getElementById(first).focus(); return; }
 
+    if(modal.blob && !modal.origPath && photoCount(r, modal.id) >= PHOTO_CAP){ formErr(errText('photo limit')); return; }
     formErr('');
     setBusy(true, modal.blob ? '사진 올리는 중…' : '저장 중…');
     const m = modal;
@@ -1623,8 +1688,10 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       if(modal===m){ setBusy(false); formErr('저장하지 못했어요. '+errText(res.error)); }
       return;
     }
+    if(m.origPath && m.origPath!==(newPath || m.photoPath)) removePhotos([m.origPath]);   // the old photo was replaced or taken out
     const saved = ideaFromRow(res.data);
     saved.photo = hasPhoto ? m.photo : '';   // show the photo already on screen, no need to ask for a new link
+    if(m.mode==='edit'){ const old = r.ideas.find(x => x.id===m.id); if(old){ saved.likes = old.likes; saved.comments = old.comments; } }
     if(m.mode==='edit'){
       const i = r.ideas.findIndex(x => x.id===m.id);
       if(i>=0) r.ideas[i] = saved; else r.ideas.push(saved);
@@ -1649,6 +1716,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     setBusy(true, '지우는 중…');
     const { error } = await sb.from('bf_ideas').delete().eq('id', m.id);
     if(error){ if(modal===m){ setBusy(false); m.confirmDel = false; renderModalActions(); formErr('지우지 못했어요. '+errText(error)); } return; }
+    removePhotos([m.origPath]);
     r.ideas = r.ideas.filter(i => i.id!==m.id); r.updatedAt = Date.now();
     r.plans.forEach(p => { if(p.ideaId===m.id) p.ideaId = ''; });   // the server keeps the entry and just drops the link
     if(modal!==m){ render(); return; }
@@ -1684,13 +1752,15 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
       +   (it.photo ? '<figure class="dv-photo"><img src="'+it.photo+'" alt="'+esc(it.title)+' 사진"></figure>' : '')
       +   (it.memo ? '<p class="dv-memo">'+esc(it.memo)+'</p>' : '')
       +   (rows.length ? '<dl class="dv-meta">'+rows.join('')+'</dl>' : '')
-      +   (it.createdAt ? '<p class="dv-date">'+longDate(it.createdAt)+'에 붙였어요</p>' : '')
+      +   (it.createdAt ? '<p class="dv-date">'+(isShared(r) ? '<b>'+esc(nickOf(r, it.by))+'</b>님이 ' : '')+longDate(it.createdAt)+'에 붙였어요</p>' : '')
+      +   (togetherReady ? '<div class="dv-social" id="dv-social"></div>' : '')
       + '</div>'
       + '<div class="actions"><div class="right"><button type="button" class="btn" data-act="close-detail">닫기</button>'+(plansReady ? '<button type="button" class="btn" data-act="plan-add">일정에 넣기</button>' : '')+'<button type="button" class="btn primary" data-act="edit-from-detail">수정하기</button></div></div>'
       + '</div></div>';
     document.body.appendChild(wrap);
     document.body.style.overflow = 'hidden';
     wrap.addEventListener('mousedown', e => { if(e.target===wrap) closeDetail(); });
+    renderSocial();
     wrap.querySelector('.x').focus();
   }
   function closeDetail(focusBack){
@@ -1700,6 +1770,434 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     document.body.style.overflow = '';
     const id = detail.id; detail = null;
     if(focusBack){ const b = document.querySelector('.sc-hit[data-view="'+id+'"]'); if(b) b.focus({ preventScroll:true }); }
+  }
+
+  // =====================================================================
+  // together: friends in a room (invite code + nickname), likes & comments
+  // =====================================================================
+  let togetherReady = true;   // false until 03_butterflight_together.sql has been run
+  const PHOTO_CAP = 60;
+  const JOIN_KEY = 'bf.join';
+  const me = () => user ? user.id : '';
+  const nickOf = (r, uid) => { const m = r && (r.members||[]).find(x => x.uid===uid); return m ? m.nick : (uid===me() ? '나' : '나간 사람'); };
+  const selfMember = () => ({ uid: me(), role:'owner', nick: ((user && user.email) || '나').split('@')[0].slice(0,20) || '나', joined: Date.now() });
+  const isShared = r => !!r && (r.type==='group' || (r.members||[]).length > 1);
+  const photoCount = (r, exceptId) => r.ideas.concat(r.plans).filter(x => x.id!==exceptId && (x.photoPath || x.photo)).length;
+  const joinErr = e => {
+    const m = String((e && e.message) || e || '');
+    if(/invite code not found/i.test(m)) return '초대 코드를 찾을 수 없어요. 코드를 다시 확인해 주세요.';
+    if(/room is solo/i.test(m)) return '혼자 쓰는 방이라 들어갈 수 없어요. 방을 만든 친구에게 ‘함께’로 바꿔 달라고 해 주세요.';
+    if(/room is full/i.test(m)) return '이 방은 20명이 꽉 찼어요.';
+    if(/nickname/i.test(m)) return '이름은 1~20자로 적어 주세요.';
+    return errText(e);
+  };
+  function copyText(text){
+    if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise((ok, no) => {
+      const t = document.createElement('textarea'); t.value = text; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select();
+      try{ document.execCommand('copy') ? ok() : no(); }catch(e){ no(e); } finally{ t.remove(); }
+    });
+  }
+  const inviteLink = code => location.origin + location.pathname + '?join=' + code;
+
+  // ----- join a room by code -----
+  function pendingJoin(){ try{ return sessionStorage.getItem(JOIN_KEY) || ''; }catch(e){ return ''; } }
+  function setPendingJoin(code){ try{ if(code) sessionStorage.setItem(JOIN_KEY, code); else sessionStorage.removeItem(JOIN_KEY); }catch(e){} }
+  // a link like ?join=ABC123 is remembered until the person has signed in
+  (function readJoinLink(){
+    try{
+      const q = new URLSearchParams(location.search), c = q.get('join');
+      if(c){ setPendingJoin(c.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6)); q.delete('join');
+        history.replaceState(null, '', location.pathname + (q.toString() ? '?'+q : '') + location.hash); }
+    }catch(e){}
+  })();
+
+  function renderJoin(){
+    root.innerHTML = '<div class="view create-view">'
+      + '<button type="button" class="back" data-act="home">← '+(rooms.length ? '방 목록' : '처음으로')+'</button>'
+      + '<div class="memo create-memo"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:2deg"></span><div class="modal">'
+      +   '<div class="modal-head"><h1>초대받은 방에 들어가기</h1></div>'
+      +   '<p class="c-lede">친구에게 받은 초대 코드를 넣고, 그 방에서 쓸 이름을 정해 주세요.</p>'
+      +   (togetherReady ? '' : '<p class="form-err">친구 초대 기능이 아직 서버에 준비되지 않았어요. (03번 SQL 실행 필요)</p>')
+      +   '<form id="join-form" novalidate>'
+      +     '<div class="field"><label for="j-code">초대 코드</label><input type="text" id="j-code" class="code-in" maxlength="9" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="예: K7M2QX" value="'+esc(view.code||'')+'"><p class="err" id="e-j-code" hidden></p></div>'
+      +     '<div class="field"><label for="j-nick">이 방에서 쓸 내 이름</label><input type="text" id="j-nick" maxlength="20" autocomplete="nickname" placeholder="예: 지은"><p class="hint-s">카드에 누가 붙였는지 이 이름으로 보여요.</p><p class="err" id="e-j-nick" hidden></p></div>'
+      +     '<p class="form-err" id="form-err" hidden></p>'
+      +     '<div class="actions"><div class="right"><button type="button" class="btn" data-act="home">취소</button><button type="submit" class="btn primary">들어가기</button></div></div>'
+      +   '</form>'
+      + '</div></div></div>';
+    document.getElementById('join-form').addEventListener('submit', onJoin);
+    ['j-code','j-nick'].forEach(id => document.getElementById(id).addEventListener('input', () => { setErr(id, ''); formErr(''); }));
+    document.getElementById(view.code ? 'j-nick' : 'j-code').focus();
+  }
+  async function onJoin(ev){
+    ev.preventDefault();
+    const btn = ev.target.querySelector('button[type=submit]'); if(btn.disabled) return;
+    const code = document.getElementById('j-code').value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const nick = document.getElementById('j-nick').value.trim();
+    const errs = { 'j-code': code.length===6 ? '' : '초대 코드 6자리를 넣어 주세요.', 'j-nick': nick ? '' : '이 방에서 쓸 이름을 적어 주세요.' };
+    let first = null;
+    Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
+    if(first){ document.getElementById(first).focus(); return; }
+    btn.disabled = true; const label = btn.textContent; btn.textContent = '들어가는 중…';
+    const { data, error } = await sb.rpc('bf_join_room', { p_code: code, p_nickname: nick });
+    if(error || !data){ btn.disabled = false; btn.textContent = label; formErr(joinErr(error)); return; }
+    setPendingJoin('');
+    await refreshRooms();
+    const r = rooms.find(x => x.id===data);
+    homeRoomId = data;
+    view = r ? { name:'room', id:data, tab:'ideas', kind:'all' } : { name:'home' };
+    render();
+    toast(r ? '‘'+r.dest+'’ 방에 들어왔어요. 같이 아이디어를 붙여 봐요!' : '방에 들어왔어요.');
+  }
+
+  // ----- people in this room: invite code, names, leave / remove -----
+  // always show who is in the room right now (friends may have joined since the page loaded)
+  async function openPeople(){
+    const r = curRoom(); if(!r) return;
+    if(togetherReady && !(pm && pm.type==='people')){
+      const { data, error } = await sb.from('bf_room_members').select('*').eq('room_id', r.id);
+      if(!error && data) r.members = data.map(m => ({ uid:m.user_id, role:m.role, nick:m.nickname || (m.role==='owner' ? '방장' : '친구'), joined:ms(m.joined_at) }));
+      if(curRoom()!==r) return;
+    }
+    const owner = isOwner(r), mine = (r.members||[]).find(m => m.uid===me());
+    let h = '';
+    if(!togetherReady){
+      h += '<p class="pm-note">친구 초대 기능이 아직 서버에 준비되지 않았어요. Supabase SQL Editor에서 03_butterflight_together.sql 을 실행해 주세요.</p>';
+    } else if(r.type==='group'){
+      h += '<div class="invite"><p class="invite-l">초대 코드</p><p class="invite-code" aria-label="초대 코드 '+esc(r.code.split('').join(' '))+'">'+esc(r.code)+'</p>'
+        +  '<div class="invite-acts"><button type="button" class="btn small" data-act="copy-code">코드 복사</button><button type="button" class="btn small" data-act="share-link">초대 링크 보내기</button></div>'
+        +  '<p class="pm-note">친구가 링크를 열거나, 앱에서 ‘초대 코드로 들어가기’에 코드를 넣으면 이 방에 들어와요.</p>'
+        +  (owner ? '<button type="button" class="linkish" data-act="reset-code">새 코드 만들기</button><span class="pm-note"> · 새로 만들면 예전 코드와 링크로는 못 들어와요</span>' : '')
+        +  '</div>';
+    } else {
+      h += '<p class="pm-note">혼자 쓰는 방이에요. 친구를 부르려면 '+(owner ? '<button type="button" class="linkish" data-act="edit-room-pm">방 정보</button>에서' : '방을 만든 사람이 방 정보에서')+' ‘함께’로 바꿔 주세요.</p>';
+    }
+    const list = (r.members||[]).slice().sort((a,b) => (a.role==='owner'?-1:0)-(b.role==='owner'?-1:0) || a.joined-b.joined);
+    if(list.length){
+      h += '<fieldset class="field"><legend>함께하는 사람 '+list.length+'명</legend><ul class="people">'
+        +  list.map(m => '<li><span class="who-n">'+esc(m.nick)+'</span>'+(m.role==='owner'?'<span class="tag">방장</span>':'')+(m.uid===me()?'<span class="tag me">나</span>':'')
+             + (owner && m.role!=='owner' ? '<button type="button" class="linkish danger" data-act="kick" data-uid="'+m.uid+'"'+(pm && pm.kick===m.uid?' data-sure="1"':'')+'>'+(pm && pm.kick===m.uid ? '정말 내보낼까요?' : '내보내기')+'</button>' : '')
+             + '</li>').join('')
+        +  '</ul></fieldset>';
+    }
+    if(mine && togetherReady){
+      h += '<div class="field"><label for="p-nick">이 방에서 내 이름</label><input type="text" id="p-nick" maxlength="20" autocomplete="nickname" value="'+esc(mine.nick)+'"><p class="err" id="e-p-nick" hidden></p></div>';
+    }
+    const keepKick = pm && pm.type==='people' ? pm.kick : '';
+    if(pm) closePM(true);
+    openPM({ type:'people', kick: keepKick, saveLabel: mine && togetherReady ? '이름 저장' : '', cancelLabel:'닫기' }, '함께하는 사람', h, saveNick);
+  }
+  async function saveNick(){
+    const r = curRoom(); if(!r) return;
+    const el = document.getElementById('p-nick'); if(!el) return;
+    const nick = el.value.trim();
+    setErr('p-nick', nick ? '' : '이름을 적어 주세요.'); if(!nick){ el.focus(); return; }
+    const mine = (r.members||[]).find(m => m.uid===me());
+    if(mine && mine.nick===nick){ closePM(); return; }
+    setBusy(true, '저장 중…');
+    const { error } = await sb.rpc('bf_set_nickname', { p_room: r.id, p_nickname: nick });
+    if(error){ setBusy(false); formErr('이름을 바꾸지 못했어요. '+joinErr(error)); return; }
+    if(mine) mine.nick = nick;
+    pm.busy = false; closePM(); toast('이 방에서 내 이름을 ‘'+nick+'’(으)로 바꿨어요.');
+  }
+  async function kickMember(uid, sure){
+    const r = curRoom(); if(!r || !pm) return;
+    if(!sure){ pm.kick = uid; openPeople(); return; }
+    const { error } = await sb.rpc('bf_remove_member', { p_room: r.id, p_user: uid });
+    if(error){ formErr('내보내지 못했어요. '+errText(error)); return; }
+    const who = nickOf(r, uid);
+    r.members = r.members.filter(m => m.uid!==uid);
+    pm.kick = ''; openPeople(); toast('‘'+who+'’님을 방에서 내보냈어요.');
+  }
+  async function resetCode(){
+    const r = curRoom(); if(!r) return;
+    const { data, error } = await sb.rpc('bf_reset_invite_code', { p_room: r.id });
+    if(error || !data){ formErr('새 코드를 만들지 못했어요. '+errText(error)); return; }
+    r.code = data; openPeople(); toast('새 초대 코드를 만들었어요.');
+  }
+  async function shareLink(){
+    const r = curRoom(); if(!r) return;
+    const url = inviteLink(r.code), text = 'Butterflight ‘'+r.name+'’ 방에 초대해요! 초대 코드: '+r.code;
+    if(navigator.share && matchMedia('(pointer: coarse)').matches){
+      try{ await navigator.share({ title:'Butterflight 초대', text, url }); return; }catch(e){ if(e && e.name==='AbortError') return; }
+    }
+    copyText(text+'\n'+url).then(() => toast('초대 링크를 복사했어요. 친구에게 붙여넣어 보내 주세요.'), () => toast('복사하지 못했어요. 코드를 직접 알려 주세요: '+r.code));
+  }
+  async function leaveRoom(el){
+    const r = curRoom(); if(!r) return;
+    el.disabled = true; el.textContent = '나가는 중…';
+    const { error } = await sb.rpc('bf_leave_room', { p_room: r.id });
+    if(error){ toast('방에서 나가지 못했어요. '+errText(error)); view.menu = false; view.confirmLeave = false; render(); return; }
+    rooms = rooms.filter(x => x.id!==r.id);
+    view = { name:'home' }; render(); window.scrollTo(0,0);
+    toast('‘'+r.dest+'’ 방에서 나왔어요.');
+  }
+
+  // ----- likes & comments (shown in the idea's detail view) -----
+  function socialHtml(r, it){
+    if(!togetherReady) return '';
+    const liked = it.likes.includes(me());
+    const who = it.likes.map(uid => nickOf(r, uid));
+    const comments = it.comments.slice().sort((a,b) => a.at-b.at);
+    return '<div class="likes"><button type="button" class="like" data-act="like" aria-pressed="'+liked+'" aria-label="좋아요'+(liked?' 취소':'')+', 지금 '+it.likes.length+'개"><span aria-hidden="true">'+(liked?'♥':'♡')+'</span> 좋아요 '+it.likes.length+'</button>'
+      + (who.length ? '<span class="like-who">'+esc(who.join(', '))+'</span>' : '') + '</div>'
+      + '<div class="comments"><p class="cm-h">댓글 '+comments.length+'</p>'
+      + (comments.length ? '<ul>'+comments.map(c => '<li><b>'+esc(nickOf(r, c.uid))+'</b><span class="cm-body">'+esc(c.body)+'</span><small>'+shortWhen(c.at)+'</small>'
+          + (c.uid===me() || isOwner(r) ? '<button type="button" class="linkish" data-act="del-comment" data-id="'+c.id+'" aria-label="댓글 지우기">지우기</button>' : '') + '</li>').join('')+'</ul>' : '')
+      + '<form class="cm-form" id="cm-form"><label class="sr" for="cm-body">댓글</label><input type="text" id="cm-body" maxlength="200" placeholder="댓글 남기기" autocomplete="off"><button type="submit" class="btn small">남기기</button></form>'
+      + '</div>';
+  }
+  const shortWhen = ts => { const d = new Date(ts), now = new Date(); return (d.toDateString()===now.toDateString()) ? pad(d.getHours())+':'+pad(d.getMinutes()) : (d.getMonth()+1)+'.'+d.getDate(); };
+  function renderSocial(){
+    const box = document.getElementById('dv-social'); if(!box || !detail) return;
+    const r = curRoom(), it = r && r.ideas.find(i => i.id===detail.id); if(!it) return;
+    const typing = document.getElementById('cm-body'), draft = typing ? typing.value : '', hadFocus = typing && document.activeElement===typing;
+    box.innerHTML = socialHtml(r, it);
+    const f = document.getElementById('cm-form');
+    if(f){ f.addEventListener('submit', onComment); const t = document.getElementById('cm-body'); t.value = draft; if(hadFocus) t.focus(); }
+  }
+  async function toggleLike(){
+    const r = curRoom(), it = r && detail && r.ideas.find(i => i.id===detail.id); if(!it) return;
+    const had = it.likes.includes(me());
+    it.likes = had ? it.likes.filter(u => u!==me()) : it.likes.concat(me());
+    renderSocial();
+    const q = had ? sb.from('bf_likes').delete().eq('idea_id', it.id).eq('user_id', me()) : sb.from('bf_likes').insert({ idea_id: it.id });
+    const { error } = await q;
+    if(error && !/duplicate|unique/i.test(error.message||'')){
+      it.likes = had ? it.likes.concat(me()) : it.likes.filter(u => u!==me()); renderSocial();
+      toast('좋아요를 저장하지 못했어요. '+errText(error));
+    }
+  }
+  async function onComment(ev){
+    ev.preventDefault();
+    const r = curRoom(), it = r && detail && r.ideas.find(i => i.id===detail.id); if(!it) return;
+    const t = document.getElementById('cm-body'), body = t.value.trim(); if(!body || t.disabled) return;
+    t.disabled = true;
+    const { data, error } = await sb.from('bf_comments').insert({ idea_id: it.id, body }).select().single();
+    t.disabled = false;
+    if(error || !data){ toast('댓글을 남기지 못했어요. '+errText(error)); t.focus(); return; }
+    it.comments.push({ id:data.id, uid:data.user_id, body:data.body, at:ms(data.created_at) });
+    t.value = ''; renderSocial(); document.getElementById('cm-body').focus();
+  }
+  async function deleteComment(id){
+    const r = curRoom(), it = r && detail && r.ideas.find(i => i.id===detail.id); if(!it) return;
+    const before = it.comments;
+    it.comments = it.comments.filter(c => c.id!==id); renderSocial();
+    const { error } = await sb.from('bf_comments').delete().eq('id', id);
+    if(error){ it.comments = before; renderSocial(); toast('댓글을 지우지 못했어요. '+errText(error)); }
+  }
+
+  // ----- quiet refresh: friends' changes show up when you come back to the app -----
+  let lastRefresh = Date.now(), refreshing = false;
+  async function refreshRooms(){
+    const res = await fetchRooms(); if(res.error) return false;
+    rooms = res.rooms; await signPhotos(rooms.flatMap(r => r.ideas.concat(r.plans))).catch(()=>{});
+    lastRefresh = Date.now(); return true;
+  }
+  async function quietRefresh(){
+    if(refreshing || !user || modal || pm || detail || drag || moveBox || !['home','room'].includes(view.name)) return;
+    if(Date.now() - lastRefresh < 15000) return;
+    refreshing = true;
+    try{
+      const was = view.name==='room' ? view.id : null;
+      if(!(await refreshRooms())) return;
+      if(modal || pm || detail || drag) return;          // something opened meanwhile: keep the new data, redraw later
+      if(was && !rooms.some(r => r.id===was)){ view = { name:'home' }; render(); toast('이 방에 더 이상 들어갈 수 없어요.'); return; }
+      keepScroll(); render();
+    } finally { refreshing = false; }
+  }
+  document.addEventListener('visibilitychange', () => { if(document.visibilityState==='visible') quietRefresh(); });
+  window.addEventListener('focus', quietRefresh);
+
+  // =====================================================================
+  // server limits: photos are deleted together with what they belong to
+  // =====================================================================
+  function removePhotos(paths){
+    const list = paths.filter(Boolean); if(!list.length) return Promise.resolve();
+    return sb.storage.from(BUCKET).remove(list).then(()=>{}, ()=>{});
+  }
+  // every photo in a room's folder, including leftovers from before this version
+  async function removeRoomPhotos(r){
+    await removePhotos(r.ideas.concat(r.plans).map(x => x.photoPath));
+    try{
+      for(let round = 0; round < 20; round++){
+        const { data, error } = await sb.storage.from(BUCKET).list(r.id, { limit: 100 });
+        if(error || !data || !data.length) break;
+        const names = data.filter(f => f && f.name && !f.name.startsWith('.')).map(f => r.id+'/'+f.name);
+        if(!names.length) break;
+        await sb.storage.from(BUCKET).remove(names);
+        if(data.length < 100) break;
+      }
+    }catch(e){}
+  }
+
+  // =====================================================================
+  // export: the scrapbook board as one picture
+  // =====================================================================
+  const loadImg = src => new Promise(async (ok) => {
+    try{
+      let url = src;
+      if(!/^data:/.test(src)){ const b = await (await fetch(src, { mode:'cors' })).blob(); url = URL.createObjectURL(b); }
+      const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = url;
+    }catch(e){ ok(null); }
+  });
+  function wrapLines(ctx, text, maxW){
+    const out = []; let line = '';
+    for(const ch of String(text)){
+      const t = line + ch;
+      if(ctx.measureText(t).width > maxW && line){
+        const sp = line.lastIndexOf(' ');
+        if(sp > 0 && ch!==' '){ out.push(line.slice(0, sp)); line = line.slice(sp+1) + ch; } else { out.push(line); line = ch===' ' ? '' : ch; }
+      } else line = t;
+    }
+    if(line) out.push(line);
+    return out;
+  }
+  const offsetIn = (el, root) => { let x = 0, y = 0; while(el && el!==root){ x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; } return { x, y }; };
+  const LOOK_BG = { polaroid:'#FFFFFF', print:'#FFFDF6', stamp:'#FFFFFF', paper:'#FFFDF6', sticky:'#FBEFC4', grid:'#FFFDF6', kraft:'#E5D6BC' };
+  const IMP_STYLE = { must:['#B4321F','#FFF8F0'], nice:['#FCEFD8','#8A560A'], maybe:['#FFFFFF','#1C2639'] };
+  async function exportBoard(){
+    const r = curRoom(); if(!r) return;
+    if(!r.ideas.length){ toast('붙인 아이디어가 없어서 저장할 게 없어요.'); return; }
+    if(view.tab!=='ideas' || view.kind!=='all'){ view.tab = 'ideas'; view.kind = 'all'; render(); await new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res))); }
+    toast('이미지를 만드는 중이에요…');
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const cv = document.getElementById('cv'); if(!cv) return;
+    const cards = [...cv.querySelectorAll('.sc')].map(li => {
+      const it = r.ideas.find(i => i.id===li.dataset.id); if(!it) return null;
+      const art = li.querySelector('.sc-card'), ph = li.querySelector('.ph'), kind = li.querySelector('.sc-kind'), title = li.querySelector('.sc-title');
+      return { it, look: cardLook(it), x: li.offsetLeft, y: li.offsetTop, w: art.offsetWidth, h: art.offsetHeight, z: it.z||1,
+        ph: ph ? Object.assign(offsetIn(ph, art), { w: ph.offsetWidth, h: ph.offsetHeight }) : null,
+        kind: Object.assign(offsetIn(kind, art), { w: kind.offsetWidth, font: getComputedStyle(kind).font, lh: parseFloat(getComputedStyle(kind).lineHeight)||16 }),
+        title: Object.assign(offsetIn(title, art), { w: title.offsetWidth, font: getComputedStyle(title).font, lh: parseFloat(getComputedStyle(title).lineHeight)||22 }) };
+    }).filter(Boolean).sort((a,b) => a.z-b.z);
+    const PAD = 70, HEAD = 170, FOOT = 70;
+    const minX = Math.min(...cards.map(c => c.x)), minY = Math.min(...cards.map(c => c.y));
+    const maxX = Math.max(...cards.map(c => c.x+c.w)), maxY = Math.max(...cards.map(c => c.y+c.h));
+    const W = Math.max(720, maxX-minX + PAD*2), H = maxY-minY + PAD*2 + HEAD + FOOT;
+    const k = Math.min(2, 3600/W, 6000/H);
+    const c = document.createElement('canvas'); c.width = Math.round(W*k); c.height = Math.round(H*k);
+    const g = c.getContext('2d'); g.scale(k, k);
+    // board
+    g.fillStyle = '#E3E8F0'; g.fillRect(0, 0, W, H);
+    g.fillStyle = '#CDD5E1'; for(let yy = 9; yy < H; yy += 18) for(let xx = 9; xx < W; xx += 18){ g.beginPath(); g.arc(xx, yy, 1.1, 0, Math.PI*2); g.fill(); }
+    // header label
+    const fam = getComputedStyle(document.body).getPropertyValue('--f-display') || 'serif', body = getComputedStyle(document.body).fontFamily;
+    g.save(); g.translate(PAD, 40); g.rotate(-1*Math.PI/180);
+    g.font = '700 40px '+fam; const tw = Math.min(W-PAD*2, Math.max(g.measureText(r.dest).width, 320) + 60);
+    g.shadowColor = 'rgba(20,30,50,.25)'; g.shadowBlur = 18; g.shadowOffsetY = 8; g.fillStyle = '#FFFDF6'; g.fillRect(0, 0, tw, 104); g.shadowColor = 'transparent';
+    g.fillStyle = 'rgba(169,195,255,.72)'; g.fillRect(tw/2-40, -10, 80, 22);
+    g.fillStyle = '#1C2639'; g.fillText(r.dest, 26, 54);
+    g.font = '500 16px '+body; g.fillStyle = '#5A6376';
+    const people = (r.members||[]).length > 1 ? ' · '+r.members.map(m => m.nick).join(', ') : '';
+    g.fillText((r.name+' · '+whenText(r)+people).slice(0, 80), 28, 84); g.restore();
+    // cards
+    const imgs = await Promise.all(cards.map(cd => cd.it.photo ? loadImg(cd.it.photo) : null));
+    const ox = PAD - minX, oy = PAD + HEAD - minY;
+    cards.forEach((cd, n) => {
+      g.save(); g.translate(ox + cd.x + cd.w/2, oy + cd.y + cd.h/2); g.rotate(cd.look.tilt*Math.PI/180); g.translate(-cd.w/2, -cd.h/2);
+      g.shadowColor = 'rgba(20,30,50,.28)'; g.shadowBlur = 16; g.shadowOffsetY = 8;
+      g.fillStyle = LOOK_BG[cd.look.look] || '#FFFDF6'; g.fillRect(0, 0, cd.w, cd.h); g.shadowColor = 'transparent';
+      if(cd.look.look==='grid'){ g.strokeStyle = '#E7E2D3'; g.lineWidth = 1; for(let q = 14; q < cd.w; q += 14){ g.beginPath(); g.moveTo(q, 0); g.lineTo(q, cd.h); g.stroke(); } for(let q = 14; q < cd.h; q += 14){ g.beginPath(); g.moveTo(0, q); g.lineTo(cd.w, q); g.stroke(); } }
+      if(cd.ph){
+        const im = imgs[n];
+        if(im){ const sr = im.width/im.height, dr = cd.ph.w/cd.ph.h; let sw = im.width, sh = im.height, sx = 0, sy = 0;
+          if(sr > dr){ sw = sh*dr; sx = (im.width-sw)/2; } else { sh = sw/dr; sy = (im.height-sh)/2; }
+          g.drawImage(im, sx, sy, sw, sh, cd.ph.x, cd.ph.y, cd.ph.w, cd.ph.h); }
+        else { g.fillStyle = '#D6DDE8'; g.fillRect(cd.ph.x, cd.ph.y, cd.ph.w, cd.ph.h); }
+      }
+      g.textBaseline = 'top';
+      g.font = cd.kind.font; g.fillStyle = '#5A6376'; g.fillText(KINDS[cd.it.kind], cd.kind.x, cd.kind.y + (cd.kind.lh - 12)/2);
+      g.font = cd.title.font; g.fillStyle = '#1C2639';
+      wrapLines(g, cd.it.title, cd.title.w + 1).forEach((ln, i) => g.fillText(ln, cd.title.x, cd.title.y + i*cd.title.lh + (cd.title.lh - 17)/2));
+      if(cd.look.tape){ g.fillStyle = cd.look.look==='print' ? 'rgba(246,214,150,.78)' : 'rgba(169,195,255,.72)'; g.save(); g.translate(cd.w/2, 0); g.rotate(-3*Math.PI/180); g.fillRect(-34, -9, 68, 18); g.restore(); }
+      const [bg, fg] = IMP_STYLE[cd.it.imp]; g.font = '700 12px '+body; const sw = g.measureText(IMP[cd.it.imp]).width + 18;
+      g.save(); g.translate(cd.w - sw + 8, -10); g.rotate(-5*Math.PI/180); g.fillStyle = bg; g.fillRect(0, 0, sw, 22);
+      if(cd.it.imp==='maybe'){ g.strokeStyle = fg; g.setLineDash([3,2]); g.strokeRect(0.5, 0.5, sw-1, 21); g.setLineDash([]); }
+      g.fillStyle = fg; g.fillText(IMP[cd.it.imp], 9, 5); g.restore();
+      g.restore();
+    });
+    // footer
+    g.font = '600 15px '+body; g.fillStyle = '#5A6376'; g.textBaseline = 'alphabetic';
+    const d = new Date(); g.fillText('Butterflight · '+d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate()+' 저장 · 아이디어 '+r.ideas.length+'개', PAD, H - 32);
+    const blob = await new Promise(res => c.toBlob(res, 'image/png'));
+    if(!blob){ toast('이미지를 만들지 못했어요.'); return; }
+    // English-only file name: some browsers drop non-Latin letters from download names
+    const slug = r.dest.normalize('NFKD').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+    const name = 'butterflight-'+(slug ? slug+'-' : '')+ymd(d)+'-'+pad(d.getHours())+pad(d.getMinutes())+'.png';
+    const url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    window.__lastExport = { name, w: c.width, h: c.height, cards: cards.length, photos: imgs.filter(Boolean).length };
+    toast('이미지로 저장했어요. 다운로드 폴더나 앨범을 확인해 보세요.');
+  }
+
+  // =====================================================================
+  // carry over: ideas you didn't get to, into another (or a new) room
+  // =====================================================================
+  function missed(r){
+    const doneIds = new Set(r.plans.filter(p => p.status==='done' && p.ideaId).map(p => p.ideaId));
+    return r.ideas.filter(i => !doneIds.has(i.id)).sort((a,b) => IMP_RANK[a.imp]-IMP_RANK[b.imp] || b.createdAt-a.createdAt).map(i => {
+      const ps = r.plans.filter(p => p.ideaId===i.id && !p.spont);
+      const why = ps.some(p => p.status==='skip') ? '못 했어요' : ps.length ? '아직 체크 안 함' : '일정에 없었음';
+      return { i, why };
+    });
+  }
+  function openCarry(){
+    const r = curRoom(); if(!r) return;
+    const list = missed(r);
+    if(!list.length){ toast('모든 아이디어를 다녀왔어요! 옮길 후보가 없어요.'); return; }
+    const others = rooms.filter(x => x.id!==r.id).sort((a,b) => b.updatedAt-a.updatedAt);
+    openPM({ type:'carry', saveLabel:'담기' }, '못 간 후보 다른 방에 담기',
+      '<p class="pm-note">‘했어요’로 체크하지 않은 아이디어예요. 고른 카드는 사진까지 복사돼서 다른 방에 붙고, 이 방에도 그대로 남아요.</p>'
+      + '<fieldset class="field"><legend>옮길 아이디어</legend><ul class="pk-list">'+list.map(({i, why}) => '<li><label class="pk"><input type="checkbox" name="cy" value="'+i.id+'" checked>'
+          + '<span class="pk-t"><span class="pk-k">'+KINDS[i.kind]+' · '+IMP[i.imp]+'</span><b>'+esc(i.title)+'</b></span><small>'+why+'</small></label></li>').join('')+'</ul></fieldset>'
+      + '<div class="field"><label for="cy-to">어느 방에 담을까요?</label><select id="cy-to">'
+      +   others.map(x => '<option value="'+x.id+'">'+esc(x.dest)+' · '+esc(x.name)+'</option>').join('')
+      +   '<option value="__new"'+(others.length?'':' selected')+'>+ 새 방 만들기</option></select></div>'
+      + '<div class="field" id="cy-new"'+(others.length?' hidden':'')+'><label for="cy-dest">새 방 여행지</label><input type="text" id="cy-dest" maxlength="30" placeholder="예: '+esc(r.dest)+' (다음에)" autocomplete="off"><p class="err" id="e-cy-dest" hidden></p></div>',
+      saveCarry);
+    document.getElementById('cy-to').addEventListener('change', e => { document.getElementById('cy-new').hidden = e.target.value!=='__new'; });
+    document.getElementById('pm-form').addEventListener('input', () => formErr(''));
+  }
+  async function saveCarry(){
+    const r = curRoom(); if(!r) return;
+    const picked = [...document.querySelectorAll('input[name=cy]:checked')].map(x => r.ideas.find(i => i.id===x.value)).filter(Boolean);
+    if(!picked.length){ formErr('옮길 아이디어를 하나 이상 골라 주세요.'); return; }
+    let toId = document.getElementById('cy-to').value, target = rooms.find(x => x.id===toId);
+    if(toId==='__new'){
+      const dest = document.getElementById('cy-dest').value.trim();
+      setErr('cy-dest', dest ? '' : '새 방의 여행지를 적어 주세요.'); if(!dest){ document.getElementById('cy-dest').focus(); return; }
+      setBusy(true, '방 만드는 중…');
+      const { data, error } = await sb.from('bf_rooms').insert({ dest, name: dest+' 여행', type: r.type }).select().single();
+      if(error || !data){ setBusy(false); formErr('새 방을 만들지 못했어요. '+errText(error)); return; }
+      target = roomFromRow(data); target.members = [selfMember()];
+      rooms.push(target);
+    }
+    if(!target){ formErr('담을 방을 골라 주세요.'); return; }
+    setBusy(true, '담는 중… (0/'+picked.length+')');
+    let room = PHOTO_CAP - photoCount(target), noPhoto = 0, n = 0;
+    const rows = [], copied = {};
+    for(const i of picked){
+      let path = null;
+      if(i.photoPath && room > 0){
+        const to = target.id + '/' + newId() + '.jpg';
+        const { error } = await sb.storage.from(BUCKET).copy(i.photoPath, to);
+        if(!error){ path = to; room--; copied[to] = i.photo; } else noPhoto++;
+      } else if(i.photoPath) noPhoto++;
+      rows.push({ room_id: target.id, kind: i.kind, title: i.title, memo: i.memo, place: i.place, link: i.link, imp: i.imp,
+        photo_path: path, photo_ratio: path ? i.ratio : null });
+      const b = document.querySelector('#m-actions button[type=submit]'); if(b) b.textContent = '담는 중… ('+(++n)+'/'+picked.length+')';
+    }
+    const { data, error } = await sb.from('bf_ideas').insert(rows).select();
+    if(error || !data){ removePhotos(Object.keys(copied)); setBusy(false); formErr('담지 못했어요. '+errText(error)); return; }
+    data.forEach(d => { const it = ideaFromRow(d); if(it.photoPath && copied[it.photoPath]) it.photo = copied[it.photoPath]; target.ideas.push(it); });
+    target.updatedAt = Date.now();
+    pm.busy = false; closePM();
+    homeRoomId = target.id; view = { name:'room', id: target.id, tab:'ideas', kind:'all' }; render(); window.scrollTo(0,0);
+    toast(data.length+'개를 ‘'+target.dest+'’ 방에 담았어요.' + (noPhoto ? ' (사진 '+noPhoto+'장은 복사하지 못했어요)' : ''));
   }
 
   // ---------- sign in / sign up ----------
@@ -1712,7 +2210,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     root.innerHTML = '<div class="view create-view">'
       + '<div class="memo create-memo"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:2deg"></span><div class="modal">'
       +   '<div class="modal-head"><h1>'+(up ? '처음이라면, 가입부터 해요' : '다시 만나서 반가워요')+'</h1></div>'
-      +   '<p class="c-lede">'+(up ? '이메일과 비밀번호만 있으면 돼요. 다른 기기에서도 같은 방이 보여요.' : '로그인하면 모아 둔 아이디어 방이 그대로 있어요.')+'</p>'
+      +   '<p class="c-lede">'+(pendingJoin() ? '친구가 보낸 초대 링크로 왔어요. 먼저 '+(up ? '가입하면' : '로그인하면')+' 바로 그 방에 들어갈 수 있어요.' : up ? '이메일과 비밀번호만 있으면 돼요. 다른 기기에서도 같은 방이 보여요.' : '로그인하면 모아 둔 아이디어 방이 그대로 있어요.')+'</p>'
       +   '<form id="auth-form" novalidate>'
       +     '<div class="field"><label for="a-email">이메일</label><input type="email" id="a-email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="'+esc(view.email||'')+'"><p class="err" id="e-a-email" hidden></p></div>'
       +     '<div class="field"><label for="a-pw">비밀번호</label><input type="password" id="a-pw" autocomplete="'+(up?'new-password':'current-password')+'" minlength="6">'
@@ -1763,15 +2261,29 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
 
   async function loadRooms(){
     view = { name:'loading', msg:'아이디어 방을 불러오는 중…' }; render();
-    let { data, error } = await sb.from('bf_rooms').select('*, bf_ideas(*), bf_plans(*)');
-    plansReady = !error;
-    // the schedule table may not exist yet (SQL 02 not run): still open the rooms and ideas
-    if(error && /bf_plans|relationship|schema cache/i.test(error.message||'')) ({ data, error } = await sb.from('bf_rooms').select('*, bf_ideas(*)'));
-    if(error || !data){ view = { name:'fail', msg:'방을 불러오지 못했어요. '+errText(error) }; render(); return; }
-    rooms = data.map(roomFromRow);
+    const res = await fetchRooms();
+    if(res.error){ view = { name:'fail', msg:'방을 불러오지 못했어요. '+errText(res.error) }; render(); return; }
+    rooms = res.rooms; lastRefresh = Date.now();
     await signPhotos(rooms.flatMap(r => r.ideas.concat(r.plans))).catch(()=>{});
-    view = { name:'home' }; render();
-    offerMove();
+    const code = pendingJoin();
+    view = code ? { name:'join', code } : { name:'home' }; render();
+    if(!code) offerMove();
+  }
+  // newest tables first; if a later SQL file hasn't been run yet, fall back so the app still opens
+  const SELECTS = [
+    ['*, bf_room_members(*), bf_ideas(*, bf_likes(*), bf_comments(*)), bf_plans(*)', true, true],
+    ['*, bf_ideas(*), bf_plans(*)', true, false],
+    ['*, bf_ideas(*)', false, false]
+  ];
+  async function fetchRooms(){
+    let last = null;
+    for(const [sel, plans, together] of SELECTS){
+      const { data, error } = await sb.from('bf_rooms').select(sel);
+      if(!error && data){ plansReady = plans; togetherReady = together; return { rooms: data.map(roomFromRow) }; }
+      last = error;
+      if(!/relationship|schema cache|does not exist|column|bf_/i.test((error && error.message)||'')) break;
+    }
+    return { error: last || new Error('load') };
   }
   async function signedIn(u){
     if(user && u && user.id===u.id) return;
@@ -1850,11 +2362,12 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     if(!user && view.name!=='loading' && view.name!=='fail') view = { name:'login', mode: view.mode||'login', email: view.email };
     document.body.classList.toggle('room-mode', view.name==='room');
     if(view.name==='edit-room' && !rooms.some(x => x.id===view.id)) view = { name:'home' };
-    document.body.classList.toggle('paper-mode', ['new-room','edit-room','login','loading','fail'].includes(view.name) || (view.name==='home' && !rooms.length));
+    document.body.classList.toggle('paper-mode', ['new-room','edit-room','join','login','loading','fail'].includes(view.name) || (view.name==='home' && !rooms.length));
     if(view.name==='loading') renderLoading(view.msg);
     else if(view.name==='fail') renderFail();
     else if(view.name==='login') renderLogin();
     else if(view.name==='new-room') renderCreate(false);
+    else if(view.name==='join') renderJoin();
     else if(view.name==='edit-room') renderCreate(false, rooms.find(x => x.id===view.id));
     else if(view.name==='room') renderRoom();
     else renderHome();
@@ -1867,7 +2380,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     const top = () => window.scrollTo(0,0);
     if(car && car.suppressClick){ e.preventDefault(); return; } // a drag just ended, don't open a room
     if(Date.now() < suppressClickUntil && el.closest('.sc')){ e.preventDefault(); return; } // a card was just dropped
-    if(view.menu && !el.closest('.rl-menu-wrap')){ view.menu = false; view.confirmRoom = false; }
+    if(view.menu && !el.closest('.rl-menu-wrap')){ view.menu = false; view.confirmRoom = false; view.confirmLeave = false; }
     if(el.dataset.go){ if(car) car.go(Number(el.dataset.go)); return; }
     // a dimmed side window slides into the middle instead of opening
     const side = el.dataset.open && el.closest('.slide:not(.is-active)');
@@ -1877,7 +2390,7 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     if(el.dataset.kind){ const sc0 = document.getElementById('cv-scroll'); if(sc0) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop }; view.kind = el.dataset.kind; render(); return; }
     if(el.dataset.view){ openDetail(el.dataset.view); return; }
     const act = el.dataset.act;
-    if(act==='home'){ view = { name:'home' }; render(); top(); }
+    if(act==='home'){ if(view.name==='join') setPendingJoin(''); view = { name:'home' }; render(); top(); }
     else if(act==='new-room'){ view = { name:'new-room' }; render(); top(); }
     else if(act==='edit-room'){ view = { name:'edit-room', id:view.id, from: view.tab || 'ideas' }; render(); top(); }
     else if(act==='back-room'){ view = { name:'room', id:view.id, tab: view.from || 'ideas', kind:'all' }; render(); top(); }
@@ -1889,13 +2402,27 @@ body.paper-mode{background:radial-gradient(circle,var(--board-dot) 1px,transpare
     else if(act==='ask-del-idea'){ if(modal){ modal.confirmDel = true; renderModalActions(); } }
     else if(act==='keep-idea'){ if(modal){ modal.confirmDel = false; renderModalActions(); } }
     else if(act==='del-idea'){ deleteIdea(); }
-    else if(act==='room-menu'){ const sc0 = document.getElementById('cv-scroll'); if(sc0) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop }; view.menu = !view.menu; view.confirmRoom = false; render(); }
+    else if(act==='room-menu'){ const sc0 = document.getElementById('cv-scroll'); if(sc0) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop }; view.menu = !view.menu; view.confirmRoom = false; view.confirmLeave = false; render(); }
     else if(act==='ask-room'){ view.menu = true; view.confirmRoom = true; render(); }
-    else if(act==='keep-room'){ view.confirmRoom = false; view.menu = false; render(); }
+    else if(act==='keep-room'){ view.confirmRoom = false; view.confirmLeave = false; view.menu = false; render(); }
+    else if(act==='ask-leave'){ view.menu = true; view.confirmLeave = true; render(); }
+    else if(act==='leave'){ leaveRoom(el); }
+    else if(act==='join'){ view = { name:'join', code: pendingJoin() }; render(); top(); }
+    else if(act==='people'){ view.menu = false; keepScroll(); render(); openPeople(); }
+    else if(act==='copy-code'){ const r = curRoom(); if(r) copyText(r.code).then(() => toast('초대 코드 '+r.code+'를 복사했어요.'), () => toast('복사하지 못했어요. 코드: '+r.code)); }
+    else if(act==='share-link'){ shareLink(); }
+    else if(act==='reset-code'){ resetCode(); }
+    else if(act==='kick'){ kickMember(el.dataset.uid, !!el.dataset.sure); }
+    else if(act==='edit-room-pm'){ closePM(true); view = { name:'edit-room', id:view.id, from: view.tab || 'ideas' }; render(); top(); }
+    else if(act==='like'){ toggleLike(); }
+    else if(act==='del-comment'){ deleteComment(el.dataset.id); }
+    else if(act==='export'){ view.menu = false; view.confirmRoom = false; exportBoard(); }
+    else if(act==='carry'){ view.menu = false; keepScroll(); render(); openCarry(); }
     else if(act==='del-room'){
-      const id = view.id;
+      const id = view.id, gone = rooms.find(x => x.id===id);
       el.disabled = true; el.textContent = '지우는 중…';
-      sb.from('bf_rooms').delete().eq('id', id).then(({ error }) => {
+      // photos first: once the room is gone, nobody is a member any more and the photo folder can't be reached
+      (gone ? removeRoomPhotos(gone) : Promise.resolve()).then(() => sb.from('bf_rooms').delete().eq('id', id)).then(({ error }) => {
         if(error){ toast('방을 지우지 못했어요. '+errText(error)); view.confirmRoom = false; view.menu = false; render(); return; }
         rooms = rooms.filter(r => r.id!==id);
         if(view.name==='room' && view.id===id){ view = { name:'home' }; render(); top(); }
