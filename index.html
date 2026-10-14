@@ -1,0 +1,1211 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="여행 전 설레는 아이디어를 스크랩북처럼 모으는 여행 앱">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Butterflight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Nanum+Pen+Script&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow column (max 680px). Home = idea rooms as boarding-pass tickets; room = idea board first */
+:root{
+  --bg:#EEF2F7; --surface:#FFFFFF; --ink:#16213B; --muted:#5A6680; --line:#D6DDE8;
+  --accent:#E9A23B; --accent-soft:#FCEFD8; --accent-ink:#8A560A;
+  --plan:#2C5BCB; --plan-bg:#E3EBFB; --trip:#1C7650; --trip-bg:#DDF2E7; --done:#5A6680; --done-bg:#E6EAF1;
+  --must:#B4321F; --must-bg:#FBE4DF;
+  --danger:#B3261E; --danger-bg:#FBE6E4;
+  --frame:#F8FAFD; --frame-edge:#CDD5E2; --frame-hi:#FFFFFF; --shadow:rgba(22,33,59,.45);
+  --sky-top:#1C3B7E; --sky-bottom:#3A6BC2; --glow:rgba(240,170,80,.42); --pane-edge:rgba(10,20,45,.35);
+  --on-sky:#FFFFFF; --on-sky-2:rgba(255,255,255,.9);
+  --shade:#E9EEF5; --shade-2:#D9E0EB; --shade-handle:#AEB9CB;
+  --cloud:#FFFFFF; --cloud-op:1;
+  --board:#E3E8F0; --board-dot:#CDD5E1; --paper:#FFFDF6; --paper-line:#E7E2D3; --kraft:#E5D6BC; --sticky:#FBEFC4;
+  --photo-frame:#FFFFFF; --card-ink:#1C2639; --card-muted:#5A6376; --tape-a:rgba(169,195,255,.72); --tape-b:rgba(246,214,150,.78);
+  --scrim:rgba(196,206,221,.55);
+  --f-pen:"Nanum Pen Script","Gowun Batang",cursive;
+  --dot-idea:#F5C46E; --dot-plan:#A9C3FF; --dot-trip:#8EE3BA; --dot-done:#CBD2DE;
+  --f-display:"Gowun Batang","Noto Serif KR",serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1626; --surface:#182238; --ink:#E8EDF7; --muted:#9BA7BF; --line:#2B3752;
+    --accent:#F0B356; --accent-soft:#3A2E17; --accent-ink:#F6CF8E;
+    --plan:#93B2FF; --plan-bg:#1E2D52; --trip:#7FD8AE; --trip-bg:#173A2D; --done:#AAB4C8; --done-bg:#252F45;
+    --must:#FF9E8C; --must-bg:#41221C;
+    --danger:#FF9C93; --danger-bg:#3D1F1D; color-scheme:dark;
+    --frame:#212B42; --frame-edge:#34405C; --frame-hi:#2D3954; --shadow:rgba(0,0,0,.7);
+    --sky-top:#060C20; --sky-bottom:#1A2C5C; --glow:rgba(240,170,80,.28); --pane-edge:rgba(0,0,0,.5);
+    --shade:#2C3753; --shade-2:#242E47; --shade-handle:#56627E;
+    --cloud:#A9B8DA; --cloud-op:.32; --board:#141D30; --board-dot:#212C45; --paper:#ECE7DA; --paper-line:#D6CFBE; --kraft:#CDBC9E; --sticky:#E8DCAE; --photo-frame:#ECE9E2; --card-muted:#565E70; --tape-a:rgba(150,176,235,.6); --tape-b:rgba(230,196,128,.66); --scrim:rgba(4,8,18,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1626; --surface:#182238; --ink:#E8EDF7; --muted:#9BA7BF; --line:#2B3752;
+  --accent:#F0B356; --accent-soft:#3A2E17; --accent-ink:#F6CF8E;
+  --plan:#93B2FF; --plan-bg:#1E2D52; --trip:#7FD8AE; --trip-bg:#173A2D; --done:#AAB4C8; --done-bg:#252F45;
+  --must:#FF9E8C; --must-bg:#41221C;
+  --danger:#FF9C93; --danger-bg:#3D1F1D; color-scheme:dark;
+  --frame:#212B42; --frame-edge:#34405C; --frame-hi:#2D3954; --shadow:rgba(0,0,0,.7);
+  --sky-top:#060C20; --sky-bottom:#1A2C5C; --glow:rgba(240,170,80,.28); --pane-edge:rgba(0,0,0,.5);
+  --shade:#2C3753; --shade-2:#242E47; --shade-handle:#56627E;
+  --cloud:#A9B8DA; --cloud-op:.32; --board:#141D30; --board-dot:#212C45; --paper:#ECE7DA; --paper-line:#D6CFBE; --kraft:#CDBC9E; --sticky:#E8DCAE; --photo-frame:#ECE9E2; --card-muted:#565E70; --tape-a:rgba(150,176,235,.6); --tape-b:rgba(230,196,128,.66); --scrim:rgba(4,8,18,.5);
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;padding-inline:16px;padding-block:0;min-height:100%;word-break:keep-all;display:flex;flex-direction:column}
+.wrap{width:100%;max-width:680px;margin:0 auto;flex:1;display:flex;flex-direction:column}
+#view{flex:1;display:flex;flex-direction:column;padding-top:20px}
+#view>.view{flex:1;display:flex;flex-direction:column}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+a{color:var(--plan)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* bottom brand */
+.foot-brand{display:flex;justify-content:center;padding-block:28px 24px}
+.brand{display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:6px 10px;border-radius:10px;color:var(--ink)}
+.brand svg{width:24px;height:24px;flex:none}
+.brand b{font-family:var(--f-display);font-size:17px;letter-spacing:.01em}
+
+/* home: airplane windows */
+.home{justify-content:center;align-items:center;text-align:center}
+.home-title{font-family:var(--f-display);font-size:clamp(23px,6vw,30px);line-height:1.35;padding-inline:8px}
+.carousel{position:relative;width:100%;margin-top:clamp(28px,6vh,52px)}
+.track{display:flex;gap:var(--gap);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-inline:calc(50% - var(--win-w) / 2);padding-block:10px 18px;user-select:none;-webkit-user-select:none;touch-action:pan-x pan-y;--gap:24px}
+.track::-webkit-scrollbar{display:none}
+.track.multi{-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);cursor:grab}
+.track.dragging{scroll-snap-type:none;cursor:grabbing}
+.track.single{justify-content:center;overflow:visible}
+.slide{flex:0 0 auto;scroll-snap-align:center;transition:opacity .3s ease,transform .3s ease}
+.track.multi .slide:not(.is-active){opacity:.42;transform:scale(.92)}
+.carousel{--win-w:min(72vw,300px,calc(52vh * .714))}
+.window{display:block;width:var(--win-w);aspect-ratio:5/7;max-width:100%;padding:16px;border:1px solid var(--frame-edge);border-radius:44% / 32%;background:var(--frame);box-shadow:0 18px 40px -22px var(--shadow),inset 0 2px 0 var(--frame-hi);cursor:pointer;transition:transform .25s ease,box-shadow .25s ease}
+.track:not(.dragging) .slide.is-active .window:hover{transform:translateY(-4px);box-shadow:0 26px 48px -24px var(--shadow),inset 0 2px 0 var(--frame-hi)}
+.window:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.pane{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%;border-radius:42% / 30%;overflow:hidden;padding:26% 13% 15%;color:var(--on-sky);
+  background:radial-gradient(120% 40% at 50% 112%,var(--glow),transparent 70%),linear-gradient(180deg,var(--sky-top),var(--sky-bottom));
+  box-shadow:inset 0 0 0 1px var(--pane-edge),inset 0 10px 24px -12px rgba(0,0,0,.45)}
+.pane::before{content:"";position:absolute;inset:0 0 auto 0;height:15%;background:linear-gradient(180deg,var(--shade),var(--shade-2));box-shadow:0 2px 6px -2px rgba(0,0,0,.35)}
+.pane::after{content:"";position:absolute;top:calc(15% - 9px);left:50%;width:30px;height:5px;margin-left:-15px;border-radius:3px;background:var(--shade-handle)}
+/* clouds sit only in the empty band between the date and the count, and along the bottom edge */
+.clouds{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:var(--cloud-op)}
+.clouds g{fill:var(--cloud)}
+.clouds .drift-a{animation:drift 26s ease-in-out infinite alternate}
+.clouds .drift-b{animation:drift 32s ease-in-out infinite alternate-reverse}
+@keyframes drift{from{transform:translateX(-2.5px)}to{transform:translateX(2.5px)}}
+@media (prefers-reduced-motion: reduce){.clouds .drift-a,.clouds .drift-b{animation:none}}
+.pane>span{position:relative;text-shadow:0 1px 8px rgba(12,28,70,.35)}
+.w-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 11px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);white-space:nowrap}
+.w-status i{width:7px;height:7px;border-radius:50%;background:var(--dot);flex:none}
+.w-dest{display:block;font-family:var(--f-display);font-size:clamp(24px,7.5vw,32px);line-height:1.28;margin-top:6px;padding-bottom:2px;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.w-name{display:block;font-size:14px;color:var(--on-sky-2);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.w-date{display:block;font-family:var(--f-mono);font-size:12px;color:var(--on-sky-2)}
+.w-count{display:flex;flex-direction:column;align-items:center;margin-top:auto;padding-top:10px;border-top:1px solid rgba(255,255,255,.22);width:72%}
+.w-count b{font-family:var(--f-mono);font-weight:600;font-size:clamp(30px,9vw,40px);line-height:1.1;font-variant-numeric:tabular-nums}
+.w-count small{font-size:12px;color:var(--on-sky-2)}
+@media (max-height:700px){
+  #view{padding-top:12px}
+  .carousel{margin-top:20px}
+  .track{padding-block:6px 12px}
+  .new-room{margin-top:12px}
+  .foot-brand{padding-block:14px 10px}
+}
+.dots{display:flex;justify-content:center;gap:8px;margin-top:4px}
+.dot{width:8px;height:8px;padding:0;border-radius:999px;border:0;background:var(--line);transition:width .25s ease,background .25s ease}
+.dot[aria-current="true"]{width:22px;background:var(--ink)}
+.dot-hit{display:grid;place-items:center;min-width:24px;height:24px;background:none;border:0;padding:0}
+.new-room{margin-top:22px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:10px 20px;font-weight:600}
+.new-room:hover{border-color:var(--muted)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;padding:11px 18px;border:1px solid var(--line);background:var(--surface);font-weight:600}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn.accent{background:var(--accent);color:#2A1A00;border-color:var(--accent)}
+.btn.danger{background:var(--danger);color:var(--surface);border-color:var(--danger)}
+.btn.small{padding:6px 12px;font-size:13px;border-radius:8px}
+.btn.ghost-danger{background:none;color:var(--danger);border-color:transparent;padding-inline:4px;font-weight:500}
+.back{background:none;border:0;padding:4px 0;color:var(--muted);font-weight:500}
+
+.page-head{display:grid;gap:8px;padding-block:8px 20px}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+.page-head h1{font-family:var(--f-display);font-size:clamp(26px,6vw,32px);line-height:1.3}
+.page-head p.lede{color:var(--muted)}
+
+/* room tickets */
+.rooms{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.ticket{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 96px;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0}
+button.ticket:hover{border-color:var(--muted)}
+.ticket::before,.ticket::after{content:"";position:absolute;right:88px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.ticket::before{top:-9px;clip-path:inset(50% 0 0 0)}
+.ticket::after{bottom:-9px;clip-path:inset(0 0 50% 0)}
+.t-main{display:grid;gap:4px;padding:16px 18px;min-width:0}
+.t-top{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.t-dest{font-family:var(--f-display);font-size:24px;line-height:1.25;overflow-wrap:anywhere}
+.t-name{color:var(--muted);overflow-wrap:anywhere}
+.t-date{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.t-stub{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-left:2px dashed var(--line);padding:12px 6px;text-align:center}
+.t-small{font-size:11px;color:var(--muted)}
+.t-big{font-family:var(--f-mono);font-weight:600;font-size:24px;line-height:1.1;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.add-room{width:100%;border:1.5px dashed var(--line);background:none;border-radius:14px;padding:16px;color:var(--muted);font-weight:600}
+.add-room:hover{border-color:var(--muted);color:var(--ink)}
+
+.pill,.badge{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.pill.idea{background:var(--accent-soft);color:var(--accent-ink)}
+.pill.plan{background:var(--plan-bg);color:var(--plan)}
+.pill.trip{background:var(--trip-bg);color:var(--trip)}
+.pill.done{background:var(--done-bg);color:var(--done)}
+.badge{border:1px solid var(--line);color:var(--muted);font-weight:500}
+
+/* forms */
+form.card{display:grid;gap:18px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.field{display:grid;gap:6px;min-width:0}
+.field>label,.field legend{font-weight:600;font-size:14px}
+.opt{font-weight:400;color:var(--muted)}
+.hint{font-size:13px;color:var(--muted)}
+input[type=text],input[type=url],input[type=date],textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{resize:vertical;min-height:72px}
+[aria-invalid="true"]{border-color:var(--danger)!important}
+.err{font-size:13px;color:var(--danger)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.seg{display:grid;grid-template-columns:repeat(var(--cols,2),minmax(0,1fr));gap:8px;margin-top:6px}
+.seg label{position:relative;display:block;cursor:pointer}
+.seg input{position:absolute;opacity:0;inset:0;margin:0}
+.seg .body{display:grid;gap:2px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);height:100%;text-align:center}
+.seg.left .body{text-align:left}
+.seg .body b{font-weight:600}
+.seg .body small{color:var(--muted);font-size:12px}
+.seg input:checked + .body{border-color:var(--ink);background:var(--surface);box-shadow:inset 0 0 0 1px var(--ink)}
+.seg input:focus-visible + .body{outline:2px solid var(--accent);outline-offset:2px}
+.actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+
+/* room: the whole screen is the board. Small paper props float on top of it. */
+body.room-mode{overflow:hidden}
+body.room-mode .foot-brand{display:none}
+.view.room-view{position:fixed;inset:0;z-index:20;animation:none}
+.cv-scroll{position:absolute;inset:0;overflow:auto;overscroll-behavior:contain;
+  background:radial-gradient(circle,var(--board-dot) 1px,transparent 1.4px) 0 0/18px 18px,var(--board)}
+.cv-sizer{position:relative}
+.cv{list-style:none;margin:0;padding:0;position:absolute;left:0;top:0;transform-origin:0 0}
+.sc{position:absolute;width:var(--w);touch-action:auto;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+.sc img{-webkit-user-drag:none;pointer-events:none}
+@media (hover:hover) and (pointer:fine){.sc{cursor:grab}}
+.sc.dragging{cursor:grabbing}
+.sc.dragging .sc-card{transform:rotate(0deg) scale(1.04)!important;box-shadow:0 2px 3px rgba(20,30,50,.12),0 26px 40px -18px rgba(20,30,50,.6);transition:transform .12s ease}
+.sc.dim{opacity:.16;pointer-events:none;filter:grayscale(.6)}
+.sc{transition:opacity .25s ease}
+
+/* floating props */
+.prop{position:fixed;z-index:30}
+.rlabel{top:calc(12px + env(safe-area-inset-top,0px));left:14px;display:flex;align-items:flex-start;gap:10px;max-width:min(460px,calc(100% - 210px));
+  background:var(--paper);color:var(--card-ink);padding:12px 14px 11px 10px;border-radius:2px;transform:rotate(-1deg);box-shadow:0 8px 18px -12px rgba(20,30,50,.55)}
+.rlabel .tape{width:54px;margin-left:-27px;top:-9px}
+.rl-back{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--paper-line);background:transparent;color:var(--card-ink);font-size:16px;line-height:1;display:grid;place-items:center}
+.rl-back:hover{background:var(--paper-line)}
+.rl-text{min-width:0;display:grid;gap:1px}
+.rlabel h1{font-family:var(--f-display);font-size:20px;line-height:1.25;overflow-wrap:anywhere}
+.rl-sub{font-size:12px;color:var(--card-muted);line-height:1.4;overflow-wrap:anywhere}
+.rl-sub i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--dot);margin-right:5px;vertical-align:1px}
+.rtools{top:calc(14px + env(safe-area-inset-top,0px));right:14px;display:flex;gap:8px;align-items:center}
+.btn.add-idea{flex:none;border-radius:999px;padding:10px 18px;background:#1C2639;color:#FFFDF6;border-color:#1C2639;box-shadow:0 10px 20px -12px rgba(0,0,0,.6)}
+.btn.add-idea:hover{filter:brightness(1.2)}
+.rl-menu-wrap{position:relative;flex:none;align-self:flex-start}
+.rl-more{width:28px;height:28px;border-radius:50%;border:0;background:transparent;color:var(--card-muted);font-size:16px;letter-spacing:1px;line-height:1}
+.rl-more:hover,.rl-more[aria-expanded="true"]{background:var(--paper-line);color:var(--card-ink)}
+.rmenu{position:absolute;top:34px;left:0;width:240px;background:var(--paper);color:var(--card-ink);border-radius:4px;padding:12px;box-shadow:0 18px 32px -18px rgba(0,0,0,.6);display:grid;gap:8px}
+.rmenu .btn{justify-content:flex-start}
+.rmenu p{font-size:13px;color:var(--danger)}
+.rmenu .row{display:flex;gap:8px;justify-content:flex-end}
+
+/* notebook index tabs along the bottom edge */
+.itabs{left:16px;bottom:0;display:flex;gap:3px;align-items:flex-end}
+.itab{border:0;border-radius:10px 10px 0 0;padding:9px 16px calc(14px + env(safe-area-inset-bottom,0px));font-size:14px;font-weight:600;color:var(--card-ink);background:var(--tabc);
+  transform:translateY(6px);box-shadow:0 -3px 10px -6px rgba(20,30,50,.5);transition:transform .2s ease}
+.itab:hover{transform:translateY(2px)}
+.itab[aria-selected="true"]{transform:none;background:var(--paper)}
+.itab .n{font-family:var(--f-mono);font-size:11px;margin-left:5px;opacity:.7}
+.itab.t-ideas{--tabc:var(--sticky)} .itab.t-plan{--tabc:#DCE5F6} .itab.t-record{--tabc:var(--kraft)}
+
+/* kind filter as round stickers */
+.kstick{right:16px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;align-items:center}
+.kst{position:relative;width:46px;height:46px;border-radius:50%;border:0;padding:0;font-size:12px;font-weight:700;background:var(--paper);color:var(--card-ink);
+  transform:rotate(var(--r,0deg));box-shadow:0 4px 10px -6px rgba(20,30,50,.6),inset 0 0 0 2px rgba(255,255,255,.6)}
+.kst[aria-pressed="true"]{background:#1C2639;color:#FFFDF6}
+.kst .n{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--accent);color:#2A1A00;font-size:10px;line-height:18px;font-family:var(--f-mono)}
+.kst:disabled{opacity:.45;cursor:default}
+
+/* other tabs: one paper sheet on the board */
+.sheet-wrap{min-height:100%;display:grid;place-items:start center;padding:110px 16px 120px}
+.sheet{width:100%;max-width:560px;background:var(--paper);color:var(--card-ink);border-radius:3px;padding:22px 20px;box-shadow:0 12px 26px -18px rgba(20,30,50,.6);display:grid;gap:12px}
+.sheet .empty{border-color:var(--paper-line);color:var(--card-muted)}
+.sheet .empty strong{color:var(--card-ink)}
+.sheet .days li{background:transparent;border-color:var(--paper-line)}
+.sheet .days .d span,.sheet .days .e{color:var(--card-muted)}
+
+.sc-card{position:relative;transform:rotate(var(--tilt,0deg));transition:transform .2s ease;color:var(--card-ink);box-shadow:0 1px 1px rgba(20,30,50,.08),0 8px 18px -12px rgba(20,30,50,.45)}
+@media (hover:hover){.sc:hover .sc-card{transform:rotate(0deg) translateY(-2px)}}
+.sc:focus-within .sc-card{transform:rotate(0deg)}
+@media (prefers-reduced-motion: reduce){.sc-card,.itab,.sc{transition:none}}
+.sc-hit{position:absolute;inset:0;z-index:1;width:100%;border:0;background:none;padding:0;cursor:inherit;border-radius:inherit}
+.sc-hit:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.sc-body{display:grid;gap:5px;padding:10px 12px 12px;min-width:0}
+.sc-kind{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--card-muted)}
+.sc-title{font-family:var(--f-display);font-size:16.5px;line-height:1.35;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sc-memo{font-family:var(--f-pen);font-size:19px;line-height:1.2;color:var(--card-ink);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.sc-meta{display:flex;flex-direction:column;gap:2px;margin-top:2px}
+.sc-meta a{position:relative;z-index:2;font-size:12.5px;color:var(--card-muted);text-decoration:none;display:inline-flex;gap:4px;align-items:center;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;align-self:flex-start}
+.sc-meta a span{overflow:hidden;text-overflow:ellipsis}
+.sc-meta a:hover{color:var(--card-ink);text-decoration:underline}
+.sc-meta svg{width:12px;height:12px;flex:none}
+.ph{display:block;overflow:hidden;background:var(--board-dot)}
+.ph img{display:block;width:100%;height:100%;object-fit:cover}
+
+@media (max-width:640px){
+  .rlabel{max-width:calc(100% - 190px);padding:10px 8px 9px 8px;gap:6px}
+  .rl-more-info{display:none}
+  .rmenu{left:auto;right:-8px}
+  .rlabel h1{font-size:17px}
+  .rl-back{width:28px;height:28px}
+  .rtools .btn.add-idea{padding:9px 13px;font-size:13px}
+  .itabs{left:10px}
+  .itab{padding-inline:12px;font-size:13px}
+  .kstick{right:auto;left:12px;bottom:calc(64px + env(safe-area-inset-bottom,0px));gap:7px}
+  .kst{width:42px;height:42px;font-size:11.5px}
+}
+/* card looks */
+.polaroid .sc-card{background:var(--photo-frame);padding:9px 9px 2px;border-radius:2px}
+.polaroid .ph{aspect-ratio:1}
+.polaroid .sc-body{padding:10px 4px 10px}
+.print .sc-card{background:var(--paper);border-radius:3px}
+.print .ph{aspect-ratio:var(--ratio,4/3);border-radius:3px 3px 0 0}
+.stamp .sc-card{padding:9px;border-radius:2px;background:radial-gradient(circle,var(--board) 2.6px,transparent 3px) -2px -2px/11px 11px,var(--photo-frame)}
+.stamp .ph{aspect-ratio:4/5}
+.stamp .sc-body{background:var(--photo-frame);padding:9px 4px 4px}
+.paper .sc-card{border-radius:2px;background:repeating-linear-gradient(180deg,transparent 0 23px,var(--paper-line) 23px 24px) 0 38px,var(--paper)}
+.paper .sc-body{padding:16px 14px 16px}
+.grid .sc-card{border-radius:2px;background:linear-gradient(var(--paper-line) 1px,transparent 1px) 0 0/14px 14px,linear-gradient(90deg,var(--paper-line) 1px,transparent 1px) 0 0/14px 14px,var(--paper)}
+.grid .sc-body{padding:16px 14px 16px}
+.kraft .sc-card{background:var(--kraft);border-radius:4px 4px 14px 4px}
+.kraft .sc-card::before{content:"";position:absolute;top:12px;left:12px;width:9px;height:9px;border-radius:50%;background:var(--board);box-shadow:inset 0 1px 2px rgba(0,0,0,.3)}
+.kraft .sc-body{padding:26px 14px 16px}
+.sticky .sc-card{background:var(--sticky);border-radius:2px 2px 2px 18px}
+.sticky .sc-body{padding:18px 14px 20px}
+.tape{position:absolute;top:-10px;left:50%;width:68px;height:20px;margin-left:-34px;transform:rotate(var(--tape-tilt,-4deg));background:var(--tape-a);z-index:2;pointer-events:none;
+  clip-path:polygon(0 8%,5% 0,10% 9%,16% 1%,84% 4%,90% 0,95% 8%,100% 2%,100% 92%,95% 100%,89% 92%,84% 100%,15% 96%,9% 100%,4% 92%,0 100%)}
+.tape.b{background:var(--tape-b)}
+
+/* importance stickers */
+.sticker{position:absolute;z-index:3;pointer-events:none;font-size:11px;font-weight:700;line-height:1.1;text-align:center;white-space:nowrap}
+.sticker.must{top:-12px;right:-10px;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#B4321F;color:#FFF8F0;transform:rotate(12deg);box-shadow:0 3px 8px -4px rgba(0,0,0,.5),inset 0 0 0 3px rgba(255,255,255,.22)}
+.sticker.nice{top:-9px;right:-8px;padding:4px 9px;border-radius:4px;background:#FCEFD8;color:#8A560A;transform:rotate(-6deg);box-shadow:0 2px 6px -3px rgba(0,0,0,.4),inset 0 0 0 1px rgba(138,86,10,.25)}
+.sticker.maybe{top:-8px;right:-6px;padding:3px 8px;border-radius:999px;background:var(--photo-frame);color:var(--card-muted);border:1px dashed var(--card-muted);transform:rotate(5deg)}
+
+/* empty board */
+.board.is-empty{position:relative;display:grid;place-items:center;min-height:100%;padding:120px 20px 140px}
+.first-note{position:relative;max-width:330px;transform:rotate(-1.5deg);background:repeating-linear-gradient(180deg,transparent 0 25px,var(--paper-line) 25px 26px) 0 46px,var(--paper);color:var(--card-ink);padding:26px 22px 22px;border-radius:2px;box-shadow:0 10px 24px -16px rgba(20,30,50,.55);text-align:left;display:grid;gap:8px}
+.first-note h2{font-family:var(--f-display);font-size:20px;line-height:1.35}
+.first-note p{font-family:var(--f-pen);font-size:20px;line-height:1.3}
+.first-note .hint{font-family:var(--f-body);font-size:13px;color:var(--card-muted)}
+.ghost-frame{position:absolute;border:1.5px dashed var(--board-dot);border-radius:3px;pointer-events:none}
+.board-note{text-align:center;color:var(--muted);padding:28px 8px}
+
+/* add / edit memo: a cream scrap note laid on the board. Paper colours stay the same in both themes, like the cards. */
+.scrim{position:fixed;inset:0;z-index:50;background:var(--scrim);-webkit-backdrop-filter:blur(1.5px);backdrop-filter:blur(1.5px);display:grid;place-items:center;padding:16px;padding-block:calc(20px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-bottom,0px))}
+.memo{--m-ink:#1C2639;--m-muted:#5F6576;--m-line:#E6DECE;--m-line-strong:#CFC4AE;--m-field:rgba(255,255,255,.78);--m-red:#A3392D;
+  position:relative;width:100%;max-width:520px;max-height:calc(100vh - 48px);max-height:calc(100dvh - 48px);display:flex;flex-direction:column;
+  background:var(--paper);color:var(--m-ink);color-scheme:light;border:1px solid var(--m-line);border-radius:4px;
+  box-shadow:0 2px 3px rgba(20,30,50,.08),0 30px 54px -30px rgba(20,30,50,.6);animation:memo-in .22s ease-out}
+@keyframes memo-in{from{opacity:.5;transform:translateY(10px) rotate(-.6deg)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.memo{animation:none}}
+.memo-tape{top:-11px;width:84px;margin-left:-42px;z-index:3}
+.memo .modal{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;padding:0 24px;scroll-padding-top:80px;scroll-padding-bottom:96px}
+.memo .modal-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;padding:26px 0 12px;background:var(--paper);border-bottom:1px dashed var(--m-line-strong)}
+.memo .modal-head h2{font-family:var(--f-display);font-size:22px;line-height:1.3}
+.memo .x{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--m-line-strong);background:transparent;color:var(--m-muted);font-size:18px;line-height:1}
+.memo .x:hover{background:var(--m-line);color:var(--m-ink)}
+.memo form{display:grid;gap:18px}
+.memo .field{gap:7px}
+.memo .field>label,.memo .field legend,.memo .field-title{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--m-ink);padding:0}
+.memo .opt{font-weight:400;color:var(--m-muted)}
+.memo :focus-visible{outline:2px solid var(--m-ink);outline-offset:2px}
+.memo input[type=text],.memo input[type=url],.memo textarea{background:var(--m-field);color:var(--m-ink);border:1px solid var(--m-line-strong);border-radius:6px;padding:10px 12px;transition:border-color .15s ease,box-shadow .15s ease}
+.memo input::placeholder,.memo textarea::placeholder{color:#9C978A}
+.memo input[type=text]:focus,.memo input[type=url]:focus,.memo textarea:focus{outline:none;border-color:var(--m-ink);box-shadow:0 0 0 3px rgba(28,38,57,.12);background:#FFFFFF}
+.memo [aria-invalid="true"]{border-color:var(--m-red)!important}
+.memo .err{color:var(--m-red)}
+.memo textarea{min-height:76px}
+
+/* kind: paper tags with a punch hole */
+.memo .seg{gap:8px;margin-top:2px}
+.memo .tags .body{position:relative;border:1px dashed var(--m-line-strong);border-radius:4px;padding:10px 8px 10px 20px;background:var(--m-field);color:var(--m-muted);transition:transform .15s ease,background .15s ease}
+.memo .tags .body::before{content:"";position:absolute;left:8px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--paper);box-shadow:inset 0 0 0 1px var(--m-line-strong)}
+.memo .tags input:checked + .body{border:1px solid var(--m-ink);background:var(--m-ink);color:#FFFDF6;transform:rotate(-1.5deg);box-shadow:0 4px 10px -6px rgba(20,30,50,.6)}
+.memo .tags input:checked + .body::before{background:var(--paper);box-shadow:none}
+.memo .tags label:hover input:not(:checked) + .body{border-color:var(--m-ink);color:var(--m-ink)}
+
+/* importance: stickers, the picked one looks like the board sticker */
+.memo .imps .body{border:1px dashed var(--m-line-strong);border-radius:999px;padding:9px 6px;background:var(--m-field);color:var(--m-muted);transition:transform .15s ease}
+.memo .imps label:hover input:not(:checked) + .body{border-color:var(--m-ink);color:var(--m-ink)}
+.memo .imps .pick-must input:checked + .body{border:1px solid #B4321F;background:#B4321F;color:#FFF8F0;transform:rotate(-2deg);box-shadow:0 4px 10px -6px rgba(120,20,10,.7)}
+.memo .imps .pick-nice input:checked + .body{border:1px solid #D9B98A;background:#FCEFD8;color:#8A560A;transform:rotate(1.5deg);box-shadow:0 4px 10px -6px rgba(120,80,10,.5)}
+.memo .imps .pick-maybe input:checked + .body{border:1.5px dashed var(--m-ink);background:#FFFFFF;color:var(--m-ink);transform:rotate(-1deg)}
+.memo .seg input:checked + .body b::before{content:"✓ ";font-weight:700}
+.memo .seg input:focus-visible + .body{outline:2px solid var(--m-ink);outline-offset:3px}
+
+/* photo: an empty album slot, or the picked photo as a small print */
+.photo-pick{position:relative;display:grid;place-items:center;padding:6px 0 4px;cursor:pointer;color:var(--m-muted)}
+.photo-pick input,.photo-has input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.photo-pick .slot{width:min(250px,100%);background:#FFFFFF;padding:10px 10px 26px;transform:rotate(-1.5deg);box-shadow:0 1px 2px rgba(20,30,50,.08),0 10px 20px -14px rgba(20,30,50,.6);transition:transform .15s ease}
+.photo-pick .slot-in{position:relative;display:grid;place-items:center;align-content:center;gap:4px;aspect-ratio:4/3;border:1.5px dashed var(--m-line-strong);background:repeating-linear-gradient(135deg,transparent 0 9px,rgba(207,196,174,.16) 9px 10px);text-align:center;padding:10px}
+.photo-pick .plus{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--m-ink);color:var(--m-ink);font-size:18px;line-height:1;margin-bottom:2px}
+.photo-pick b{color:var(--m-ink);font-weight:700;font-size:14px}
+.photo-pick small{font-size:12px;line-height:1.4}
+.photo-pick:hover .slot,.photo-pick.drag .slot{transform:rotate(0deg)}
+.photo-pick:hover .slot-in,.photo-pick.drag .slot-in{border-color:var(--m-ink)}
+.photo-pick:focus-within .slot{outline:2px solid var(--m-ink);outline-offset:3px}
+.photo-has{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:4px 0}
+.photo-has .pola{margin:0;background:#FFFFFF;padding:8px 8px 22px;transform:rotate(-2deg);box-shadow:0 1px 2px rgba(20,30,50,.08),0 10px 20px -14px rgba(20,30,50,.6)}
+.photo-has img{display:block;width:132px;height:132px;object-fit:cover}
+.photo-has .acts{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.photo-has label{cursor:pointer}
+.photo-has label:focus-within{outline:2px solid var(--m-ink);outline-offset:2px}
+
+/* buttons on paper */
+.memo .btn{border:1px solid var(--m-line-strong);background:var(--m-field);color:var(--m-ink);border-radius:6px;font-weight:600}
+.memo .btn:hover{border-color:var(--m-ink)}
+.memo .btn.primary{background:var(--m-ink);border-color:var(--m-ink);color:#FFFDF6}
+.memo .btn.primary:hover{filter:brightness(1.2)}
+.memo .btn.danger{background:var(--m-red);border-color:var(--m-red);color:#FFFFFF}
+.memo .btn.ghost-danger{background:none;border-color:transparent;color:var(--m-red);padding-inline:2px}
+.memo .btn.ghost-danger:hover{text-decoration:underline}
+.memo .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;position:sticky;bottom:0;z-index:2;margin:4px -24px 0;padding:14px 24px 20px;background:var(--paper);border-top:1px dashed var(--m-line-strong)}
+.memo .actions .right{display:flex;gap:10px;margin-left:auto}
+.memo .confirm{background:#F7E4DF;border-radius:6px}
+.memo .confirm p{color:var(--m-red)}
+.memo-view .modal-head h2{overflow-wrap:anywhere}
+.dv{display:grid;gap:16px;padding-bottom:8px}
+.dv-labels{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.dv-kind{position:relative;display:inline-block;padding:6px 12px 6px 22px;border-radius:4px;background:var(--m-ink);color:#FFFDF6;font-size:13px;font-weight:700;transform:rotate(-1.5deg);box-shadow:0 4px 10px -6px rgba(20,30,50,.6)}
+.dv-kind::before{content:"";position:absolute;left:8px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--paper)}
+.dv-imp{display:inline-block;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:700}
+.dv-imp.must{background:#B4321F;color:#FFF8F0;transform:rotate(3deg);box-shadow:0 4px 10px -6px rgba(120,20,10,.7)}
+.dv-imp.nice{background:#FCEFD8;color:#8A560A;border:1px solid #D9B98A;transform:rotate(-2deg)}
+.dv-imp.maybe{background:#FFFFFF;color:var(--m-ink);border:1.5px dashed var(--m-ink);transform:rotate(2deg)}
+.dv-photo{width:fit-content;max-width:100%;margin:0 auto;background:#FFFFFF;padding:10px 10px 16px;transform:rotate(-.8deg);box-shadow:0 1px 2px rgba(20,30,50,.08),0 12px 24px -16px rgba(20,30,50,.6)}
+.dv-photo img{display:block;width:auto;max-width:100%;height:auto;max-height:min(44vh,400px);object-fit:contain}
+.dv-memo{font-family:var(--f-pen);font-size:22px;line-height:28px;color:var(--m-ink);white-space:pre-wrap;overflow-wrap:anywhere;padding:0 2px 4px;background:repeating-linear-gradient(180deg,transparent 0 27px,var(--m-line) 27px 28px)}
+.dv-meta{margin:0;display:grid;gap:10px;padding:12px 14px;border:1px dashed var(--m-line-strong);border-radius:6px;background:var(--m-field)}
+.dv-meta div{display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;align-items:baseline}
+.dv-meta dt{font-size:12px;font-weight:700;color:var(--m-muted)}
+.dv-meta dd{margin:0;min-width:0}
+.dv-meta a{display:inline-flex;gap:6px;align-items:baseline;max-width:100%;color:var(--m-ink);text-decoration:underline;text-decoration-color:var(--m-line-strong);text-underline-offset:3px}
+.dv-meta a span{min-width:0;overflow-wrap:anywhere}
+.dv-meta a:hover{text-decoration-color:var(--m-ink)}
+.dv-meta svg{width:13px;height:13px;flex:none;align-self:center}
+.dv-date{font-size:12px;color:var(--m-muted)}
+.memo .form-err{font-size:13px;color:var(--m-red);background:#F7E4DF;border-radius:6px;padding:8px 12px}
+@media (max-width:520px){
+  .scrim{padding:12px;padding-block:calc(18px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-bottom,0px))}
+  .memo .modal{padding:0 16px}
+  .memo .modal-head{padding-top:22px}
+  .memo .modal-head h2{font-size:20px}
+  .memo .actions{margin:4px -16px 0;padding:12px 16px 14px}
+  .memo .actions .right{flex:1;justify-content:flex-end}
+  .photo-has img{width:110px;height:110px}
+  .room-top .btn.add-idea{padding:8px 13px;font-size:13px}
+}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:28px 20px;text-align:center;color:var(--muted);display:grid;gap:8px;justify-items:center}
+.empty strong{color:var(--ink);font-weight:600}
+.soon{display:inline-block;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--accent-ink);background:var(--accent-soft);border-radius:6px;padding:2px 8px}
+.days{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:8px}
+.days li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.days .d{font-family:var(--f-mono);font-size:13px;font-weight:600}
+.days .d span{color:var(--muted);font-weight:500;margin-left:6px}
+.days .e{color:var(--muted);font-size:13px;text-align:right}
+.danger-zone{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.confirm{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--danger-bg);border-radius:10px;padding:10px 14px;width:100%}
+.confirm p{flex:1 1 200px;color:var(--danger);font-weight:500}
+
+.view>.back{align-self:flex-start}
+#toast{position:fixed;z-index:60;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 18px;border-radius:999px;font-size:14px;max-width:calc(100% - 32px);text-align:center}
+.view{animation:in .25s ease-out}
+@keyframes in{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.view{animation:none}}
+@media (max-width:420px){
+  .row2{grid-template-columns:1fr}
+  .ticket{grid-template-columns:minmax(0,1fr) 82px}
+  .ticket::before,.ticket::after{right:74px}
+  .seg.kinds{--cols:2!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main id="view"></main>
+  <footer class="foot-brand">
+    <button class="brand" type="button" data-act="home" aria-label="Butterflight 처음 화면으로">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <ellipse cx="10" cy="11" rx="8" ry="6" transform="rotate(-25 10 11)" fill="var(--accent)"/>
+        <ellipse cx="22" cy="11" rx="8" ry="6" transform="rotate(25 22 11)" fill="var(--accent)"/>
+        <ellipse cx="11" cy="21" rx="5" ry="4" transform="rotate(20 11 21)" fill="var(--accent)" opacity=".7"/>
+        <ellipse cx="21" cy="21" rx="5" ry="4" transform="rotate(-20 21 21)" fill="var(--accent)" opacity=".7"/>
+        <rect x="15" y="7" width="2" height="18" rx="1" fill="var(--ink)"/>
+      </svg>
+      <b>Butterflight</b>
+    </button>
+  </footer>
+</div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function(){
+  const KEY = 'butterflight.rooms.v2';
+  const WD = ['일','월','화','수','목','금','토'];
+  const STATUS = { idea:'아이디어 모으는 중', plan:'계획 중', trip:'여행 중', done:'여행 완료' };
+  const KINDS = { place:'장소', food:'음식', activity:'활동', etc:'기타' };
+  const IMP = { must:'꼭 하기', nice:'하면 좋음', maybe:'후보' };
+  const IMP_RANK = { must:0, nice:1, maybe:2 };
+
+  // ---------- helpers ----------
+  const pad = n => String(n).padStart(2,'0');
+  const ymd = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y,m-1,d); };
+  const addDays = (s,n) => { const d = parse(s); d.setDate(d.getDate()+n); return ymd(d); };
+  const diff = (a,b) => Math.round((parse(b)-parse(a))/86400000);
+  const today = () => ymd(new Date());
+  const fmt = s => { const d = parse(s); return (d.getMonth()+1)+'.'+d.getDate()+' ('+WD[d.getDay()]+')'; };
+  const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const uid = p => p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+  function status(r){
+    if(!r.start || !r.end) return 'idea';
+    const now = today();
+    if(now < r.start) return 'plan';
+    if(now <= r.end) return 'trip';
+    return 'done';
+  }
+  function whenText(r){
+    if(!r.start || !r.end) return '날짜 미정';
+    const n = diff(r.start,r.end);
+    return fmt(r.start)+' – '+fmt(r.end)+' · '+(n===0?'당일치기':n+'박 '+(n+1)+'일');
+  }
+  function dday(r){
+    if(status(r)!=='plan') return '';
+    const n = diff(today(), r.start);
+    return n===0 ? 'D-DAY' : 'D-'+n;
+  }
+
+  // ---------- storage ----------
+  function load(){
+    try{ const raw = localStorage.getItem(KEY); if(raw){ const v = JSON.parse(raw); if(Array.isArray(v)) return v; } }catch(e){}
+    return [];
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(rooms)); return true; }catch(e){ return false; } }
+
+  let rooms = load();
+  let view = { name:'home' };
+  const root = document.getElementById('view');
+
+  let toastTimer;
+  function toast(msg){
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(()=>{ el.hidden = true; }, 2600);
+  }
+  function setErr(id, msg){
+    const input = document.getElementById(id), e = document.getElementById('e-'+id);
+    if(!input || !e) return;
+    if(msg){ e.textContent = msg; e.hidden = false; input.setAttribute('aria-invalid','true'); input.setAttribute('aria-describedby','e-'+id); }
+    else { e.hidden = true; input.removeAttribute('aria-invalid'); input.removeAttribute('aria-describedby'); }
+  }
+
+  // ---------- home: pick a room, or create the first one ----------
+  function renderHome(){
+    if(!rooms.length){ return renderCreate(true); }
+    const list = homeList();
+    const multi = list.length > 1;
+    const idx = Math.max(0, list.findIndex(r => r.id===homeRoomId));
+
+    const slides = list.map((r,i) => {
+      const st = status(r), d = dday(r);
+      const label = esc(r.dest)+' 방 열기. '+STATUS[st]+(d?', '+d:'')+'. 모은 아이디어 '+r.ideas.length+'개';
+      return '<li class="slide'+(i===idx?' is-active':'')+'" data-i="'+i+'">'
+        + '<button type="button" class="window" data-open="'+r.id+'" aria-label="'+label+'"'+(multi?' aria-roledescription="슬라이드"':'')+'>'
+        +   '<span class="pane">' + CLOUDS
+        +     '<span class="w-status" style="--dot:var(--dot-'+st+')"><i></i>'+STATUS[st]+(d?' · '+d:'')+'</span>'
+        +     '<span class="w-dest">'+esc(r.dest)+'</span>'
+        +     '<span class="w-name">'+esc(r.name)+' · '+(r.type==='group'?'함께':'혼자')+'</span>'
+        +     '<span class="w-date">'+whenText(r)+'</span>'
+        +     '<span class="w-count"><b>'+r.ideas.length+'</b><small>모은 아이디어</small></span>'
+        +   '</span>'
+        + '</button></li>';
+    }).join('');
+
+    const dots = multi ? '<div class="dots" role="group" aria-label="방 넘기기">'
+      + list.map((r,i)=>'<button type="button" class="dot-hit" data-go="'+i+'" aria-label="'+(i+1)+'번째 방, '+esc(r.dest)+'"><span class="dot"'+(i===idx?' aria-current="true"':'')+'></span></button>').join('')
+      + '</div>' : '';
+
+    root.innerHTML = '<div class="view home">'
+      + '<h1 class="home-title">어디서 아이디어를 모아볼까요?</h1>'
+      + '<div class="carousel"'+(multi?' role="region" aria-roledescription="캐러셀" aria-label="아이디어 방"':'')+'>'
+      +   '<ul class="track '+(multi?'multi':'single')+'" id="track" style="list-style:none;margin:0"'+(multi?' tabindex="0"':'')+'>'+slides+'</ul>'
+      + '</div>'
+      + dots
+      + '<button type="button" class="new-room" data-act="new-room">+ 새 방 만들기</button>'
+      + '</div>';
+
+    if(multi) setupCarousel(list.length, idx);
+  }
+
+  // viewBox 100 x 140 ~ the pane's shape. Text occupies x 15-85 above y 72 and the centre below y 98.
+  // position lives on the outer group; the inner group carries the CSS drift (a CSS transform would replace the attribute)
+  const puff = (x,y,k,o,cls) => '<g opacity="'+o+'" transform="translate('+x+' '+y+') scale('+k+')"><g class="'+cls+'">'
+    + '<circle cx="0" cy="0" r="5"/><circle cx="7" cy="-3.5" r="7"/><circle cx="15" cy="-1.5" r="5.5"/><circle cx="21" cy="1" r="4"/>'
+    + '<rect x="-4" y="0" width="29" height="5" rx="2.5"/></g></g>';
+  // one continuous outline per layer. Its baseline follows the window's bottom curve:
+  // high at both edges, lowest in the middle (yC = middle height, k = how much higher the edges sit).
+  const bank = (yC, k, x0, bumps, o) => {
+    const f = x => yC - k * Math.pow((x-50)/50, 2);
+    let x = x0, d = 'M'+x0+' 141 L'+x0+' '+f(x0).toFixed(2);
+    bumps.forEach(([w,h]) => { const dy = f(x+w) - f(x); d += ' a'+(w/2)+' '+h+' 0 0 1 '+w+' '+dy.toFixed(2); x += w; });
+    d += ' L'+x+' 141 Z';
+    return '<g opacity="'+o+'"><path d="'+d+'"/></g>';
+  };
+  const CLOUDS = '<svg class="clouds" viewBox="0 0 100 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">'
+    + puff(-9, 80, 1.05, .72, 'drift-a')      // left edge, empty middle band
+    + puff(77, 87, .95, .62, 'drift-b')       // right edge, a little lower
+    // low cloud bank along the bottom, under the count: a faint back row and a brighter front row
+    + '</svg>';
+
+  function homeList(){ return rooms.slice().sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0)); }
+
+  // ---------- carousel: swipe (touch), drag + buttons (desktop), dots ----------
+  let car = null;
+  let homeRoomId = null; // which window the home carousel shows
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setupCarousel(count, start){
+    const track = document.getElementById('track');
+    const slideEls = Array.from(track.children);
+    const step = () => slideEls.length > 1 ? slideEls[1].offsetLeft - slideEls[0].offsetLeft : 1;
+    car = { track, count, idx:start };
+    track.scrollLeft = step()*start;
+
+    function mark(i){
+      if(i===car.idx && track.dataset.ready) return;
+      car.idx = i; homeRoomId = slideEls[i].querySelector('.window').dataset.open; track.dataset.ready = '1';
+      slideEls.forEach((s,k)=>s.classList.toggle('is-active', k===i));
+      root.querySelectorAll('.dot').forEach((d,k)=>{ if(k===i) d.setAttribute('aria-current','true'); else d.removeAttribute('aria-current'); });
+    }
+    car.go = function(i){
+      i = Math.max(0, Math.min(count-1, i));
+      track.scrollTo({ left: step()*i, behavior: reduced() ? 'auto' : 'smooth' });
+      mark(i);
+    };
+
+    let ticking = false;
+    track.addEventListener('scroll', () => {
+      if(ticking || car.drag) return; ticking = true;
+      requestAnimationFrame(() => { ticking = false; mark(Math.round(track.scrollLeft / step())); });
+    }, { passive:true });
+
+    track.addEventListener('keydown', e => {
+      if(e.key==='ArrowRight'){ e.preventDefault(); car.go(car.idx+1); }
+      else if(e.key==='ArrowLeft'){ e.preventDefault(); car.go(car.idx-1); }
+    });
+
+    // mouse drag (touch uses native swipe + snap)
+    track.addEventListener('pointerdown', e => {
+      if(e.pointerType!=='mouse' || e.button!==0) return;
+      car.drag = { x:e.clientX, left:track.scrollLeft, moved:false };
+    });
+    car.step = step;
+    mark(start);
+  }
+  // registered once; they act on whichever carousel is on screen
+  window.addEventListener('pointermove', e => {
+    if(!car || !car.drag) return;
+    const dx = e.clientX - car.drag.x;
+    if(!car.drag.moved && Math.abs(dx) > 6){ car.drag.moved = true; car.track.classList.add('dragging'); }
+    if(car.drag.moved) car.track.scrollLeft = car.drag.left - dx;
+  });
+  window.addEventListener('pointerup', e => {
+    if(!car || !car.drag) return;
+    const d = car.drag; car.drag = null;
+    if(!d.moved) return;
+    car.track.classList.remove('dragging');
+    car.suppressClick = true; setTimeout(()=>{ if(car) car.suppressClick = false; }, 50);
+    const dx = e.clientX - d.x, from = Math.round(d.left / car.step());
+    car.go(Math.abs(dx) > 50 ? from + (dx < 0 ? 1 : -1) : from);
+  });
+
+  function renderCreate(first){
+    root.innerHTML = '<div class="view">'
+      + (first ? '' : '<button type="button" class="back" data-act="home">← 방 목록</button>')
+      + '<div class="page-head">'
+      +   '<h1>'+(first ? '첫 아이디어 방을 만들어 볼까요?' : '새 아이디어 방 만들기')+'</h1>'
+      +   (first ? '' : '<p class="lede">가고 싶은 여행지 하나만 정하면 돼요. 날짜는 몰라도 괜찮아요.</p>')
+      + '</div>'
+      + '<form class="card" id="room-form" novalidate>'
+      +   '<div class="field"><label for="r-dest">여행지</label><input type="text" id="r-dest" maxlength="30" placeholder="예: 오사카" autocomplete="off"><p class="err" id="e-r-dest" hidden></p></div>'
+      +   '<div class="field"><label for="r-name">방 이름 <span class="opt">(선택)</span></label><input type="text" id="r-name" maxlength="40" placeholder="비워 두면 “오사카 여행”처럼 지어져요" autocomplete="off"></div>'
+      +   '<fieldset class="field"><legend>누구와 모으나요?</legend><div class="seg left">'
+      +     '<label><input type="radio" name="r-type" id="r-solo" value="solo" checked><span class="body"><b>혼자</b><small>나만의 위시리스트</small></span></label>'
+      +     '<label><input type="radio" name="r-type" id="r-group" value="group"><span class="body"><b>함께</b><small>친구들과 추천 모으기</small></span></label>'
+      +   '</div></fieldset>'
+      +   '<fieldset class="field"><legend>여행 날짜 <span class="opt">(선택)</span></legend>'
+      +     '<div class="row2"><div class="field"><label for="r-start" class="hint">가는 날</label><input type="date" id="r-start"><p class="err" id="e-r-start" hidden></p></div>'
+      +     '<div class="field"><label for="r-end" class="hint">오는 날</label><input type="date" id="r-end"><p class="err" id="e-r-end" hidden></p></div></div>'
+      +   '</fieldset>'
+      +   '<div class="actions">'+(first?'':'<button type="button" class="btn" data-act="home">취소</button>')+'<button type="submit" class="btn primary">방 만들기</button></div>'
+      + '</form></div>';
+    document.getElementById('room-form').addEventListener('submit', onCreateRoom);
+    if(!first) document.getElementById('r-dest').focus();
+  }
+
+  function onCreateRoom(ev){
+    ev.preventDefault();
+    const dest = document.getElementById('r-dest').value.trim();
+    const name = document.getElementById('r-name').value.trim() || (dest ? dest+' 여행' : '');
+    const start = document.getElementById('r-start').value;
+    const end = document.getElementById('r-end').value;
+    const type = document.getElementById('r-group').checked ? 'group' : 'solo';
+    const errs = {
+      'r-dest': dest ? '' : '여행지를 적어 주세요.',
+      'r-start': (!start && end) ? '오는 날을 골랐다면 가는 날도 골라 주세요.' : '',
+      'r-end': (start && !end) ? '가는 날을 골랐다면 오는 날도 골라 주세요.' : (start && end && end < start ? '오는 날은 가는 날과 같거나 그 뒤여야 해요.' : '')
+    };
+    let first = null;
+    Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
+    if(first){ document.getElementById(first).focus(); return; }
+
+    const room = { id:uid('r'), dest, name, type, start:start||'', end:end||'', ideas:[], createdAt:Date.now(), updatedAt:Date.now() };
+    rooms.push(room);
+    const ok = save();
+    view = { name:'room', id:room.id, tab:'ideas', kind:'all', adding:true };
+    render();
+    toast(ok ? '방을 만들었어요. 첫 아이디어를 담아 보세요.' : '방을 만들었지만, 이 브라우저에서는 저장이 안 돼서 새로고침하면 사라져요.');
+  }
+
+  // ---------- room: scrapbook board ----------
+  const hash = str => { let h = 7; for(let k=0;k<str.length;k++) h = (h*31 + str.charCodeAt(k)) >>> 0; return h; };
+  const TILTS = [-2, 1.4, -0.8, 1.9, -1.5, 0.6, 1.1, -1.2];
+  const PIN = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 11.2s3.8-3.6 3.8-6.3A3.8 3.8 0 0 0 2.2 4.9c0 2.7 3.8 6.3 3.8 6.3z" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="4.9" r="1.3" fill="currentColor"/></svg>';
+  const LINK = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M5 7l2-2M4.2 5.6L3 6.8a1.8 1.8 0 0 0 2.5 2.5l1.2-1.2M7.8 6.4L9 5.2a1.8 1.8 0 0 0-2.5-2.5L5.3 3.9" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
+
+  // every card gets a stable look and width from its id, so the board doesn't reshuffle on each visit
+  const WIDTHS = { polaroid:210, print:240, stamp:190, paper:215, sticky:190, grid:215, kraft:195 };
+  function cardLook(it){
+    const h = hash(it.id), tilt = TILTS[h % TILTS.length];
+    if(it.photo){
+      const look = ['polaroid','print','stamp'][h % 3];
+      return { tilt, look, w: WIDTHS[look], tape: look==='print' || (look==='polaroid' && h%2===0) };
+    }
+    const look = ['paper','sticky','grid','kraft'][h % 4];
+    return { tilt, look, w: WIDTHS[look], tape: look==='paper' || look==='grid' };
+  }
+
+  function cardHtml(it){
+    const L = cardLook(it), h = hash(it.id);
+    const ratio = Math.min(1.6, Math.max(0.75, it.ratio || 4/3));
+    const photo = it.photo ? '<span class="ph" style="--ratio:'+ratio.toFixed(3)+'"><img src="'+it.photo+'" alt="" draggable="false"></span>' : '';
+    const place = it.place ? '<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(it.place)+'" target="_blank" rel="noopener noreferrer">'+PIN+'<span>'+esc(it.place)+'</span></a>' : '';
+    const link = it.link && /^https?:\/\//i.test(it.link) ? '<a href="'+esc(it.link)+'" target="_blank" rel="noopener noreferrer">'+LINK+'<span>'+esc(it.link.replace(/^https?:\/\/(www\.)?/i,'').replace(/\/$/,''))+'</span></a>' : '';
+    const dim = view.kind!=='all' && it.kind!==view.kind;
+    const placed = typeof it.x === 'number';
+    return '<li class="sc '+L.look+(dim?' dim':'')+'" data-id="'+it.id+'" style="--w:'+L.w+'px;'+(placed?'left:'+it.x+'px;top:'+it.y+'px;':'visibility:hidden;')+'z-index:'+(it.z||1)+'"'+(dim?' aria-hidden="true"':'')+'>'
+      + '<article class="sc-card" style="--tilt:'+L.tilt+'deg">'
+      +   (L.tape ? '<span class="tape'+(h%3===0?' b':'')+'" style="--tape-tilt:'+((h%7)-3)+'deg"></span>' : '')
+      +   '<span class="sticker '+it.imp+'">'+IMP[it.imp]+'</span>'
+      +   '<button type="button" class="sc-hit" data-view="'+it.id+'" aria-label="'+esc(it.title)+' 자세히 보기. Alt와 방향키로 옮길 수 있어요"'+(dim?' tabindex="-1"':'')+'></button>'
+      +   photo
+      +   '<div class="sc-body">'
+      +     '<p class="sc-kind">'+KINDS[it.kind]+'</p>'
+      +     '<h3 class="sc-title">'+esc(it.title)+'</h3>'
+      +   '</div>'
+      + '</article></li>';
+  }
+
+  function emptyBoard(){
+    return '<div class="board is-empty">'
+      + '<span class="ghost-frame" style="left:12%;top:24%;width:110px;height:130px;transform:rotate(-6deg)"></span>'
+      + '<span class="ghost-frame" style="right:12%;bottom:24%;width:130px;height:96px;transform:rotate(5deg)"></span>'
+      + '<div class="first-note"><span class="tape" style="--tape-tilt:-3deg"></span>'
+      +   '<h2>첫 아이디어를 붙여 볼까요?</h2>'
+      +   '<p>가고 싶은 곳, 먹고 싶은 것, 해 보고 싶은 일을 사진이랑 같이 모아 봐요.</p>'
+      +   '<p class="hint">오른쪽 위 ‘아이디어 추가하기’를 누르면 시작돼요.</p>'
+      + '</div></div>';
+  }
+
+  // ---------- free canvas ----------
+  const CV_PAD = 360;                          // spare room to drag into
+  const cvTop = () => Math.round(130 / cvScale());   // room under the floating label, in canvas units
+  const cvScale = () => Math.min(1, Math.max(0.62, window.innerWidth / 560));
+  let canvasRoom = null;                      // the room currently drawn on the canvas
+  let pendingScroll = null;                   // keep the view where it was across re-renders
+
+  function sizeCanvas(){
+    const sc = document.getElementById('cv-scroll'), sz = document.getElementById('cv-sizer'), cv = document.getElementById('cv');
+    if(!sc || !cv) return;
+    const s = cvScale();
+    let W = sc.clientWidth / s, H = sc.clientHeight / s;
+    cv.querySelectorAll('.sc').forEach(li => {
+      if(li.style.visibility==='hidden') return;
+      W = Math.max(W, li.offsetLeft + li.offsetWidth + CV_PAD);
+      H = Math.max(H, li.offsetTop + li.offsetHeight + CV_PAD);
+    });
+    cv.style.width = W+'px'; cv.style.height = H+'px'; cv.style.transform = 'scale('+s+')';
+    sz.style.width = (W*s)+'px'; sz.style.height = (H*s)+'px';
+  }
+
+  // ideas that have no spot yet (made before this version) get one, in tidy columns, once
+  function placeUnplaced(r){
+    const cv = document.getElementById('cv'), sc = document.getElementById('cv-scroll'); if(!cv) return;
+    const todo = [...cv.querySelectorAll('.sc')].filter(li => li.style.visibility==='hidden');
+    if(!todo.length) return;
+    const s = cvScale(), viewW = sc.clientWidth / s, colW = 258;
+    const cols = Math.max(1, Math.floor((viewW - 24) / colW));
+    const x0 = Math.max(16, (viewW - cols*colW) / 2 + 12);
+    // continue below anything already placed
+    let floor = cvTop();
+    cv.querySelectorAll('.sc').forEach(li => { if(li.style.visibility!=='hidden') floor = Math.max(floor, li.offsetTop + li.offsetHeight + 40); });
+    const colY = Array(cols).fill(floor);
+    let z = maxZ(r);
+    todo.forEach(li => {
+      const it = r.ideas.find(i => i.id===li.dataset.id); if(!it) return;
+      const c = colY.indexOf(Math.min(...colY)), h = hash(it.id);
+      it.x = Math.round(x0 + c*colW + (h%17) - 8); it.y = Math.round(colY[c] + (h%11));
+      it.z = ++z;
+      li.style.left = it.x+'px'; li.style.top = it.y+'px'; li.style.zIndex = it.z; li.style.visibility = '';
+      colY[c] += li.offsetHeight + 34;
+    });
+    save();
+  }
+  const maxZ = r => r.ideas.reduce((m,i)=>Math.max(m, i.z||0), 0);
+
+  // where a new card should land: the open space closest to the middle of what you're looking at
+  function freeSpot(){
+    const sc = document.getElementById('cv-scroll'), cv = document.getElementById('cv'), s = cvScale();
+    const W = 230, H = 280, gap = 18;
+    const view = sc ? { l: sc.scrollLeft/s, t: sc.scrollTop/s, w: sc.clientWidth/s, h: sc.clientHeight/s } : { l:0, t:0, w: innerWidth/s, h: innerHeight/s };
+    const cx = view.l + view.w/2 - W/2, cy = Math.max(cvTop(), view.t + view.h/2 - H/2);
+    const boxes = cv ? [...cv.querySelectorAll('.sc')].map(li => ({ l: li.offsetLeft-gap, t: li.offsetTop-gap, r: li.offsetLeft+li.offsetWidth+gap, b: li.offsetTop+li.offsetHeight+gap })) : [];
+    const free = (x,y) => x >= 12 && y >= cvTop() && !boxes.some(b => x < b.r && x+W > b.l && y < b.b && y+H > b.t);
+    for(let ring = 0; ring <= 14; ring++){
+      const pts = ring===0 ? [[0,0]] : [];
+      for(let k=0; ring && k<8*ring; k++){ const a = k/(8*ring)*Math.PI*2; pts.push([Math.cos(a)*ring*70, Math.sin(a)*ring*60]); }
+      for(const [dx,dy] of pts){ const x = Math.round(cx+dx), y = Math.round(cy+dy); if(free(x,y)) return { x, y }; }
+    }
+    // board is full around here: put it just below everything
+    const bottom = boxes.reduce((m,b)=>Math.max(m,b.b), cvTop());
+    return { x: Math.max(16, Math.round(cx)), y: Math.round(bottom + gap) };
+  }
+
+  function mountCanvas(r){
+    const sc = document.getElementById('cv-scroll'); if(!sc) return;
+    canvasRoom = r;
+    const cv = document.getElementById('cv');
+    if(cv){
+      cv.style.transform = 'scale('+cvScale()+')';
+      placeUnplaced(r); sizeCanvas();
+      cv.querySelectorAll('img').forEach(img => { if(!img.complete) img.addEventListener('load', sizeCanvas, { once:true }); });
+      if(document.fonts && document.fonts.ready) document.fonts.ready.then(sizeCanvas);
+      cv.addEventListener('pointerdown', onCardDown);
+      cv.addEventListener('contextmenu', e => { if(e.target.closest('.sc')) e.preventDefault(); });
+      cv.addEventListener('touchmove', e => { if(drag && drag.active) e.preventDefault(); }, { passive:false });
+      cv.addEventListener('keydown', onCardKey);
+    }
+    if(pendingScroll){ sc.scrollLeft = pendingScroll.left; sc.scrollTop = pendingScroll.top; pendingScroll = null; }
+  }
+  window.addEventListener('resize', () => { if(document.getElementById('cv')) sizeCanvas(); });
+
+  // ---------- dragging: mouse drags right away, touch drags after a long press ----------
+  let drag = null, suppressClickUntil = 0;
+  function onCardDown(e){
+    const li = e.target.closest('.sc'); if(!li || (e.button!==undefined && e.button>0)) return;
+    if(e.target.closest('a')) return;
+    const sc = document.getElementById('cv-scroll');
+    drag = { li, id: li.dataset.id, pid: e.pointerId, sx: e.clientX, sy: e.clientY, x0: li.offsetLeft, y0: li.offsetTop,
+             sl: sc.scrollLeft, st: sc.scrollTop, active: false, touch: e.pointerType!=='mouse', timer: null, lx: e.clientX, ly: e.clientY };
+    if(drag.touch) drag.timer = setTimeout(() => { if(drag && !drag.active) startDrag(); }, 380);
+  }
+  function startDrag(){
+    drag.active = true;
+    const r = canvasRoom; drag.li.style.zIndex = (r ? maxZ(r) : 0) + 1;
+    drag.li.classList.add('dragging');
+    try{ drag.li.setPointerCapture(drag.pid); }catch(_){}
+    if(navigator.vibrate) try{ navigator.vibrate(12); }catch(_){}
+  }
+  function dragTo(clientX, clientY){
+    const sc = document.getElementById('cv-scroll'), s = cvScale();
+    const x = Math.max(0, Math.round(drag.x0 + (clientX - drag.sx + sc.scrollLeft - drag.sl) / s));
+    const y = Math.max(0, Math.round(drag.y0 + (clientY - drag.sy + sc.scrollTop - drag.st) / s));
+    drag.li.style.left = x+'px'; drag.li.style.top = y+'px';
+    // grow the board while dragging toward its far edges
+    const cv = document.getElementById('cv');
+    if(x + drag.li.offsetWidth + 120 > parseFloat(cv.style.width) || y + drag.li.offsetHeight + 120 > parseFloat(cv.style.height)) sizeCanvas();
+  }
+  let edgeTimer = null;
+  function edgeScroll(){
+    if(!drag || !drag.active){ edgeTimer = null; return; }
+    const sc = document.getElementById('cv-scroll'), m = 56; let dx = 0, dy = 0;
+    if(drag.lx < m) dx = -14; else if(drag.lx > innerWidth - m) dx = 14;
+    if(drag.ly < m) dy = -14; else if(drag.ly > innerHeight - m) dy = 14;
+    if(dx || dy){ sc.scrollLeft += dx; sc.scrollTop += dy; dragTo(drag.lx, drag.ly); }
+    edgeTimer = requestAnimationFrame(edgeScroll);
+  }
+  window.addEventListener('pointermove', e => {
+    if(!drag || e.pointerId!==drag.pid) return;
+    const dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+    if(!drag.active){
+      if(drag.touch){ if(Math.hypot(dx,dy) > 9){ clearTimeout(drag.timer); drag = null; } return; } // finger moved first: it's a scroll
+      if(Math.hypot(dx,dy) < 4) return;
+      startDrag();
+    }
+    e.preventDefault();
+    drag.lx = e.clientX; drag.ly = e.clientY;
+    dragTo(e.clientX, e.clientY);
+    if(!edgeTimer) edgeTimer = requestAnimationFrame(edgeScroll);
+  }, { passive:false });
+  function endDrag(){
+    if(!drag) return;
+    clearTimeout(drag.timer);
+    const d = drag; drag = null;
+    if(!d.active) return;
+    d.li.classList.remove('dragging');
+    suppressClickUntil = Date.now() + 350;
+    const r = canvasRoom, it = r && r.ideas.find(i => i.id===d.id);
+    if(it){ it.x = d.li.offsetLeft; it.y = d.li.offsetTop; it.z = parseInt(d.li.style.zIndex,10) || 1; save(); }
+    sizeCanvas();
+  }
+  window.addEventListener('pointerup', endDrag);
+  window.addEventListener('pointercancel', endDrag);
+
+  // keyboard: Alt + arrow keys nudge the focused card
+  function onCardKey(e){
+    if(!e.altKey || !/^Arrow/.test(e.key)) return;
+    const li = e.target.closest('.sc'), r = canvasRoom; if(!li || !r) return;
+    const it = r.ideas.find(i => i.id===li.dataset.id); if(!it) return;
+    e.preventDefault();
+    const step = e.shiftKey ? 60 : 20;
+    if(e.key==='ArrowLeft') it.x = Math.max(0, it.x - step);
+    if(e.key==='ArrowRight') it.x += step;
+    if(e.key==='ArrowUp') it.y = Math.max(0, it.y - step);
+    if(e.key==='ArrowDown') it.y += step;
+    li.style.left = it.x+'px'; li.style.top = it.y+'px'; save(); sizeCanvas();
+  }
+
+  function renderRoom(){
+    const r = rooms.find(x => x.id===view.id);
+    if(!r){ view = { name:'home' }; return render(); }
+    const st = status(r), d = dday(r);
+    let body = '';
+
+    if(view.tab==='ideas'){
+      body = r.ideas.length
+        ? '<div class="cv-sizer" id="cv-sizer"><ul class="cv" id="cv">'+r.ideas.slice().sort((a,b)=> IMP_RANK[a.imp]-IMP_RANK[b.imp] || b.createdAt-a.createdAt).map(cardHtml).join('')+'</ul></div>'
+        : emptyBoard();
+    } else {
+      let panel;
+      if(view.tab==='plan'){
+        if(st==='idea'){
+          panel = '<div class="empty"><strong>아직 날짜를 정하지 않았어요</strong><span>날짜를 정하면 날짜별 칸이 생기고, 모은 아이디어를 옮겨 일정을 짤 수 있어요.</span><span class="soon">다음 단계에서 추가</span></div>';
+        } else {
+          const total = diff(r.start,r.end)+1, show = Math.min(total,10);
+          let rows=''; for(let i=0;i<show;i++){ rows += '<li><span class="d">DAY '+(i+1)+'<span>'+fmt(addDays(r.start,i))+'</span></span><span class="e">아직 일정이 없어요</span></li>'; }
+          panel = '<ul class="days">'+rows+'</ul>'+(total>show?'<p class="hint" style="text-align:center">그 밖에 '+(total-show)+'일 더 있어요</p>':'')
+            + '<div class="empty"><strong>모은 아이디어를 날짜로 옮기는 기능은 준비 중이에요</strong><span class="soon">다음 단계에서 추가</span></div>';
+        }
+      } else {
+        panel = '<div class="empty"><strong>아직 남긴 기록이 없어요</strong><span>여행 중에는 했어요·못 했어요를 체크하고, 다녀와서는 사진과 감상을 남기는 곳이에요.</span><span class="soon">다음 단계에서 추가</span></div>';
+      }
+      body = '<div class="sheet-wrap"><div class="sheet" role="tabpanel" aria-labelledby="tab-'+view.tab+'">'+panel+'</div></div>';
+    }
+
+    const counts = { all:r.ideas.length }; Object.keys(KINDS).forEach(k=>counts[k]=0); r.ideas.forEach(i=>counts[i.kind]++);
+    const ROT = { all:-6, place:4, food:-3, activity:7, etc:-5 };
+    const stickers = (view.tab==='ideas' && r.ideas.length)
+      ? '<div class="prop kstick" role="group" aria-label="종류로 거르기">'
+        + [['all','전체']].concat(Object.keys(KINDS).map(k=>[k,KINDS[k]])).map(([k,l]) =>
+            '<button type="button" class="kst" data-kind="'+k+'" aria-pressed="'+(view.kind===k)+'" style="--r:'+ROT[k]+'deg"'+(k!=='all'&&!counts[k]?' disabled':'')+'>'+l+(k!=='all'&&counts[k]?'<span class="n">'+counts[k]+'</span>':'')+'</button>').join('')
+        + '</div>' : '';
+
+    const menu = !view.menu ? '' : view.confirmRoom
+      ? '<div class="rmenu"><p>“'+esc(r.name)+'” 방과 아이디어 '+r.ideas.length+'개를 모두 지울까요? 되돌릴 수 없어요.</p><div class="row"><button type="button" class="btn small" data-act="keep-room">취소</button><button type="button" class="btn small danger" data-act="del-room">삭제</button></div></div>'
+      : '<div class="rmenu"><button type="button" class="btn small ghost-danger" data-act="ask-room">이 방 삭제</button></div>';
+
+    const tabs = [['ideas','아이디어', r.ideas.length],['plan','일정'],['record','여행 기록']];
+    root.innerHTML = '<div class="view room-view">'
+      + '<div class="cv-scroll" id="cv-scroll">'+body+'</div>'
+      + '<header class="prop rlabel"><span class="tape" style="--tape-tilt:3deg"></span>'
+      +   '<button type="button" class="rl-back" data-act="home" aria-label="방 목록으로">←</button>'
+      +   '<div class="rl-text"><h1>'+esc(r.dest)+'</h1>'
+      +   '<p class="rl-sub"><i style="--dot:var(--dot-'+st+')"></i>'+STATUS[st]+(d?' · '+d:'')+' · '+(r.type==='group'?'함께':'혼자')+'<span class="rl-more-info"><br>'+esc(r.name)+' · '+whenText(r)+'</span></p></div>'
+      +   '<div class="rl-menu-wrap"><button type="button" class="rl-more" data-act="room-menu" aria-label="방 메뉴" aria-expanded="'+(!!view.menu)+'">⋯</button>'+menu+'</div>'
+      + '</header>'
+      + '<div class="prop rtools"><button type="button" class="btn add-idea" data-act="add-idea">+ 아이디어 추가하기</button></div>'
+      + '<nav class="prop itabs" role="tablist" aria-label="방 메뉴">'
+      +   tabs.map(([k,l,n]) => '<button type="button" class="itab t-'+k+'" role="tab" id="tab-'+k+'" aria-selected="'+(view.tab===k)+'" data-tab="'+k+'">'+l+(n!==undefined?'<span class="n">'+n+'</span>':'')+'</button>').join('')
+      + '</nav>'
+      + stickers
+      + '</div>';
+    mountCanvas(r);
+  }
+
+  // ---------- add / edit modal ----------
+  let modal = null; // { mode, id, photo, ratio, confirmDel, opener, fromDetail }
+  function openModal(mode, id, opts){
+    opts = opts || {};
+    const r = rooms.find(x => x.id===view.id); if(!r) return;
+    const it = mode==='edit' ? r.ideas.find(i => i.id===id) : null;
+    if(mode==='edit' && !it) return;
+    modal = { mode, id, photo: it ? (it.photo||'') : '', ratio: it ? (it.ratio||0) : 0, confirmDel:false, opener: document.activeElement, fromDetail: !!opts.fromDetail };
+    const v = (k, dflt) => it ? (it[k]||'') : (dflt||'');
+    const kind = it ? it.kind : (view.kind!=='all' ? view.kind : 'place');
+    const imp = it ? it.imp : 'nice';
+    const wrap = document.createElement('div');
+    wrap.className = 'scrim'; wrap.id = 'scrim';
+    wrap.innerHTML = '<div class="memo" role="dialog" aria-modal="true" aria-labelledby="m-title"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:-2deg"></span><div class="modal">'
+      + '<div class="modal-head"><h2 id="m-title">'+(mode==='edit'?'아이디어 수정하기':'아이디어 붙이기')+'</h2><button type="button" class="x" data-act="close-modal" aria-label="닫기">×</button></div>'
+      + '<form id="idea-form" novalidate>'
+      +   '<div class="field"><span class="field-title">사진 <span class="opt">(선택)</span></span><div id="photo-slot"></div><p class="err" id="e-i-photo" hidden></p></div>'
+      +   '<div class="field"><label for="i-title">아이디어 제목</label><input type="text" id="i-title" maxlength="50" placeholder="예: 도톤보리 글리코 간판 앞에서 사진" autocomplete="off" value="'+esc(v('title'))+'"><p class="err" id="e-i-title" hidden></p></div>'
+      +   '<fieldset class="field"><legend>종류</legend><div class="seg tags kinds" style="--cols:4">'
+      +     Object.keys(KINDS).map(k=>'<label><input type="radio" name="i-kind" id="i-kind-'+k+'" value="'+k+'"'+(k===kind?' checked':'')+'><span class="body"><b>'+KINDS[k]+'</b></span></label>').join('')
+      +   '</div></fieldset>'
+      +   '<div class="field"><label for="i-memo">짧은 메모 <span class="opt">(선택)</span></label><textarea id="i-memo" maxlength="200" placeholder="예: 친구가 꼭 가 보라고 추천함">'+esc(v('memo'))+'</textarea></div>'
+      +   '<div class="row2">'
+      +     '<div class="field"><label for="i-place">위치 <span class="opt">(선택)</span></label><input type="text" id="i-place" maxlength="60" placeholder="예: 오사카 도톤보리" autocomplete="off" value="'+esc(v('place'))+'"></div>'
+      +     '<div class="field"><label for="i-link">링크 <span class="opt">(선택)</span></label><input type="url" id="i-link" maxlength="300" placeholder="https://" autocomplete="off" value="'+esc(v('link'))+'"><p class="err" id="e-i-link" hidden></p></div>'
+      +   '</div>'
+      +   '<fieldset class="field"><legend>얼마나 하고 싶나요?</legend><div class="seg imps" style="--cols:3">'
+      +     Object.keys(IMP).map(k=>'<label class="pick-'+k+'"><input type="radio" name="i-imp" id="i-imp-'+k+'" value="'+k+'"'+(k===imp?' checked':'')+'><span class="body"><b>'+IMP[k]+'</b></span></label>').join('')
+      +   '</div></fieldset>'
+      +   '<p class="form-err" id="form-err" hidden></p>'
+      +   '<div class="actions" id="m-actions"></div>'
+      + '</form></div></div>';
+    document.body.appendChild(wrap);
+    document.body.style.overflow = 'hidden';
+    renderPhotoSlot(); renderModalActions();
+    wrap.addEventListener('mousedown', e => { if(e.target===wrap) closeModal(); });
+    document.getElementById('idea-form').addEventListener('submit', onSaveIdea);
+    // a warning goes away as soon as the field is being fixed
+    ['i-title','i-link'].forEach(id => document.getElementById(id).addEventListener('input', () => setErr(id, '')));
+    document.getElementById('i-title').focus();
+  }
+  // back = true: cancelling an edit that started from the detail view goes back to that detail view
+  function closeModal(back){
+    if(back===undefined) back = true;
+    const w = document.getElementById('scrim'); if(w) w.remove();
+    document.body.style.overflow = '';
+    const m = modal; modal = null;
+    if(!m) return;
+    if(back && m.fromDetail){ openDetail(m.id); return; }
+    if(m.opener && document.body.contains(m.opener)) m.opener.focus();
+  }
+  function renderModalActions(){
+    const a = document.getElementById('m-actions'); if(!a || !modal) return;
+    if(modal.confirmDel){
+      a.innerHTML = '<div class="confirm"><p>이 아이디어를 지울까요? 되돌릴 수 없어요.</p><button type="button" class="btn" data-act="keep-idea">취소</button><button type="button" class="btn danger" data-act="del-idea">삭제</button></div>';
+    } else {
+      a.innerHTML = (modal.mode==='edit' ? '<button type="button" class="btn ghost-danger" data-act="ask-del-idea">삭제</button>' : '')
+        + '<div class="right"><button type="button" class="btn" data-act="close-modal">취소</button><button type="submit" class="btn primary">'+(modal.mode==='edit'?'저장':'게시판에 붙이기')+'</button></div>';
+    }
+  }
+  function renderPhotoSlot(){
+    const slot = document.getElementById('photo-slot'); if(!slot || !modal) return;
+    if(modal.photo){
+      slot.innerHTML = '<div class="photo-has"><figure class="pola"><img src="'+modal.photo+'" alt="고른 사진 미리보기"></figure>'
+        + '<div class="acts"><label class="btn small" for="i-photo">사진 바꾸기</label><button type="button" class="btn small" data-act="drop-photo">사진 빼기</button>'
+        + '<input type="file" id="i-photo" accept="image/*"></div></div>';
+    } else {
+      slot.innerHTML = '<label class="photo-pick" id="photo-pick" for="i-photo"><input type="file" id="i-photo" accept="image/*">'
+        + '<span class="slot"><span class="slot-in"><span class="plus" aria-hidden="true">+</span><b>사진 추가</b><small>눌러서 고르거나, 사진을 여기로 끌어다 놓아요</small></span></span></label>';
+      const pick = document.getElementById('photo-pick');
+      pick.addEventListener('dragover', e => { e.preventDefault(); pick.classList.add('drag'); });
+      pick.addEventListener('dragleave', () => pick.classList.remove('drag'));
+      pick.addEventListener('drop', e => { e.preventDefault(); pick.classList.remove('drag'); const f = e.dataTransfer.files && e.dataTransfer.files[0]; if(f) takePhoto(f); });
+    }
+    document.getElementById('i-photo').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if(f) takePhoto(f); });
+  }
+  // shrink the photo before storing it: longest side 960px, JPEG
+  function readPhoto(file){
+    return new Promise((resolve, reject) => {
+      if(!/^image\//.test(file.type||'')) return reject(new Error('type'));
+      const url = URL.createObjectURL(file), img = new Image();
+      img.onload = () => {
+        const w = img.naturalWidth, h = img.naturalHeight, k = Math.min(1, 960 / Math.max(w, h));
+        const c = document.createElement('canvas'); c.width = Math.round(w*k); c.height = Math.round(h*k);
+        const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        resolve({ src: c.toDataURL('image/jpeg', 0.8), ratio: w / h });
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('load')); };
+      img.src = url;
+    });
+  }
+  function takePhoto(file){
+    const e = document.getElementById('e-i-photo');
+    readPhoto(file).then(res => {
+      if(!modal) return;
+      modal.photo = res.src; modal.ratio = res.ratio; e.hidden = true; renderPhotoSlot();
+    }).catch(() => { e.textContent = '이 파일은 사진으로 읽을 수 없어요. JPG나 PNG 사진을 골라 주세요.'; e.hidden = false; });
+  }
+
+  function onSaveIdea(ev){
+    ev.preventDefault();
+    const r = rooms.find(x => x.id===view.id); if(!r || !modal) return;
+    const title = document.getElementById('i-title').value.trim();
+    const memo = document.getElementById('i-memo').value.trim();
+    const place = document.getElementById('i-place').value.trim();
+    let link = document.getElementById('i-link').value.trim();
+    const kind = (document.querySelector('input[name="i-kind"]:checked')||{}).value || 'place';
+    const imp = (document.querySelector('input[name="i-imp"]:checked')||{}).value || 'nice';
+    if(link && !/^https?:\/\//i.test(link)) link = 'https://'+link;
+    const errs = {
+      'i-title': title ? '' : '아이디어 제목을 적어 주세요.',
+      'i-link': (link && !/^https?:\/\/[^\s.]+\.[^\s]+$/i.test(link)) ? '링크 주소가 맞는지 확인해 주세요.' : ''
+    };
+    let first = null;
+    Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
+    if(first){ document.getElementById(first).focus(); return; }
+
+    const data = { kind, title, memo, place, link, imp, photo: modal.photo || '', ratio: modal.photo ? modal.ratio : 0 };
+    let undo;
+    if(modal.mode==='edit'){
+      const it = r.ideas.find(i => i.id===modal.id); if(!it) return;
+      const before = Object.assign({}, it); Object.assign(it, data);
+      undo = () => { Object.keys(it).forEach(k => delete it[k]); Object.assign(it, before); };
+    } else {
+      const spot = freeSpot();
+      r.ideas.push(Object.assign({ id: uid('i'), createdAt: Date.now(), x: spot.x, y: spot.y, z: maxZ(r) + 1 }, data));
+      undo = () => r.ideas.pop();
+    }
+    const prevUpdated = r.updatedAt; r.updatedAt = Date.now();
+    const ok = save();
+    if(!ok && data.photo){
+      // most likely the browser's storage is full of photos: keep the board as it was and say so
+      undo(); r.updatedAt = prevUpdated;
+      const fe = document.getElementById('form-err');
+      fe.textContent = '사진 저장 공간이 꽉 차서 붙이지 못했어요. 사진을 빼고 붙이거나, 다른 아이디어의 사진을 지운 뒤 다시 해 주세요.';
+      fe.hidden = false; return;
+    }
+    const wasEdit = modal.mode==='edit', fromDetail = modal.fromDetail, savedId = modal.id;
+    const sc0 = document.getElementById('cv-scroll'); if(sc0 && document.getElementById('cv')) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop };
+    closeModal(false);
+    view.tab = 'ideas'; if(!wasEdit) view.kind = 'all';
+    render();
+    if(fromDetail) openDetail(savedId);   // show the saved changes right away
+    toast(!ok ? '붙였지만 이 브라우저에서는 저장이 안 돼서 새로고침하면 사라져요.' : wasEdit ? '아이디어를 고쳤어요.' : '게시판에 붙였어요.');
+  }
+
+  function deleteIdea(){
+    const r = rooms.find(x => x.id===view.id); if(!r || !modal) return;
+    r.ideas = r.ideas.filter(i => i.id!==modal.id); r.updatedAt = Date.now(); save();
+    const sc0 = document.getElementById('cv-scroll'); if(sc0) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop };
+    closeModal(false); render(); toast('아이디어를 지웠어요.');
+  }
+
+  document.addEventListener('keydown', e => {
+    if(e.key!=='Escape') return;
+    if(modal){ e.preventDefault(); closeModal(); }
+    else if(detail){ e.preventDefault(); closeDetail(); }
+  });
+
+  // ---------- read-only detail view ----------
+  let detail = null; // { id }
+  const longDate = ts => { const d = new Date(ts); return d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate()+' ('+WD[d.getDay()]+')'; };
+  function openDetail(id){
+    const r = rooms.find(x => x.id===view.id), it = r && r.ideas.find(i => i.id===id);
+    if(!it) return;
+    closeDetail(false);
+    detail = { id };
+    const shortUrl = u => u.replace(/^https?:\/\/(www\.)?/i,'').replace(/\/$/,'');
+    const rows = []
+      .concat(it.place ? ['<div><dt>위치</dt><dd><a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(it.place)+'" target="_blank" rel="noopener noreferrer">'+PIN+'<span>'+esc(it.place)+'</span></a></dd></div>'] : [])
+      .concat(it.link && /^https?:\/\//i.test(it.link) ? ['<div><dt>링크</dt><dd><a href="'+esc(it.link)+'" target="_blank" rel="noopener noreferrer">'+LINK+'<span>'+esc(shortUrl(it.link))+' ↗</span></a></dd></div>'] : []);
+    const wrap = document.createElement('div');
+    wrap.className = 'scrim'; wrap.id = 'scrim';
+    wrap.innerHTML = '<div class="memo memo-view" role="dialog" aria-modal="true" aria-labelledby="d-title"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:2deg"></span><div class="modal">'
+      + '<div class="modal-head"><h2 id="d-title">'+esc(it.title)+'</h2><button type="button" class="x" data-act="close-detail" aria-label="닫기">×</button></div>'
+      + '<div class="dv">'
+      +   '<div class="dv-labels"><span class="dv-kind">'+KINDS[it.kind]+'</span><span class="dv-imp '+it.imp+'">'+IMP[it.imp]+'</span></div>'
+      +   (it.photo ? '<figure class="dv-photo"><img src="'+it.photo+'" alt="'+esc(it.title)+' 사진"></figure>' : '')
+      +   (it.memo ? '<p class="dv-memo">'+esc(it.memo)+'</p>' : '')
+      +   (rows.length ? '<dl class="dv-meta">'+rows.join('')+'</dl>' : '')
+      +   (it.createdAt ? '<p class="dv-date">'+longDate(it.createdAt)+'에 붙였어요</p>' : '')
+      + '</div>'
+      + '<div class="actions"><div class="right"><button type="button" class="btn" data-act="close-detail">닫기</button><button type="button" class="btn primary" data-act="edit-from-detail">수정하기</button></div></div>'
+      + '</div></div>';
+    document.body.appendChild(wrap);
+    document.body.style.overflow = 'hidden';
+    wrap.addEventListener('mousedown', e => { if(e.target===wrap) closeDetail(); });
+    wrap.querySelector('.x').focus();
+  }
+  function closeDetail(focusBack){
+    if(focusBack===undefined) focusBack = true;
+    if(!detail) return;
+    const w = document.getElementById('scrim'); if(w) w.remove();
+    document.body.style.overflow = '';
+    const id = detail.id; detail = null;
+    if(focusBack){ const b = document.querySelector('.sc-hit[data-view="'+id+'"]'); if(b) b.focus({ preventScroll:true }); }
+  }
+
+  function render(){
+    car = null; canvasRoom = null;
+    document.body.classList.toggle('room-mode', view.name==='room');
+    if(view.name==='new-room') renderCreate(false);
+    else if(view.name==='room') renderRoom();
+    else renderHome();
+  }
+
+  // ---------- events ----------
+  document.addEventListener('click', e => {
+    const el = e.target.closest('[data-act],[data-open],[data-tab],[data-kind],[data-view],[data-go],[data-step]');
+    if(!el) return;
+    const top = () => window.scrollTo(0,0);
+    if(car && car.suppressClick){ e.preventDefault(); return; } // a drag just ended, don't open a room
+    if(Date.now() < suppressClickUntil && el.closest('.sc')){ e.preventDefault(); return; } // a card was just dropped
+    if(view.menu && !el.closest('.rl-menu-wrap')){ view.menu = false; view.confirmRoom = false; }
+    if(el.dataset.go){ if(car) car.go(Number(el.dataset.go)); return; }
+    // a dimmed side window slides into the middle instead of opening
+    const side = el.dataset.open && el.closest('.slide:not(.is-active)');
+    if(side && car){ car.go(Number(side.dataset.i)); return; }
+    if(el.dataset.open){ homeRoomId = el.dataset.open; view = { name:'room', id:el.dataset.open, tab:'ideas', kind:'all' }; render(); top(); return; }
+    if(el.dataset.tab){ view.tab = el.dataset.tab; view.menu = false; render(); document.getElementById('tab-'+view.tab).focus(); return; }
+    if(el.dataset.kind){ const sc0 = document.getElementById('cv-scroll'); if(sc0) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop }; view.kind = el.dataset.kind; render(); return; }
+    if(el.dataset.view){ openDetail(el.dataset.view); return; }
+    const act = el.dataset.act;
+    if(act==='home'){ view = { name:'home' }; render(); top(); }
+    else if(act==='new-room'){ view = { name:'new-room' }; render(); top(); }
+    else if(act==='add-idea'){ openModal('add'); }
+    else if(act==='close-modal'){ closeModal(); }
+    else if(act==='close-detail'){ closeDetail(); }
+    else if(act==='edit-from-detail'){ if(detail){ const id = detail.id; closeDetail(false); openModal('edit', id, { fromDetail:true }); } }
+    else if(act==='drop-photo'){ if(modal){ modal.photo = ''; modal.ratio = 0; renderPhotoSlot(); } }
+    else if(act==='ask-del-idea'){ if(modal){ modal.confirmDel = true; renderModalActions(); } }
+    else if(act==='keep-idea'){ if(modal){ modal.confirmDel = false; renderModalActions(); } }
+    else if(act==='del-idea'){ deleteIdea(); }
+    else if(act==='room-menu'){ const sc0 = document.getElementById('cv-scroll'); if(sc0) pendingScroll = { left: sc0.scrollLeft, top: sc0.scrollTop }; view.menu = !view.menu; view.confirmRoom = false; render(); }
+    else if(act==='ask-room'){ view.menu = true; view.confirmRoom = true; render(); }
+    else if(act==='keep-room'){ view.confirmRoom = false; view.menu = false; render(); }
+    else if(act==='del-room'){
+      rooms = rooms.filter(r => r.id!==view.id); save();
+      view = { name:'home' }; render(); top(); toast('방을 지웠어요.');
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
