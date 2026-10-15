@@ -881,12 +881,12 @@ body.room-mode.tab-ideas .kst,body.room-mode.tab-ideas .kst[data-kind="food"]:no
 body.room-mode.tab-ideas .kst:hover:not(:disabled){box-shadow:0 4px 10px -5px rgba(4,30,60,.7),inset 0 0 0 2px #1D2B4F}
 body.room-mode.tab-ideas .kst[aria-pressed="true"]{background:#1D2B4F;color:#FFF3DF;box-shadow:0 0 0 2px #FFF3DF,0 6px 12px -6px rgba(4,30,60,.7)}
 body.room-mode.tab-ideas .kst .n,body.room-mode.tab-ideas .kst[data-kind="food"] .n,body.room-mode.tab-ideas .kst[data-kind="etc"] .n{background:#1D2B4F;color:#FFF3DF;box-shadow:0 0 0 1.5px #FFF3DF}
-/* index tabs back to their earlier colours (olive 아이디어·일정, honey ginger 여행 기록, ivory open tab); room-label tape in soft mustard gold #E6B84A */
+/* index tabs back to their earlier colours (olive 아이디어·일정, honey ginger 여행 기록, ivory open tab); room-label tape in calm sage green #9AA66A */
 body.room-mode.tab-ideas .itab.t-ideas,body.room-mode.tab-ideas .itab.t-plan{background:#8E9A50;color:#1E2116}
 body.room-mode.tab-ideas .itab.t-record:not([aria-selected="true"]){background:#A86217;color:#FFFFFF}
 body.room-mode.tab-ideas .itab[aria-selected="true"]{background:#FAF3E6;color:#23262B}
 body.room-mode.tab-ideas .itab[aria-selected="true"] .n{color:#575F22}
-body.room-mode.tab-ideas .rlabel .tape{background:#E6B84A;opacity:.92}
+body.room-mode.tab-ideas .rlabel .tape{background:#9AA66A;opacity:.92}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -2403,7 +2403,7 @@ body.room-mode.tab-ideas .rlabel .tape{background:#E6B84A;opacity:.92}
     g.save(); g.translate(PAD, 40); g.rotate(-1*Math.PI/180);
     g.font = '700 40px '+fam; const tw = Math.min(W-PAD*2, Math.max(g.measureText(r.dest).width, 320) + 60);
     g.shadowColor = 'rgba(20,30,50,.25)'; g.shadowBlur = 18; g.shadowOffsetY = 8; g.fillStyle = '#FFF3DF'; g.fillRect(0, 0, tw, 104); g.shadowColor = 'transparent';
-    g.fillStyle = 'rgba(230,184,74,.92)'; g.fillRect(tw/2-40, -10, 80, 22);
+    g.fillStyle = 'rgba(154,166,106,.92)'; g.fillRect(tw/2-40, -10, 80, 22);
     g.fillStyle = '#1D2B4F'; g.fillText(r.dest, 26, 54);
     g.font = '500 16px '+body; g.fillStyle = '#5A4632';
     const people = (r.members||[]).length > 1 ? ' · '+r.members.map(m => m.nick).join(', ') : '';
