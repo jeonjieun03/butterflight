@@ -1005,6 +1005,99 @@ body.tab-plan #toast{background:#1D2B4F;color:#FFF3DF}
 /* 일정 room on the same cobalt board as the idea board (same dots), the cream receipt floating on it */
 body.room-mode.tab-plan{--board:#0877C8;--board-dot:#2A8BD4}
 body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2)) drop-shadow(0 14px 20px rgba(4,30,60,.4))}
+/* ===== 여행 기록 tab: one roll of film on a cream page (cobalt board, navy film, yellow hand-drawn canister) ===== */
+body.room-mode.tab-record{--board:#0877C8;--board-dot:#2A8BD4;--fu:7.4px;--film-hole:#FFF8EC}
+body.room-mode.tab-record .rlabel{background:#FFF3DF;color:#1D2B4F}
+body.room-mode.tab-record .rl-sub,body.room-mode.tab-record .rl-more{color:#5A4632}
+body.room-mode.tab-record .rl-back{color:#1D2B4F}
+body.room-mode.tab-record .rl-back:hover,body.room-mode.tab-record .rl-more:hover,body.room-mode.tab-record .rl-more[aria-expanded="true"]{background:#E8C99B;color:#1D2B4F}
+body.room-mode.tab-record .rlabel .tape{background:#9AA66A;opacity:.92}
+body.room-mode.tab-record .btn.add-idea{background:#E64D3F;color:#FFFFFF;font-weight:700;border:0}
+body.room-mode.tab-record .btn.add-idea:hover{background:#D4443A}
+body.room-mode.tab-record .btn.add-idea:focus-visible{outline:3px solid #1D2B4F;outline-offset:3px}
+body.room-mode.tab-record .itab.t-ideas{background:#8E9A50;color:#1E2116}
+body.room-mode.tab-record .itab.t-plan{background:#A86217;color:#FFFFFF}
+body.room-mode.tab-record .itab[aria-selected="true"]{background:#FAF3E6;color:#23262B}
+body.room-mode.tab-record .itab:focus-visible{outline:2.5px solid #FFF3DF;outline-offset:2px}
+body.tab-record #toast{background:#1D2B4F;color:#FFF3DF;top:calc(16px + env(safe-area-inset-top,0px));bottom:auto;z-index:70}
+.film-wrap-page{min-height:100%;padding:176px 16px calc(130px + env(safe-area-inset-bottom,0px))}
+.film-page{width:min(1240px,100%);margin:0 auto;background:#FFF8EC;color:#1D2B4F;padding:20px 0 16px;box-shadow:0 18px 30px -18px rgba(4,30,60,.7)}
+.fp-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 36px}
+.fp-head h2{font-family:var(--f-display);font-size:32px;line-height:1.15;color:#161616}
+.fp-head h2 span{margin-right:2px} .fp-head h2 em{font-style:normal;color:#A86217}
+.fp-nav{display:flex;gap:6px}
+.fp-nav button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(29,43,79,.3);background:#FFFFFF;color:#1D2B4F;font-size:18px;line-height:1;display:grid;place-items:center}
+.fp-nav button:hover{background:#1D2B4F;color:#FFF8EC}
+.fp-nav button:focus-visible,.fp-scroll:focus-visible{outline:2.5px solid #0877C8;outline-offset:2px}
+.fp-scroll{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scroll-padding-left:36px;padding:2px 36px 8px;scrollbar-width:thin;
+  -webkit-mask:linear-gradient(90deg,#000 calc(100% - 64px),transparent);mask:linear-gradient(90deg,#000 calc(100% - 64px),transparent)}
+.fp-roll{display:flex;align-items:flex-start;width:max-content;padding-right:48px}
+.fp-can{flex:none;scroll-snap-align:start;width:calc(var(--fu)*24);height:calc(var(--fu)*43);margin-right:-2px;margin-top:calc(var(--fu)*-.6);position:relative;z-index:2}
+.fp-can svg{display:block;width:100%;height:100%;filter:drop-shadow(1px 3px 3px rgba(20,20,30,.22))}
+.ff{position:relative;flex:none;width:calc(var(--fu)*30);margin-top:calc(var(--fu)*6.4);scroll-snap-align:start}
+.ff-hit{position:relative;display:block;width:calc(var(--fu)*30);height:calc(var(--fu)*29);padding:0;border:0;background:none;cursor:pointer}
+.ff-hit:focus-visible{outline:3px solid #0877C8;outline-offset:-3px}
+.ff-film{display:block;width:100%;height:100%}
+.ff-win{position:absolute;left:calc(var(--fu)*.5);top:calc(var(--fu)*5.6);width:calc(var(--fu)*29);height:calc(var(--fu)*17.8);overflow:hidden;background:#E9E2D6}
+.ff-win img{width:100%;height:100%;object-fit:cover;object-position:center 45%;display:block;transition:filter .15s ease}
+.ff-hit:hover .ff-win img{filter:brightness(1.05)}
+.ff-win.none{display:grid;place-items:center;align-content:center;gap:6px;color:#7A6E5E;font-size:12.5px;text-align:center;line-height:1.4}
+.ff-win.none svg{width:30px;height:30px}
+.ff-win.add{background:#FFF8EC;color:#5A4632;font-size:13.5px}
+.ff-win.add b{font-size:26px;line-height:1;color:#1D2B4F;font-weight:500}
+.ff-hit:hover .ff-win.add{background:#FFFFFF}
+.ff-day{position:absolute;left:calc(var(--fu)*1);top:-40px;font-family:var(--f-display);font-size:24px;font-weight:700;color:#1D2B4F;white-space:nowrap}
+.ff-day small{font-family:var(--f-mono);font-size:13px;font-weight:500;color:#5A4632;margin-left:8px}
+.ff-cap{padding:8px calc(var(--fu)*1) 0;display:grid;gap:3px}
+.ff-cap b{font-size:15.5px;font-weight:600;line-height:1.35;color:#1D2B4F;word-break:keep-all;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ff-cap small{font-size:13px;color:#5A4632}
+.ff-st{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#1D2B4F;width:fit-content;margin-top:2px}
+.ff-st i,.shot-st .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.ff-st.done i,.shot-st .dot.done{background:#5F7A2B}.ff-st.changed i,.shot-st .dot.changed{background:#A86217}
+.ff-st.skip i,.shot-st .dot.skip{background:#E64D3F}.ff-st.spont i,.shot-st .dot.spont{background:#0877C8}.ff-st.none i{background:transparent;box-shadow:inset 0 0 0 1.5px #8A7D6A}
+.ff-tail{flex:none;width:calc(var(--fu)*14);height:calc(var(--fu)*29);margin-top:calc(var(--fu)*6.4)}
+.ff-tail svg{display:block;width:100%;height:100%}
+.fp-check{margin:10px 36px 0;padding-top:12px;border-top:1.5px dashed rgba(29,43,79,.28)}
+.fp-check h3{font-size:18px;font-weight:700;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;color:#1D2B4F}
+.fp-check h3 small{font-weight:500;font-size:13px;color:#5A4632}
+.fp-check ol{list-style:none;margin:6px 0 0;padding:0}
+.fc-row{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 0;border-top:1px dotted rgba(29,43,79,.25);font-size:15px}
+.fc-day{font-family:var(--f-mono);font-size:13px;color:#065E9F;font-weight:600}
+.fc-t{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline;min-width:0}
+.fc-t b{font-weight:500;overflow-wrap:anywhere}.fc-t small{color:#5A4632;font-size:13px}
+.fc-seg{display:flex;gap:6px;flex-wrap:wrap}
+.fc-seg button{font-size:13.5px;font-weight:600;padding:6px 13px;border-radius:999px;border:1px solid rgba(29,43,79,.35);background:#FFFFFF;color:#1D2B4F;white-space:nowrap}
+.fc-seg button:hover{border-color:#1D2B4F}
+.fc-seg button[aria-pressed="true"]{background:#1D2B4F;color:#FFF3DF;border-color:#1D2B4F}
+.fc-seg button:focus-visible{outline:2px solid #0877C8;outline-offset:2px}
+/* photo record detail */
+.memo.sv .modal{display:grid;gap:4px}
+.sv-photo{background:#1D2B4F;padding:12px;margin-bottom:10px;display:grid;place-items:center}
+.sv-photo img{display:block;max-width:100%;max-height:min(56vh,520px);width:auto;height:auto}
+.sv-photo.none{aspect-ratio:3/2;color:#C9CFDD;gap:6px;align-content:center;font-size:13px}
+.sv-photo.none svg{width:34px;height:34px}
+.sv h2{font-size:21px;color:var(--m-ink,#1D2B4F)}
+.sv-meta{font-family:var(--f-mono);font-size:13px;color:#5A4632}
+.sv-note{font-size:14.5px;line-height:1.6;margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.sv-box{margin:0;border-top:1px dashed rgba(29,43,79,.35);padding:10px 0 6px;display:grid;gap:4px;font-size:14px}
+.sv-box dt{font-size:12px;font-weight:700;color:#5A4632;letter-spacing:.03em}.sv-box dd{margin:0}
+.memo .hint{font-size:12px;color:#5A4632;margin-top:4px}
+.shot-st .body{display:flex;align-items:center;gap:7px}
+.shot-st input:disabled + .body{opacity:.4;cursor:not-allowed}
+@media (max-width:640px){
+  body.room-mode.tab-record{--fu:5.2px}
+  .film-wrap-page{padding:96px 10px calc(120px + env(safe-area-inset-bottom,0px))}
+  .fp-head{padding:0 16px}.fp-head h2{font-size:25px}
+  .fp-nav{display:none}
+  .fp-scroll{padding-left:16px;padding-right:16px;scroll-padding-left:16px}
+  .ff-day{font-size:20px;top:-34px}
+  .ff-cap b{font-size:15px}
+  .fp-check{margin:10px 16px 0}
+  .fc-row{grid-template-columns:52px minmax(0,1fr)}.fc-seg{grid-column:1/-1}
+  body.tab-record #toast{top:calc(10px + env(safe-area-inset-top,0px));font-size:13.5px}
+}
+@media (prefers-reduced-motion: reduce){ .ff-win img{transition:none} }
+body.tab-record .memo-tape{background:#9AA66A;opacity:.92}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -1597,6 +1690,8 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
       const panel = view.tab==='plan' ? planPanel(r) : recordPanel(r);
       body = view.tab==='plan' && plansReady
         ? '<div class="sheet-wrap"><div class="rcp-shadow"><div class="sheet wide receipt" role="tabpanel" aria-labelledby="tab-plan">'+panel+'</div></div></div>'
+        : view.tab==='record' && plansReady
+        ? '<div class="film-wrap-page"><section class="film-page" role="tabpanel" aria-labelledby="tab-record">'+panel+'</section></div>'
         : '<div class="sheet-wrap"><div class="sheet wide" role="tabpanel" aria-labelledby="tab-'+view.tab+'">'+panel+'</div></div>';
     }
 
@@ -1633,6 +1728,8 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
       + '</header>'
       + '<div class="prop rtools">'+(view.tab==='plan' && plansReady
           ? '<button type="button" class="btn add-idea add-plan" data-act="plan-pick" data-day="'+planAddDay(r)+'">+ 일정 추가하기</button>'
+          : view.tab==='record' && plansReady
+          ? '<button type="button" class="btn add-idea add-shot" data-act="shot-add" data-day="'+planAddDay(r)+'">+ 사진 기록 추가</button>'
           : '<button type="button" class="btn add-idea" data-act="add-idea">+ 아이디어 추가하기</button>')+'</div>'
       + '<nav class="prop itabs" role="tablist" aria-label="방 메뉴">'
       +   tabs.map(([k,l,n]) => '<button type="button" class="itab t-'+k+'" role="tab" id="tab-'+k+'" aria-selected="'+(view.tab===k)+'" data-tab="'+k+'">'+l+(n!==undefined?'<span class="n">'+n+'</span>':'')+'</button>').join('')
@@ -1644,9 +1741,10 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
 
   // ---------- schedule + trip record: one row in bf_plans is one schedule entry and, later, its record ----------
   let plansReady = true;   // false until 02_butterflight_plans.sql has been run on the server
+  let photosReady = true;  // false until 05_butterflight_photos.sql (plan links + "다르게 했어요") has been run
   function planFromRow(d){
     return { id:d.id, ideaId:d.idea_id||'', title:d.title, day:d.day||'', time:d.at_time||'', place:d.place||'',
-      sort:d.sort||0, status:d.status||'', spont:!!d.spontaneous, note:d.note||'',
+      sort:d.sort||0, status:d.status||'', spont:!!d.spontaneous, note:d.note||'', ofPlan:d.of_plan||'',
       photoPath:d.photo_path||'', photo: photoLinks[d.photo_path] || '', ratio:d.photo_ratio||0, by:d.created_by, createdAt:ms(d.created_at) };
   }
   const dayList = r => { if(!r.start || !r.end) return []; const n = diff(r.start, r.end) + 1; return Array.from({ length:n }, (_, i) => addDays(r.start, i)); };
@@ -1712,38 +1810,176 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
     return { plan: planned.length, done: planned.filter(p => p.status==='done').length, skip: planned.filter(p => p.status==='skip').length,
              spont: r.plans.filter(p => p.spont).length };
   }
+  // ----- 여행 기록 tab: one roll of film, photos in date order -----
+  // a frame on the roll is a photo record (a spontaneous row, optionally linked to a plan with of_plan)
+  // or, from before the film, a planned entry that got a photo of its own
+  const SHOT_ST = { done:'계획대로 했어요', changed:'다르게 했어요', skip:'못 했어요', spont:'즉흥적으로 했어요', none:'아직 체크 전' };
+  const shotState = p => p.spont ? (p.ofPlan && p.status ? p.status : 'spont') : (p.status || 'none');
+  const filmFrames = r => r.plans.filter(p => p.spont || p.photoPath)
+    .sort((a, b) => (a.day||'9999').localeCompare(b.day||'9999') || byTime(a, b));
+  const planLabel = (r, p) => (p.day && inTrip(r, p.day) ? dayTag(r, p.day) : '날짜 미정') + (p.time ? ' · '+p.time : '') + ' · ' + p.title;
+  const FILM_CAN = '<svg class="fc-body" viewBox="0 0 24 43" aria-hidden="true"><defs>'
+    + '<filter id="fc-hd" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="5"/><feDisplacementMap in="SourceGraphic" scale=".45"/></filter>'
+    + '<filter id="fc-hd2" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="1" seed="2"/><feDisplacementMap in="SourceGraphic" scale=".16"/></filter>'
+    + '<pattern id="fc-hl" width=".9" height=".9" patternUnits="userSpaceOnUse" patternTransform="rotate(32)"><path d="M0 .45 H.9" stroke="#FFFFFF" stroke-width=".22" opacity=".28"/></pattern>'
+    + '<pattern id="fc-hs" width=".7" height=".7" patternUnits="userSpaceOnUse" patternTransform="rotate(-28)"><path d="M0 .35 H.7" stroke="#7A4A08" stroke-width=".26" opacity=".34"/></pattern>'
+    + '<pattern id="fc-hk" width=".6" height=".6" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><path d="M0 .3 H.6" stroke="#43557F" stroke-width=".2" opacity=".75"/></pattern>'
+    + '</defs><g filter="url(#fc-hd)" stroke="#111A30" stroke-width=".38" stroke-linejoin="round">'
+    + '<rect x="1.5" y="3.2" width="19" height="2.8" rx="1.1" fill="#1D2B4F"/><rect x="1.5" y="3.2" width="19" height="2.8" rx="1.1" fill="url(#fc-hk)" stroke="none"/>'
+    + '<rect x="2" y="5.6" width="18" height="30.8" fill="#E7B94F"/><rect x="2" y="5.6" width="18" height="30.8" fill="url(#fc-hl)" stroke="none"/>'
+    + '<rect x="14.4" y="5.6" width="5.6" height="30.8" fill="url(#fc-hs)" stroke="none"/>'
+    + '<rect x="2" y="5.6" width="1.3" height="30.8" fill="#E64D3F" stroke-width=".25"/>'
+    + '<rect x="1.5" y="36" width="19" height="2.8" rx="1.1" fill="#1D2B4F"/><rect x="1.5" y="36" width="19" height="2.8" rx="1.1" fill="url(#fc-hk)" stroke="none"/>'
+    + '<rect x="7.4" y="38.4" width="7.2" height="4" rx=".8" fill="#1D2B4F"/><rect x="7.4" y="38.4" width="7.2" height="4" rx=".8" fill="url(#fc-hk)" stroke="none"/>'
+    + '</g><rect x="19.6" y="7" width="4.4" height="29" fill="#1D2B4F"/><g filter="url(#fc-hd2)" font-family="IBM Plex Mono, ui-monospace, monospace">'
+    + '<g transform="translate(9.4 33.4) rotate(-90)"><text font-size="2.9" font-weight="700" fill="#1D2B4F">BUTTERFLIGHT</text><text y="2.9" font-size="1.45" fill="#1D2B4F" opacity=".85">color film for memories</text></g>'
+    + '<g transform="translate(16.6 33.4) rotate(-90)"><text font-size="3.8" font-weight="700" fill="#C2392E">200</text><text x="9.6" font-size="1.8" fill="#1D2B4F" opacity=".85">135 / 36</text></g></g></svg>';
+  // one 35 mm-style frame: 30 x 29 units, 9 equal perforations a row; the photo window is 29 x 17.8
+  const FILM_HOLES = (() => { let p = ''; for(let k = 0; k < 9; k++){ const x = (k*30/9 + (30/9 - 1.8)/2).toFixed(3);
+    p += '<rect x="'+x+'" y="1.5" width="1.8" height="2.7" rx=".55"/><rect x="'+x+'" y="24.8" width="1.8" height="2.7" rx=".55"/>'; } return p; })();
+  const FILM_FRAME = '<svg class="ff-film" viewBox="0 0 30 29" aria-hidden="true"><rect width="30" height="29" fill="#1D2B4F"/><g fill="var(--film-hole,#FFF8EC)">'+FILM_HOLES+'</g></svg>';
+  const FILM_TAIL = (() => { let p = ''; for(let k = 0; k < 4; k++){ const x = (k*30/9 + (30/9 - 1.8)/2).toFixed(3); p += '<rect x="'+x+'" y="1.5" width="1.8" height="2.7" rx=".55"/><rect x="'+x+'" y="24.8" width="1.8" height="2.7" rx=".55"/>'; }
+    return '<svg viewBox="0 0 14 29" aria-hidden="true"><defs><linearGradient id="ff-tail" x1="0" x2="1"><stop offset=".3" stop-color="#1D2B4F"/><stop offset="1" stop-color="#1D2B4F" stop-opacity="0"/></linearGradient></defs><rect width="14" height="29" fill="url(#ff-tail)"/><g fill="#FFF8EC">'+p+'</g></svg>'; })();
+  const CAM_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l1.5-2.5h5L16 7"/><circle cx="12" cy="13.5" r="3.6"/></svg>';
   function recordPanel(r){
     if(!plansReady) return setupNote();
-    const days = dayList(r);
-    let h = '<div class="pl-head"><h2>여행 기록</h2>'
-      + '<div class="rmode" role="group" aria-label="보는 방법"><button type="button" data-act="rmode" data-mode="check" aria-pressed="'+(view.rmode!=='compare')+'">체크하기</button>'
-      + '<button type="button" data-act="rmode" data-mode="compare" aria-pressed="'+(view.rmode==='compare')+'">계획과 실제</button></div></div>';
-    if(!days.length) return h + noDates(r, '날짜를 정하면 날마다 했어요·못 했어요를 체크하고, 사진과 감상을 남길 수 있어요.');
-    const t = tally(r);
-    h += '<p class="rc-sum">계획 '+t.plan+'개 중 <b class="ok">했어요 '+t.done+'</b> · <b class="no">못 했어요 '+t.skip+'</b> · <b class="sp">즉흥 '+t.spont+'</b></p>';
-    if(status(r)==='plan') h += '<p class="pl-none">여행이 시작되면 여기서 하나씩 체크해 보세요. 미리 둘러봐도 괜찮아요.</p>';
-    if(view.rmode==='compare') return h + comparePanel(r, days);
-
-    const row = p => {
-      const thumb = p.photo ? '<img class="rc-thumb" src="'+esc(p.photo)+'" alt="">' : '';
-      return '<li class="rc '+(p.status||'none')+(p.spont?' spont':'')+'">'
-        + '<button type="button" class="pl-item rc-main" data-act="rec-edit" data-id="'+p.id+'" aria-label="'+esc(p.title)+' 기록 남기기">' + timeChip(p)
-        +   '<span class="pl-main"><b>'+esc(p.title)+'</b>'+(p.note ? '<span class="rc-note">'+esc(p.note)+'</span>' : (p.place ? '<small>'+PIN+esc(p.place)+'</small>' : ''))+'</span>'+thumb+'</button>'
-        + (p.spont ? '<span class="rc-tag">즉흥</span>'
-          : '<span class="rc-checks" role="group" aria-label="'+esc(p.title)+'">'
-            + '<button type="button" class="done" data-act="rec-mark" data-id="'+p.id+'" data-st="done" aria-pressed="'+(p.status==='done')+'">했어요</button>'
-            + '<button type="button" class="skip" data-act="rec-mark" data-id="'+p.id+'" data-st="skip" aria-pressed="'+(p.status==='skip')+'">못 했어요</button></span>')
-        + '</li>';
-    };
-    days.forEach(day => {
-      const items = r.plans.filter(p => p.day===day).sort(byTime);
-      h += '<section class="pl-day"><header><b>'+dayTag(r, day)+'</b><span>'+fmt(day)+'</span></header>'
-        + (items.length ? '<ol class="pl-list">'+items.map(row).join('')+'</ol>' : '<p class="pl-none">이날 넣어 둔 일정이 없어요</p>')
-        + '<button type="button" class="rc-add" data-act="rec-spont" data-day="'+day+'">+ 계획에 없던 일 기록하기</button></section>';
+    const frames = filmFrames(r), planned = r.plans.filter(p => !p.spont);
+    let h = '<header class="fp-head"><h2>여행 기록<span>:</span> <em>'+esc(r.dest)+'</em></h2>'
+      + (frames.length > 1 ? '<div class="fp-nav"><button type="button" data-act="film-nav" data-dir="-1" aria-label="앞 사진">‹</button><button type="button" data-act="film-nav" data-dir="1" aria-label="다음 사진">›</button></div>' : '')
+      + '</header>';
+    let roll = '<div class="fp-can">'+FILM_CAN+'</div>', lastDay = null;
+    frames.forEach((p, n) => {
+      const day = p.day || '', st = shotState(p);
+      const tag = day!==lastDay ? '<span class="ff-day">'+(day && inTrip(r, day) ? dayTag(r, day)+'<small>'+fmt(day)+'</small>' : day ? fmt(day) : '날짜 미정')+'</span>' : '';
+      lastDay = day;
+      const meta = [day ? fmt(day) + (p.time ? ' '+p.time : '') : '날짜 미정', p.place].filter(Boolean).map(esc).join(' · ');
+      roll += '<div class="ff">'+tag
+        + '<button type="button" class="ff-hit" data-act="shot-view" data-id="'+p.id+'" aria-label="'+esc(p.title)+' 사진 기록 보기">'+FILM_FRAME
+        + '<span class="ff-win'+(p.photo ? '' : ' none')+'">'+(p.photo ? '<img src="'+esc(p.photo)+'" alt="" loading="lazy">' : CAM_ICON+'<span>사진 없음</span>')+'</span></button>'
+        + '<div class="ff-cap"><b>'+esc(p.title)+'</b><small>'+meta+'</small><span class="ff-st '+st+'"><i></i>'+SHOT_ST[st]+'</span></div></div>';
     });
-    const loose = r.plans.filter(p => !p.spont && !inTrip(r, p.day)).sort(byTime);
-    if(loose.length) h += '<section class="pl-day loose"><header><b>날짜 미정</b><span>일정에서 날짜를 정하지 않은 것</span></header><ol class="pl-list">'+loose.map(row).join('')+'</ol></section>';
+    roll += '<div class="ff ff-add">'+(frames.length ? '' : '<span class="ff-day">첫 사진</span>')
+      + '<button type="button" class="ff-hit" data-act="shot-add" data-day="'+planAddDay(r)+'">'+FILM_FRAME
+      + '<span class="ff-win none add"><b>+</b><span>'+(frames.length ? '사진 기록 추가' : '여행 중 찍은 첫 사진을<br>필름에 붙여 보세요')+'</span></span></button></div>'
+      + '<div class="ff-tail">'+FILM_TAIL+'</div>';
+    h += '<div class="fp-scroll" id="fp-scroll" tabindex="0" aria-label="사진 필름, 옆으로 넘겨 보기"><div class="fp-roll">'+roll+'</div></div>';
+    // plan check: every planned entry can still be marked, with or without a photo
+    const shots = id => r.plans.filter(x => x.spont && x.ofPlan===id).length + (r.plans.find(x => x.id===id && x.photoPath) ? 1 : 0);
+    const checks = [['done','계획대로'],['changed','다르게'],['skip','못 했어요']].filter(([k]) => k!=='changed' || photosReady);
+    const row = p => { const n = shots(p.id);
+      return '<li class="fc-row"><span class="fc-day">'+(p.day && inTrip(r, p.day) ? dayTag(r, p.day) : '미정')+'</span>'
+        + '<span class="fc-t"><b>'+esc(p.title)+'</b><small>'+(n ? '사진 '+n+'장' : '사진 없음')+'</small></span>'
+        + '<span class="fc-seg" role="group" aria-label="'+esc(p.title)+' 수행 상태">'+checks.map(([k,l]) => '<button type="button" data-act="rec-mark" data-id="'+p.id+'" data-st="'+k+'" aria-pressed="'+(p.status===k)+'">'+l+'</button>').join('')+'</span></li>'; };
+    const sorted = planned.slice().sort((a, b) => (inTrip(r, a.day) ? a.day : '9999').localeCompare(inTrip(r, b.day) ? b.day : '9999') || byTime(a, b));
+    h += '<section class="fp-check"><h3>계획 체크 <small>사진이 없는 계획도 여기서 체크해요</small></h3>'
+      + (sorted.length ? '<ol>'+sorted.map(row).join('')+'</ol>' : '<p class="pl-none">일정 탭에서 넣은 계획이 여기에 보여요</p>') + '</section>';
     return h;
+  }
+  // read-only view of one frame, before any editing
+  let sv = null;   // { id, opener }
+  function openShotView(id){
+    const r = curRoom(), p = r && r.plans.find(x => x.id===id); if(!p) return;
+    closeShotView(false);
+    sv = { id, opener: document.activeElement };
+    const st = shotState(p), plan = p.spont ? (p.ofPlan && r.plans.find(x => x.id===p.ofPlan)) : p;
+    const when = (p.day ? (inTrip(r, p.day) ? dayTag(r, p.day)+' · ' : '')+fmt(p.day) : '날짜 미정') + (p.time ? ' '+p.time : '');
+    const wrap = document.createElement('div');
+    wrap.className = 'scrim'; wrap.id = 'sv-scrim';
+    wrap.innerHTML = '<div class="memo sv" role="dialog" aria-modal="true" aria-labelledby="sv-title"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:-2deg"></span><div class="modal">'
+      + '<div class="sv-photo'+(p.photo ? '' : ' none')+'">'+(p.photo ? '<img src="'+esc(p.photo)+'" alt="'+esc(p.title)+' 사진">' : CAM_ICON+'<span>사진 없음</span>')+'</div>'
+      + '<h2 id="sv-title">'+esc(p.title)+'</h2><p class="sv-meta">'+esc(when)+(p.place ? ' · '+esc(p.place) : '')+'</p>'
+      + (p.note ? '<p class="sv-note">'+esc(p.note)+'</p>' : '')
+      + '<dl class="sv-box"><dt>계획한 일정</dt><dd>'+(plan ? esc(planLabel(r, plan))+(plan.place ? ' ('+esc(plan.place)+')' : '') : '연결된 계획 없음')+'</dd></dl>'
+      + '<dl class="sv-box"><dt>실제로는</dt><dd><span class="ff-st '+st+'"><i></i>'+SHOT_ST[st]+'</span></dd></dl>'
+      + '<div class="actions"><div class="right"><button type="button" class="btn" data-act="close-sv">닫기</button><button type="button" class="btn primary" data-act="shot-edit" data-id="'+p.id+'">수정하기</button></div></div>'
+      + '</div></div>';
+    document.body.appendChild(wrap);
+    document.body.style.overflow = 'hidden';
+    wrap.addEventListener('mousedown', e => { if(e.target===wrap) closeShotView(); });
+    wrap.querySelector('[data-act=close-sv]').focus();
+  }
+  function closeShotView(refocus){
+    if(!sv) return;
+    const w = document.getElementById('sv-scrim'); if(w) w.remove();
+    document.body.style.overflow = '';
+    const o = sv.opener; sv = null;
+    if(refocus!==false && o && document.body.contains(o)) o.focus();
+  }
+  // add / edit a photo record (a frame). A frame that was a planned entry with its own photo keeps the older record form.
+  function openShot(id, day){
+    const r = curRoom(); if(!r) return;
+    const p = id ? r.plans.find(x => x.id===id) : null;
+    if(id && !p) return;
+    if(p && !p.spont) return openRecord(p.id);
+    const planned = r.plans.filter(x => !x.spont).sort((a, b) => (inTrip(r, a.day) ? a.day : '9999').localeCompare(inTrip(r, b.day) ? b.day : '9999') || byTime(a, b));
+    const link = p ? p.ofPlan : '', st = p ? shotState(p) : 'spont';
+    const opts = '<option value="">연결 안 함 (즉흥)</option>' + planned.map(x => '<option value="'+x.id+'"'+(x.id===link?' selected':'')+'>'+esc(planLabel(r, x))+'</option>').join('');
+    const f = '<div class="field"><span class="field-title">사진</span><div id="photo-slot"></div><p class="err" id="e-i-photo" hidden></p></div>'
+      + '<div class="field"><label for="p-title">짧은 제목</label><input type="text" id="p-title" maxlength="50" placeholder="예: 강변에서 본 노을" autocomplete="off" value="'+esc(p ? p.title : '')+'"><p class="err" id="e-p-title" hidden></p></div>'
+      + '<div class="field"><label for="p-note">설명 · 실제로 어땠나요? <span class="opt">(선택)</span></label><textarea id="p-note" maxlength="300" placeholder="예: 줄이 길어서 근처 다른 가게로 갔는데 더 맛있었어요">'+esc(p ? p.note : '')+'</textarea></div>'
+      + '<div class="row2"><div class="field"><label for="p-day">날짜</label><select id="p-day">'+dayOptions(r, p ? p.day : (day||''))+'</select></div>'
+      + '<div class="field"><label for="p-time">시간 <span class="opt">(선택)</span></label><input type="time" id="p-time" value="'+esc(p ? p.time : '')+'"></div></div>'
+      + '<div class="field"><label for="p-place">장소 <span class="opt">(선택)</span></label><input type="text" id="p-place" maxlength="60" autocomplete="off" value="'+esc(p ? p.place : '')+'"></div>'
+      + '<div class="field"><label for="p-link">연결할 계획 <span class="opt">(선택)</span></label><select id="p-link"'+(photosReady ? '' : ' disabled')+'>'+opts+'</select>'
+      +   (photosReady ? '' : '<p class="hint">계획 연결은 서버에 05_butterflight_photos.sql 을 실행하면 쓸 수 있어요.</p>')+'</div>'
+      + '<fieldset class="field"><legend>일정 수행 상태</legend><div class="seg imps shot-st" style="--cols:2">'
+      +   ['done','changed','skip','spont'].map(k => '<label class="pick-shot-'+k+'"><input type="radio" name="p-st" value="'+k+'"'+(k===st?' checked':'')+'><span class="body"><i class="dot '+k+'"></i><b>'+SHOT_ST[k]+'</b></span></label>').join('')
+      + '</div><p class="hint">계획을 고르지 않으면 ‘즉흥적으로 했어요’로 저장돼요.</p></fieldset>';
+    openPM({ type:'shot', id: p ? p.id : null, spont:true, day: p ? p.day : day, photo: p ? p.photo : '', photoPath: p ? p.photoPath : '', origPath: p ? p.photoPath : '', blob:null, ratio: p ? p.ratio : 0 },
+      p ? '사진 기록 고치기' : '사진 기록 추가', f, saveShot);
+    const sel = document.getElementById('p-link');
+    const sync = () => { const linked = !!sel.value;
+      document.querySelectorAll('input[name=p-st]').forEach(x => { x.disabled = linked ? x.value==='spont' : x.value!=='spont'; });
+      const cur = document.querySelector('input[name=p-st]:checked');
+      if(!linked) document.querySelector('input[name=p-st][value=spont]').checked = true;
+      else if(!cur || cur.value==='spont') document.querySelector('input[name=p-st][value=done]').checked = true;
+      if(!photosReady) document.querySelector('input[name=p-st][value=changed]').disabled = true; };
+    sel.addEventListener('change', sync); sync();
+  }
+  async function saveShot(){
+    const r = curRoom(); if(!r) return;
+    const m = pm;
+    const title = document.getElementById('p-title').value.trim();
+    setErr('p-title', title ? '' : '짧은 제목을 적어 주세요.');
+    if(!title){ document.getElementById('p-title').focus(); return; }
+    const link = photosReady ? document.getElementById('p-link').value : '';
+    const pick = (document.querySelector('input[name=p-st]:checked') || {}).value || 'spont';
+    const st = link && pick!=='spont' ? pick : null;
+    const row = { title, note: document.getElementById('p-note').value.trim(), day: document.getElementById('p-day').value || null,
+      at_time: (document.getElementById('p-time').value || '').slice(0,5) || null, place: document.getElementById('p-place').value.trim(), status: st };
+    if(photosReady) row.of_plan = link || null;
+    if(m.blob && !m.origPath && photoCount(r, m.id) >= PHOTO_CAP){ formErr(errText('photo limit')); return; }
+    formErr(''); setBusy(true, m.blob ? '사진 올리는 중…' : '저장 중…');
+    let newPath = '';
+    if(m.blob){
+      try{ newPath = await uploadPhoto(r.id, m.blob); }
+      catch(err){ setBusy(false); formErr('사진을 올리지 못했어요. '+errText(err)); return; }
+    }
+    const hasPhoto = !!(newPath || m.photoPath);
+    Object.assign(row, { photo_path: newPath || m.photoPath || null, photo_ratio: hasPhoto ? m.ratio : null });
+    const res = m.id
+      ? await sb.from('bf_plans').update(row).eq('id', m.id).select().single()
+      : await sb.from('bf_plans').insert(Object.assign(row, { room_id:r.id, spontaneous:true, sort:0 })).select().single();
+    if(res.error || !res.data){ dropUpload(newPath); setBusy(false); formErr('저장하지 못했어요. '+errText(res.error)); return; }
+    if(m.origPath && m.origPath!==(newPath || m.photoPath)) removePhotos([m.origPath]);
+    const saved = planFromRow(res.data); saved.photo = hasPhoto ? m.photo : '';
+    const i = r.plans.findIndex(p => p.id===saved.id); if(i >= 0) r.plans[i] = saved; else r.plans.push(saved);
+    // the linked plan gets the same check, so 계획 체크 and the frame agree
+    const plan = link && r.plans.find(p => p.id===link);
+    if(plan && st && plan.status!==st){
+      const before = plan.status; plan.status = st;
+      const up = await sb.from('bf_plans').update({ status: st }).eq('id', plan.id);
+      if(up.error) plan.status = before;
+    }
+    r.updatedAt = Date.now();
+    const wasNew = !m.id;
+    m.busy = false; closePM(); keepScroll(); render();
+    toast(wasNew ? '필름에 사진 기록을 붙였어요.' : '사진 기록을 고쳤어요.');
+    if(!wasNew) openShotView(saved.id);
+  }
+  function filmNav(dir){
+    const sc = document.getElementById('fp-scroll'), f = sc && sc.querySelector('.ff'); if(!f) return;
+    sc.scrollBy({ left: dir * f.getBoundingClientRect().width * 2, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
   function comparePanel(r, days){
     const mark = p => '<i class="mk '+(p.status||'none')+'" aria-label="'+(p.status==='done'?'했어요':p.status==='skip'?'못 했어요':'아직')+'">'+(p.status==='done'?'✓':p.status==='skip'?'✕':'')+'</i>';
@@ -1792,8 +2028,8 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
   }
   function renderPMActions(){
     const a = document.getElementById('m-actions'); if(!a || !pm) return;
-    const delWords = { item:['일정에서 빼기','이 일정을 뺄까요? 남긴 기록도 같이 지워져요.'], rec:['기록 지우기','이 즉흥 기록을 지울까요? 되돌릴 수 없어요.'] };
-    const canDel = pm.id && (pm.type==='item' || (pm.type==='rec' && pm.spont));
+    const delWords = { item:['일정에서 빼기','이 일정을 뺄까요? 남긴 기록도 같이 지워져요.'], rec:['기록 지우기','이 즉흥 기록을 지울까요? 되돌릴 수 없어요.'], shot:['사진 기록 지우기','이 사진 기록을 지울까요? 사진도 같이 지워지고, 되돌릴 수 없어요.'] };
+    const canDel = pm.id && (pm.type==='item' || pm.type==='shot' || (pm.type==='rec' && pm.spont));
     if(pm.confirmDel){
       a.innerHTML = '<div class="confirm"><p>'+delWords[pm.type][1]+'</p><button type="button" class="btn" data-act="pm-keep">취소</button><button type="button" class="btn danger" data-act="pm-del">지우기</button></div>';
       return;
@@ -1897,8 +2133,8 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
         +  '<div class="field"><label for="p-place">장소 <span class="opt">(선택)</span></label><input type="text" id="p-place" maxlength="60" autocomplete="off" value="'+esc(p ? p.place : '')+'"></div>';
     } else {
       f += '<p class="pm-plan">'+timeChip(p)+(p.place ? ' <span>'+PIN+esc(p.place)+'</span>' : '')+'</p>'
-        +  '<fieldset class="field"><legend>어떻게 됐나요?</legend><div class="seg imps" style="--cols:3">'
-        +  [['done','했어요'],['skip','못 했어요'],['','아직']].map(([k,l]) => '<label class="pick-'+(k||'none')+'"><input type="radio" name="p-st" value="'+k+'"'+(k===st?' checked':'')+'><span class="body"><b>'+l+'</b></span></label>').join('')
+        +  '<fieldset class="field"><legend>어떻게 됐나요?</legend><div class="seg imps" style="--cols:'+(photosReady?4:3)+'">'
+        +  [['done','했어요'],['changed','다르게 했어요'],['skip','못 했어요'],['','아직']].filter(([k]) => k!=='changed' || photosReady).map(([k,l]) => '<label class="pick-'+(k||'none')+'"><input type="radio" name="p-st" value="'+k+'"'+(k===st?' checked':'')+'><span class="body"><b>'+l+'</b></span></label>').join('')
         +  '</div></fieldset>';
     }
     f += '<div class="field"><span class="field-title">사진 <span class="opt">(선택)</span></span><div id="photo-slot"></div><p class="err" id="e-i-photo" hidden></p></div>'
@@ -1964,7 +2200,7 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
     if(gone) removePhotos([gone.photoPath]);
     r.plans = r.plans.filter(p => p.id!==pm.id); r.updatedAt = Date.now();
     pm.busy = false; closePM(); keepScroll(); render();
-    toast(type==='item' ? '일정에서 뺐어요.' : '기록을 지웠어요.');
+    toast(type==='item' ? '일정에서 뺐어요.' : type==='shot' ? '사진 기록을 지웠어요.' : '기록을 지웠어요.');
   }
 
   // ---------- add / edit modal ----------
@@ -2176,6 +2412,7 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
   document.addEventListener('keydown', e => {
     if(e.key!=='Escape') return;
     if(pm){ e.preventDefault(); closePM(); }
+    else if(sv){ e.preventDefault(); closeShotView(); }
     else if(modal){ e.preventDefault(); closeModal(); }
     else if(detail){ e.preventDefault(); closeDetail(); }
   });
@@ -2446,7 +2683,7 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
     lastRefresh = Date.now(); return true;
   }
   async function quietRefresh(){
-    if(refreshing || !user || modal || pm || detail || drag || moveBox || !['home','room'].includes(view.name)) return;
+    if(refreshing || !user || modal || pm || sv || detail || drag || moveBox || !['home','room'].includes(view.name)) return;
     if(Date.now() - lastRefresh < 15000) return;
     refreshing = true;
     try{
@@ -2622,7 +2859,7 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
     const doneIds = new Set(r.plans.filter(p => p.status==='done' && p.ideaId).map(p => p.ideaId));
     return r.ideas.filter(i => !doneIds.has(i.id)).sort((a,b) => IMP_RANK[a.imp]-IMP_RANK[b.imp] || b.createdAt-a.createdAt).map(i => {
       const ps = r.plans.filter(p => p.ideaId===i.id && !p.spont);
-      const why = ps.some(p => p.status==='skip') ? '못 했어요' : ps.length ? '아직 체크 안 함' : '일정에 없었음';
+      const why = ps.some(p => p.status==='skip') ? '못 했어요' : ps.some(p => p.status==='changed') ? '다르게 했어요' : ps.length ? '아직 체크 안 함' : '일정에 없었음';
       return { i, why };
     });
   }
@@ -2760,7 +2997,11 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
     let last = null;
     for(const [sel, plans, together] of SELECTS){
       const { data, error } = await sb.from('bf_rooms').select(sel);
-      if(!error && data){ plansReady = plans; togetherReady = together; return { rooms: data.map(roomFromRow) }; }
+      if(!error && data){
+        plansReady = plans; togetherReady = together;
+        if(plans){ const probe = await sb.from('bf_plans').select('id, of_plan').eq('id', '00000000-0000-0000-0000-000000000000'); photosReady = !probe.error; }
+        return { rooms: data.map(roomFromRow) };
+      }
       last = error;
       if(!/relationship|schema cache|does not exist|column|bf_/i.test((error && error.message)||'')) break;
     }
@@ -2773,7 +3014,7 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
   }
   function signedOut(){
     user = null; rooms = []; homeRoomId = null;
-    closePM(true); closeModal(false); closeDetail(false); closeMove();
+    closePM(true); closeShotView(false); closeModal(false); closeDetail(false); closeMove();
     view = { name:'login', mode:'login' }; render();
   }
 
@@ -2844,6 +3085,7 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
     document.body.classList.toggle('room-mode', view.name==='room');
     document.body.classList.toggle('tab-ideas', view.name==='room' && view.tab==='ideas');
     document.body.classList.toggle('tab-plan', view.name==='room' && view.tab==='plan');
+    document.body.classList.toggle('tab-record', view.name==='room' && view.tab==='record');
     if(view.name==='edit-room' && !rooms.some(x => x.id===view.id)) view = { name:'home' };
     document.body.classList.toggle('paper-mode', ['new-room','edit-room','join','login','loading','fail'].includes(view.name) || (view.name==='home' && !rooms.length));
     if(view.name==='loading') renderLoading(view.msg);
@@ -2919,6 +3161,11 @@ body.room-mode.tab-plan .rcp-shadow{filter:drop-shadow(0 2px 2px rgba(4,30,60,.2
     else if(act==='rec-edit'){ openRecord(el.dataset.id); }
     else if(act==='rec-spont'){ openRecord(null, el.dataset.day); }
     else if(act==='rec-mark'){ markPlan(el.dataset.id, el.dataset.st); }
+    else if(act==='shot-add'){ closeShotView(false); openShot(null, el.dataset.day || ''); }
+    else if(act==='shot-view'){ openShotView(el.dataset.id); }
+    else if(act==='shot-edit'){ const id = el.dataset.id; closeShotView(false); openShot(id); }
+    else if(act==='close-sv'){ closeShotView(); }
+    else if(act==='film-nav'){ filmNav(+el.dataset.dir); }
     else if(act==='rmode'){ keepScroll(); view.rmode = el.dataset.mode; render(); }
     else if(act==='close-pm'){ closePM(); }
     else if(act==='pm-ask-del'){ if(pm){ pm.confirmDel = true; renderPMActions(); } }
