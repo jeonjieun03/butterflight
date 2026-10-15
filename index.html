@@ -1234,6 +1234,85 @@ body.room-edit{--paper:#FBEED7;--card-ink:#3C5227;--card-muted:#6A4B36}
 body.room-edit,body.room-edit.paper-mode{background:radial-gradient(circle,#7FC0EC 1px,transparent 1.4px) 0 0/18px 18px,#99D2FB;background-attachment:fixed}
 body.room-edit .view{background:transparent}
 body.room-edit .view a,body.room-edit .view .back,body.room-edit .view [data-act=back-room],body.room-edit .view [data-act=open-room]{color:#3C5227}
+/* ===== boarding pass login / sign-up ===== */
+.auth-view{padding-inline:16px}
+.bp-wrap{width:min(760px,100%);margin-inline:auto;filter:drop-shadow(0 2px 2px rgba(20,30,50,.12)) drop-shadow(0 18px 26px rgba(20,30,50,.24))}
+.memo.bp{--cut:200px;--paper:#FFF8EA;max-width:none;width:100%;max-height:none;margin:0;padding:0;border:0;border-radius:14px;display:grid;grid-template-columns:minmax(0,1fr) var(--cut);background:var(--paper);overflow:visible;animation:none;
+  -webkit-mask:radial-gradient(circle 13px at calc(100% - var(--cut)) 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 13px at calc(100% - var(--cut)) 100%,#0000 97%,#000) bottom/100% 51% no-repeat;
+          mask:radial-gradient(circle 13px at calc(100% - var(--cut)) 0,#0000 97%,#000) top/100% 51% no-repeat,radial-gradient(circle 13px at calc(100% - var(--cut)) 100%,#0000 97%,#000) bottom/100% 51% no-repeat}
+.bp-main{min-width:0}
+.bp-main .modal{padding:24px 30px 22px;max-height:none;overflow:visible}
+.bp .modal-head{position:static;padding:4px 0 12px;margin-bottom:12px;background:transparent}
+.bp .modal-head h1{font-size:25px}
+.bp-top{display:flex;justify-content:space-between;gap:12px;font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;color:#5F6576;padding-bottom:10px;border-bottom:1px solid #E6DECE}
+.bp-top span:first-child{color:#1C2639;font-weight:600}
+.bp .c-lede{margin-bottom:14px}
+.bp .actions{border-top:1px dashed #CFC4AE;margin-top:6px;padding-top:14px;position:static;background:transparent}
+.bp .auth-switch{margin-top:12px}
+.bp-stub{position:relative;border-left:2px dashed #CFC4AE;padding:26px 22px;display:grid;align-content:start;gap:2px;color:#1C2639;font-family:var(--f-mono)}
+.bp-k{font-size:10.5px;letter-spacing:.16em;color:#5F6576;margin-top:8px}
+.bp-v{font-family:var(--f-display);font-size:20px;line-height:1.2;color:#1C2639}
+.bp-v.sm{font-family:var(--f-mono);font-size:17px;font-weight:600}
+.bp-row{display:flex;gap:26px}
+.bp-bar{display:block;height:44px;margin-top:16px;opacity:.75;background:repeating-linear-gradient(90deg,#1C2639 0 2px,transparent 2px 4px,#1C2639 4px 5px,transparent 5px 8px,#1C2639 8px 11px,transparent 11px 13px)}
+.bp-stamp{position:absolute;left:50%;top:50%;display:grid;justify-items:center;padding:8px 14px;border:3px double #A3392D;border-radius:8px;color:#A3392D;font-family:var(--f-mono);
+  transform:translate(-50%,-50%) rotate(-12deg) scale(1.6);opacity:0;pointer-events:none;background:rgba(255,248,234,.55)}
+.bp-stamp b{font-family:var(--f-display);font-size:22px;letter-spacing:.06em;white-space:nowrap}
+.bp-stamp small{font-size:10.5px;letter-spacing:.24em;font-weight:600}
+.bp.stamped .bp-stamp{animation:bp-stamp .32s cubic-bezier(.3,1.4,.6,1) forwards}
+.bp.leaving{animation:bp-leave .42s ease-in forwards}
+@keyframes bp-stamp{from{opacity:0;transform:translate(-50%,-50%) rotate(-12deg) scale(1.6)}to{opacity:1;transform:translate(-50%,-50%) rotate(-12deg) scale(1)}}
+@keyframes bp-leave{0%{transform:none}30%{transform:translateY(8px) rotate(-1deg)}100%{transform:translate(18vw,-110vh) rotate(-8deg);opacity:.0}}
+/* the short window-and-clouds hand-over to the room list */
+.sky-pass{position:fixed;inset:0;z-index:300;background:linear-gradient(180deg,#5B8FD6 0%,#9CC6F2 55%,#DCEBFA 100%);overflow:hidden;animation:sky-in .28s ease-out both}
+.sky-pass.out{animation:sky-out .45s ease-in forwards}
+.sky-pass .cl{position:absolute;display:block;background:#FFFFFF;border-radius:999px;opacity:.95;box-shadow:0 10px 30px rgba(255,255,255,.6)}
+.sky-pass .cl::before,.sky-pass .cl::after{content:"";position:absolute;background:#FFFFFF;border-radius:50%}
+.sky-pass .cl::before{width:55%;height:150%;left:14%;bottom:30%}
+.sky-pass .cl::after{width:40%;height:120%;right:12%;bottom:35%}
+.sky-pass .c1{width:340px;height:90px;top:22%;left:100%;animation:cloud 1.1s linear .05s forwards}
+.sky-pass .c2{width:240px;height:66px;top:52%;left:100%;animation:cloud .95s linear .15s forwards}
+.sky-pass .c3{width:420px;height:110px;top:70%;left:100%;animation:cloud 1.2s linear 0s forwards}
+.sky-pass .c4{width:200px;height:56px;top:10%;left:100%;animation:cloud .9s linear .25s forwards}
+@keyframes cloud{to{transform:translateX(calc(-100vw - 480px))}}
+@keyframes sky-in{from{opacity:0;clip-path:ellipse(12% 18% at 50% 50%)}to{opacity:1;clip-path:ellipse(80% 80% at 50% 50%)}}
+@keyframes sky-out{from{opacity:1;clip-path:ellipse(80% 80% at 50% 50%)}to{opacity:0;clip-path:ellipse(120% 120% at 50% 50%)}}
+@media (max-width:640px){
+  .memo.bp{--cut:0px;grid-template-columns:minmax(0,1fr);
+    -webkit-mask:radial-gradient(circle 12px at 0 calc(100% - 132px),#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% calc(100% - 132px),#0000 97%,#000) right/51% 100% no-repeat;
+            mask:radial-gradient(circle 12px at 0 calc(100% - 132px),#0000 97%,#000) left/51% 100% no-repeat,radial-gradient(circle 12px at 100% calc(100% - 132px),#0000 97%,#000) right/51% 100% no-repeat}
+  .bp-main .modal{padding:20px 18px 18px}
+  .bp .modal-head h1{font-size:22px}
+  .bp-stub{border-left:0;border-top:2px dashed #CFC4AE;height:132px;padding:16px 18px;grid-template-columns:repeat(3,auto) 1fr;grid-template-rows:auto auto;column-gap:16px;align-content:center}
+  .bp-stub .bp-k{margin-top:0}
+  .bp-stub>.bp-k:nth-of-type(1){grid-area:1/1}.bp-stub>.bp-v:nth-of-type(2){grid-area:2/1}
+  .bp-stub>.bp-k:nth-of-type(3){grid-area:1/2}.bp-stub>.bp-v:nth-of-type(4){grid-area:2/2}
+  .bp-stub .bp-row{grid-area:1/3/3/4;gap:14px}.bp-stub .bp-row .bp-k{margin-top:0}
+  .bp-stub .bp-v{font-size:17px}
+  .bp-bar{grid-area:1/4/3/5;height:auto;margin:0;min-height:56px}
+}
+@media (prefers-reduced-motion: reduce){ .bp.stamped .bp-stamp{animation:none;opacity:1;transform:translate(-50%,-50%) rotate(-12deg)} .bp.leaving{animation:none} }
+/* shorter boarding pass: sign-up link on the same line as the button, tighter spacing */
+.bp-main .modal{padding:18px 28px 16px}
+.bp .bp-top{padding-bottom:8px}
+.bp .modal-head{padding:2px 0 8px;margin-bottom:8px}
+.bp .modal-head h1{font-size:23px}
+.bp .c-lede{font-size:17px;margin-bottom:8px}
+.bp .field{margin-bottom:10px;gap:4px}
+.bp .field input{padding-top:8px;padding-bottom:8px}
+.bp .hint-s{margin-top:2px}
+.bp .actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px;padding-top:12px}
+.bp .actions .auth-switch{margin:0;text-align:left}
+.bp-stub{padding:20px 22px}
+.bp-k{margin-top:5px}
+.bp-bar{height:38px;margin-top:12px}
+@media (max-width:640px){ .bp-main .modal{padding:16px 18px 14px} .bp .actions{flex-wrap:wrap} }
+/* email and password side by side on wide screens, so the pass stays short */
+.bp #auth-form{display:grid;grid-template-columns:1fr 1fr;column-gap:14px;align-items:start}
+.bp #auth-form>*{grid-column:1/-1}
+.bp #auth-form>.field{grid-column:auto;margin-bottom:6px}
+.bp .field .err:empty,.bp .field .err[hidden]{display:none}
+@media (max-width:640px){ .bp #auth-form{grid-template-columns:1fr} }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -3065,8 +3144,10 @@ body.room-edit .view a,body.room-edit .view .back,body.room-edit .view [data-act
   }
   function renderLogin(){
     const up = view.mode==='signup';
-    root.innerHTML = '<div class="view create-view">'
-      + '<div class="memo create-memo"><span class="tape memo-tape" aria-hidden="true" style="--tape-tilt:2deg"></span><div class="modal">'
+    // a boarding pass: the main part holds the form, the tear-off stub on the right (bottom on phones) is decoration only
+    root.innerHTML = '<div class="view create-view auth-view">'
+      + '<div class="bp-wrap"><div class="memo bp" id="bp"><div class="bp-main"><div class="modal">'
+      +   '<p class="bp-top"><span>BUTTERFLIGHT</span><span>'+(up ? 'NEW PASSENGER · 가입' : 'BOARDING PASS · 탑승권')+'</span></p>'
       +   '<div class="modal-head"><h1>'+(up ? '처음이라면, 가입부터 해요' : '다시 만나서 반가워요')+'</h1></div>'
       +   '<p class="c-lede">'+(pendingJoin() ? '친구가 보낸 초대 링크로 왔어요. 먼저 '+(up ? '가입하면' : '로그인하면')+' 바로 그 방에 들어갈 수 있어요.' : up ? '이메일과 비밀번호만 있으면 돼요. 다른 기기에서도 같은 방이 보여요.' : '로그인하면 모아 둔 아이디어 방이 그대로 있어요.')+'</p>'
       +   '<form id="auth-form" novalidate>'
@@ -3075,10 +3156,17 @@ body.room-edit .view a,body.room-edit .view .back,body.room-edit .view [data-act
       +       (up ? '<p class="hint-s">6자 이상. 비밀번호 찾기는 아직 없으니 꼭 기억해 두세요.</p>' : '')
       +       '<p class="err" id="e-a-pw" hidden></p></div>'
       +     '<p class="form-err" id="form-err" hidden></p>'
-      +     '<div class="actions"><div class="right"><button type="submit" class="btn primary">'+(up ? '가입하고 시작하기' : '로그인')+'</button></div></div>'
+      +     '<div class="actions"><p class="auth-switch">'+(up ? '이미 가입했나요? <button type="button" data-act="auth-login">로그인</button>' : '처음인가요? <button type="button" data-act="auth-signup">가입하기</button>')+'</p>'
+      +       '<div class="right"><button type="submit" class="btn primary">'+(up ? '가입하고 시작하기' : '로그인')+'</button></div></div>'
       +   '</form>'
-      +   '<p class="auth-switch">'+(up ? '이미 가입했나요? <button type="button" data-act="auth-login">로그인</button>' : '처음인가요? <button type="button" data-act="auth-signup">가입하기</button>')+'</p>'
-      + '</div></div></div>';
+      + '</div></div>'
+      + '<div class="bp-stub" aria-hidden="true">'
+      +   '<p class="bp-k">FROM</p><p class="bp-v">오늘</p>'
+      +   '<p class="bp-k">TO</p><p class="bp-v">다음 여행</p>'
+      +   '<div class="bp-row"><div><p class="bp-k">GATE</p><p class="bp-v sm">B</p></div><div><p class="bp-k">SEAT</p><p class="bp-v sm">'+(up ? 'NEW' : '12A')+'</p></div></div>'
+      +   '<span class="bp-bar"></span>'
+      +   '<span class="bp-stamp"><b>탑승 완료</b><small>BOARDED</small></span>'
+      + '</div></div></div></div>';
     document.getElementById('auth-form').addEventListener('submit', onAuth);
     ['a-email','a-pw'].forEach(id => document.getElementById(id).addEventListener('input', () => { setErr(id, ''); formErr(''); }));
   }
@@ -3106,7 +3194,28 @@ body.room-edit .view a,body.room-edit .view .back,body.room-edit .view [data-act
       btn.disabled = false; btn.textContent = label;
       formErr('메일함에서 확인 링크를 누른 뒤 로그인해 주세요.'); view.mode = 'login'; return;
     }
-    await signedIn(res.data.session.user);
+    await boardAndGo(res.data.session.user);
+  }
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  // runs only after Supabase has returned a real session: stamp -> ticket slides away -> clouds -> rooms
+  async function boardAndGo(u){
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, bp = document.getElementById('bp');
+    if(!reduce && bp){
+      bp.classList.add('stamped'); await wait(620);
+      bp.classList.add('leaving'); await wait(420);
+    }
+    let sky = null;
+    if(!reduce){
+      sky = document.createElement('div'); sky.className = 'sky-pass'; sky.setAttribute('aria-hidden', 'true');
+      sky.innerHTML = '<span class="cl c1"></span><span class="cl c2"></span><span class="cl c3"></span><span class="cl c4"></span>';
+      document.body.appendChild(sky);
+    }
+    const t0 = Date.now();
+    await signedIn(u);
+    if(sky){
+      await wait(Math.max(0, 750 - (Date.now() - t0)));
+      sky.classList.add('out'); await wait(450); sky.remove();
+    }
   }
 
   function renderLoading(msg){
