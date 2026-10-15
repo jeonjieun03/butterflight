@@ -1313,6 +1313,36 @@ body.room-edit .view a,body.room-edit .view .back,body.room-edit .view [data-act
 .bp #auth-form>.field{grid-column:auto;margin-bottom:6px}
 .bp .field .err:empty,.bp .field .err[hidden]{display:none}
 @media (max-width:640px){ .bp #auth-form{grid-template-columns:1fr} }
+/* window card: trip dates easier to read — plain sans, one line for the dates, the length as a small pill under it */
+.w-name{color:rgba(255,255,255,.95);font-weight:500}
+.w-date{display:flex;flex-direction:column;align-items:center;gap:5px;margin-top:6px;font-family:var(--f-body);font-size:13.5px;font-weight:600;color:#FFFFFF;letter-spacing:0}
+.w-date>span{white-space:nowrap}
+.w-date em{font-style:normal;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);white-space:nowrap}
+.w-type{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;padding:2px 11px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);color:#FFFFFF;white-space:nowrap}
+.w-date{margin-top:8px}
+/* ===== login + main (room list) screens: snowy-street palette ===== 
+   brunnera #8BC3E5 sky page · cadet blue #409BD8 window sky · igloo #F6F1E4 paper · black magic #0A0A2A ink · tangerine #E6642A actions */
+body.snow-screen{--bg:#8BC3E5;--board:#8BC3E5;--board-dot:#A9D4EE;--ink:#0A0A2A;--muted:#27304A;--surface:#F6F1E4;--line:rgba(10,10,42,.22);
+  --sky-top:#2C78BD;--sky-bottom:#56A6DF;--glow:rgba(230,100,42,.42);--frame:#F6F1E4;--frame-edge:#DDD4C0;--frame-hi:#FFFFFF;--on-sky:#FFFFFF;--on-sky-2:rgba(255,255,255,.95);--cloud:#F6F1E4;
+  background:radial-gradient(circle,#A9D4EE 1px,transparent 1.4px) 0 0/18px 18px,#8BC3E5;background-attachment:fixed;color:#0A0A2A}
+body.snow-screen .brand{color:#0A0A2A}
+body.snow-screen .new-room{background:#E6642A;border-color:#E6642A;color:#FFFFFF;font-weight:700}
+body.snow-screen .new-room:hover{background:#CF5620;border-color:#CF5620}
+body.snow-screen .join-link,body.snow-screen .acct button{color:#0A0A2A}
+body.snow-screen .acct{color:#27304A}
+body.snow-screen .memo{--paper:#F6F1E4;--m-ink:#0A0A2A;--m-muted:#3E4560;--m-line:#E6DFCF;--m-line-strong:#CEC5B2}
+body.snow-screen .memo .btn.primary{background:#E6642A;border-color:#E6642A;color:#FFFFFF}
+body.snow-screen .memo .btn.primary:hover{background:#CF5620;border-color:#CF5620}
+body.snow-screen .memo-tape{background:#409BD8;opacity:.9}
+body.snow-screen .memo.bp{--paper:#F6F1E4}
+body.snow-screen .bp-top{color:#3E4560;border-bottom-color:#E6DFCF} body.snow-screen .bp-top span:first-child{color:#409BD8}
+body.snow-screen .bp-stub{color:#0A0A2A;border-left-color:#CEC5B2} body.snow-screen .bp-k{color:#3E4560} body.snow-screen .bp-v{color:#0A0A2A}
+body.snow-screen .bp-bar{background:repeating-linear-gradient(90deg,#0A0A2A 0 2px,transparent 2px 4px,#0A0A2A 4px 5px,transparent 5px 8px,#0A0A2A 8px 11px,transparent 11px 13px)}
+body.snow-screen .bp-stamp{border-color:#E6642A;color:#C9511C;background:rgba(246,241,228,.6)}
+body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-shadow(0 18px 26px rgba(10,10,42,.26))}
+.sky-pass{background:radial-gradient(90% 40% at 50% 112%,rgba(230,100,42,.35),transparent 70%),linear-gradient(180deg,#409BD8 0%,#8BC3E5 62%,#F6F1E4 100%)}
+.sky-pass .cl,.sky-pass .cl::before,.sky-pass .cl::after{background:#F6F1E4}
+@media (max-width:640px){ body.snow-screen .bp-stub{border-top-color:#CEC5B2} }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -1482,8 +1512,9 @@ body.room-edit .view a,body.room-edit .view .back,body.room-edit .view [data-act
         +   '<span class="pane">' + CLOUDS
         +     '<span class="w-status" style="--dot:var(--dot-'+st+')"><i></i>'+STATUS[st]+(d?' · '+d:'')+'</span>'
         +     '<span class="w-dest">'+esc(r.dest)+'</span>'
-        +     '<span class="w-name">'+esc(r.name)+' · '+(r.type==='group'?'함께':'혼자')+'</span>'
-        +     '<span class="w-date">'+whenText(r)+'</span>'
+        +     '<span class="w-name">'+esc(r.name)+'</span>'
+        +     '<span class="w-type">'+(r.type==='group'?'함께':'혼자')+'</span>'
+        +     '<span class="w-date">'+(r.start && r.end ? '<span>'+fmt(r.start)+' – '+fmt(r.end)+'</span>' : '<span>날짜 미정</span>')+'</span>'
         +     '<span class="w-count"><b>'+r.ideas.length+'</b><small>모은 아이디어</small></span>'
         +   '</span>'
         + '</button></li>';
@@ -3336,6 +3367,7 @@ body.room-edit .view a,body.room-edit .view .back,body.room-edit .view [data-act
     document.body.classList.toggle('tab-plan', view.name==='room' && view.tab==='plan');
     document.body.classList.toggle('tab-record', view.name==='room' && view.tab==='record');
     document.body.classList.toggle('room-edit', view.name==='edit-room');
+    document.body.classList.toggle('snow-screen', view.name==='login' || view.name==='home');
     if(view.name==='edit-room' && !rooms.some(x => x.id===view.id)) view = { name:'home' };
     document.body.classList.toggle('paper-mode', ['new-room','edit-room','join','login','loading','fail'].includes(view.name) || (view.name==='home' && !rooms.length));
     if(view.name==='loading') renderLoading(view.msg);
