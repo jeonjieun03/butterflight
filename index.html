@@ -1346,17 +1346,21 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
 /* room tabs: same folder-tab shape, just moved — one row right under the main button (top right) on wider screens; phones keep the bottom row */
 @media (min-width:641px){
   /* index sticky flags stuck to the right wall: one under another, the open one sticks out further */
-  .itabs{left:auto;right:0;bottom:auto;top:calc(84px + env(safe-area-inset-top,0px));flex-direction:column;align-items:flex-end;gap:8px}
-  .itab,body.room-mode .itab,body.room-mode .itab[aria-selected="true"]{position:relative;min-width:118px;border-radius:6px 0 0 6px;padding:11px 18px 11px 16px;text-align:left;transform:translateX(6px);
+  .itabs{left:auto;right:var(--sbw,0px);bottom:auto;top:calc(24px + env(safe-area-inset-top,0px));flex-direction:column;align-items:flex-end;gap:8px}
+  .itab,body.room-mode .itab,body.room-mode .itab[aria-selected="true"]{position:relative;min-width:118px;border-radius:6px 0 0 6px;padding:11px 18px 11px 16px;text-align:left;transform:none;
     box-shadow:-2px 3px 6px -3px rgba(30,40,20,.45),inset -8px 0 10px -8px rgba(0,0,0,.18)}
   .itab::after{content:"";position:absolute;inset:0 0 0 auto;width:10px;background:rgba(255,255,255,.18)}
-  .itab:hover{transform:translateX(4px);min-width:126px}
-  .itab[aria-selected="true"],body.room-mode .itab[aria-selected="true"]{transform:translateX(6px);min-width:146px}
+  .itab:hover{transform:none;min-width:126px}
+  .itab[aria-selected="true"],body.room-mode .itab[aria-selected="true"]{transform:none;min-width:146px}
 }
 @media (min-width:641px){
   /* keep the schedule papers and the film page clear of the tab column on the right */
   body.tab-plan .sheet-wrap{padding-right:170px}
   .film-wrap-page{padding-right:170px}
+}
+/* the add button (아이디어 / 일정 / 사진 기록 추가) sits bottom-left on wider screens, where the tabs used to be */
+@media (min-width:641px){
+  body.room-mode .rtools{top:auto;right:auto;left:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px))}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -1775,7 +1779,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
       + '<div class="first-note"><span class="tape" style="--tape-tilt:-3deg"></span>'
       +   '<h2>첫 아이디어를 붙여 볼까요?</h2>'
       +   '<p>가고 싶은 곳, 먹고 싶은 것, 해 보고 싶은 일을 사진이랑 같이 모아 봐요.</p>'
-      +   '<p class="hint">오른쪽 위 ‘아이디어 추가하기’를 누르면 시작돼요.</p>'
+      +   '<p class="hint">‘+ 아이디어 추가하기’ 버튼을 누르면 시작돼요.</p>'
       + '</div></div>';
   }
 
@@ -3243,6 +3247,12 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
     await boardAndGo(res.data.session.user);
   }
   const wait = ms => new Promise(r => setTimeout(r, ms));
+  // the index flags sit on the right wall, just left of the board's own scroll bar (0 where scroll bars overlay, e.g. phones / macOS)
+  function syncScrollbar(){
+    requestAnimationFrame(() => { const sc = document.getElementById('cv-scroll');
+      document.body.style.setProperty('--sbw', sc ? (sc.offsetWidth - sc.clientWidth)+'px' : '0px'); });
+  }
+  addEventListener('resize', syncScrollbar);
   // runs only after Supabase has returned a real session: stamp -> ticket slides away -> clouds -> rooms
   async function boardAndGo(u){
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, bp = document.getElementById('bp');
@@ -3383,6 +3393,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
     document.body.classList.toggle('tab-record', view.name==='room' && view.tab==='record');
     document.body.classList.toggle('room-edit', view.name==='edit-room');
     document.body.classList.toggle('snow-screen', view.name==='login' || view.name==='home');
+    syncScrollbar();
     if(view.name==='edit-room' && !rooms.some(x => x.id===view.id)) view = { name:'home' };
     document.body.classList.toggle('paper-mode', ['new-room','edit-room','join','login','loading','fail'].includes(view.name) || (view.name==='home' && !rooms.length));
     if(view.name==='loading') renderLoading(view.msg);
