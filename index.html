@@ -1343,6 +1343,21 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
 .sky-pass{background:radial-gradient(90% 40% at 50% 112%,rgba(230,100,42,.35),transparent 70%),linear-gradient(180deg,#409BD8 0%,#8BC3E5 62%,#F6F1E4 100%)}
 .sky-pass .cl,.sky-pass .cl::before,.sky-pass .cl::after{background:#F6F1E4}
 @media (max-width:640px){ body.snow-screen .bp-stub{border-top-color:#CEC5B2} }
+/* room tabs: same folder-tab shape, just moved — one row right under the main button (top right) on wider screens; phones keep the bottom row */
+@media (min-width:641px){
+  /* index sticky flags stuck to the right wall: one under another, the open one sticks out further */
+  .itabs{left:auto;right:0;bottom:auto;top:calc(84px + env(safe-area-inset-top,0px));flex-direction:column;align-items:flex-end;gap:8px}
+  .itab,body.room-mode .itab,body.room-mode .itab[aria-selected="true"]{position:relative;min-width:118px;border-radius:6px 0 0 6px;padding:11px 18px 11px 16px;text-align:left;transform:translateX(6px);
+    box-shadow:-2px 3px 6px -3px rgba(30,40,20,.45),inset -8px 0 10px -8px rgba(0,0,0,.18)}
+  .itab::after{content:"";position:absolute;inset:0 0 0 auto;width:10px;background:rgba(255,255,255,.18)}
+  .itab:hover{transform:translateX(4px);min-width:126px}
+  .itab[aria-selected="true"],body.room-mode .itab[aria-selected="true"]{transform:translateX(6px);min-width:146px}
+}
+@media (min-width:641px){
+  /* keep the schedule papers and the film page clear of the tab column on the right */
+  body.tab-plan .sheet-wrap{padding-right:170px}
+  .film-wrap-page{padding-right:170px}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
