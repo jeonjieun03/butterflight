@@ -11,6 +11,7 @@ img{max-width:100%}
 [hidden]{display:none!important}
 </style>
 <title>Butterflight</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='2' y='2' width='60' height='60' rx='16' fill='%232C78BD'/%3E%3Cg transform='translate%289 10%29 scale%28.72%29' fill='%23F6F1E4'%3E%3Cpath d='M31 30.5C19 31 8.5 25.5 5.5 15C4.6 11.5 4.3 7.5 5 4.2C8.5 4.8 13 6.6 17 9.2C25.5 14.8 30.5 21.5 31 30.5Z'/%3E%3Cpath d='M31 34.5C29 41.5 24 47 19 48.5C15.3 49.6 13.2 46.8 14.3 43.7C16.4 38 24 34 31 34.5Z'/%3E%3Cg transform='translate%2864 0%29 scale%28-1 1%29'%3E%3Cpath d='M31 30.5C19 31 8.5 25.5 5.5 15C4.6 11.5 4.3 7.5 5 4.2C8.5 4.8 13 6.6 17 9.2C25.5 14.8 30.5 21.5 31 30.5Z'/%3E%3Cpath d='M31 34.5C29 41.5 24 47 19 48.5C15.3 49.6 13.2 46.8 14.3 43.7C16.4 38 24 34 31 34.5Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Nanum+Pen+Script&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
@@ -75,8 +76,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* bottom brand */
 .foot-brand{display:flex;justify-content:center;padding-block:28px 24px}
 .brand{display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:6px 10px;border-radius:10px;color:var(--ink)}
-.brand svg{width:24px;height:24px;flex:none}
-.brand b{font-family:var(--f-display);font-size:17px;letter-spacing:.01em}
+.brand svg{width:28px;height:28px;flex:none}
+.brand b{font-family:var(--f-display);font-size:18px;letter-spacing:.01em;color:#0A0A2A}
+.brand b i{font-style:italic;color:#2C78BD}
 
 /* home: airplane windows */
 .home{justify-content:center;align-items:center;text-align:center}
@@ -1387,6 +1389,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
 .sky-pick input:focus-visible + .sw{outline:2px solid var(--m-ink);outline-offset:6px}
 .sky-pick label:hover .sw{transform:translateY(-2px)}
 @media (max-width:420px){ .sky-pick{gap:6px} .sky-pick b{font-size:11px} }
+.sky-pick{margin-top:12px;padding-top:4px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -1395,14 +1398,8 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
   <main id="view"></main>
   <footer class="foot-brand">
     <button class="brand" type="button" data-act="home" aria-label="Butterflight 처음 화면으로">
-      <svg viewBox="0 0 32 32" aria-hidden="true">
-        <ellipse cx="10" cy="11" rx="8" ry="6" transform="rotate(-25 10 11)" fill="var(--accent)"/>
-        <ellipse cx="22" cy="11" rx="8" ry="6" transform="rotate(25 22 11)" fill="var(--accent)"/>
-        <ellipse cx="11" cy="21" rx="5" ry="4" transform="rotate(20 11 21)" fill="var(--accent)" opacity=".7"/>
-        <ellipse cx="21" cy="21" rx="5" ry="4" transform="rotate(-20 21 21)" fill="var(--accent)" opacity=".7"/>
-        <rect x="15" y="7" width="2" height="18" rx="1" fill="var(--ink)"/>
-      </svg>
-      <b>Butterflight</b>
+      <svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#0A0A2A"><path d="M31 30.5C19 31 8.5 25.5 5.5 15C4.6 11.5 4.3 7.5 5 4.2C8.5 4.8 13 6.6 17 9.2C25.5 14.8 30.5 21.5 31 30.5Z"/><path d="M31 34.5C29 41.5 24 47 19 48.5C15.3 49.6 13.2 46.8 14.3 43.7C16.4 38 24 34 31 34.5Z"/><g transform="translate(64 0) scale(-1 1)"><path d="M31 30.5C19 31 8.5 25.5 5.5 15C4.6 11.5 4.3 7.5 5 4.2C8.5 4.8 13 6.6 17 9.2C25.5 14.8 30.5 21.5 31 30.5Z"/><path d="M31 34.5C29 41.5 24 47 19 48.5C15.3 49.6 13.2 46.8 14.3 43.7C16.4 38 24 34 31 34.5Z"/></g></g></svg>
+      <b>Butter<i>flight</i></b>
     </button>
   </footer>
 </div>
@@ -1683,7 +1680,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
       +       '<label><input type="radio" name="r-type" id="r-solo" value="solo"'+(group?'':' checked')+'><span class="body"><b>혼자</b><small>나만의 위시리스트</small></span></label>'
       +       '<label><input type="radio" name="r-type" id="r-group" value="group"'+(group?' checked':'')+'><span class="body"><b>함께</b><small>친구들과 추천 모으기</small></span></label>'
       +     '</div></fieldset>'
-      +     '<fieldset class="field"><legend>창문 밖 하늘</legend><div class="sky-pick">'
+      +     '<fieldset class="field"><legend>배경</legend><div class="sky-pick">'
       +       SKIES.map(([k,l]) => '<label><input type="radio" name="r-sky" value="'+k+'"'+(((ed && ed.sky) || 'day')===k ? ' checked' : '')+'><span class="sw sky-'+k+'" aria-hidden="true"></span><b>'+l+'</b></label>').join('')
       +     '</div></fieldset>'
       +     '<fieldset class="field"><legend>여행 날짜 <span class="opt">(선택)</span></legend>'
@@ -2777,6 +2774,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
     if(/invite code not found/i.test(m)) return '초대 코드를 찾을 수 없어요. 코드를 다시 확인해 주세요.';
     if(/room is solo/i.test(m)) return '혼자 쓰는 방이라 들어갈 수 없어요. 방을 만든 친구에게 ‘함께’로 바꿔 달라고 해 주세요.';
     if(/room is full/i.test(m)) return '이 방은 20명이 꽉 찼어요.';
+    if(/too many attempts/i.test(m)) return '초대 코드를 너무 여러 번 틀렸어요. 1시간 뒤에 다시 시도해 주세요.';
     if(/nickname/i.test(m)) return '이름은 1~20자로 적어 주세요.';
     return errText(e);
   };
@@ -2831,7 +2829,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
     if(first){ document.getElementById(first).focus(); return; }
     btn.disabled = true; const label = btn.textContent; btn.textContent = '들어가는 중…';
     const { data, error } = await sb.rpc('bf_join_room', { p_code: code, p_nickname: nick });
-    if(error || !data){ btn.disabled = false; btn.textContent = label; formErr(joinErr(error)); return; }
+    if(error || !data){ btn.disabled = false; btn.textContent = label; formErr(joinErr(error || 'invite code not found')); return; }
     setPendingJoin('');
     await refreshRooms();
     const r = rooms.find(x => x.id===data);
