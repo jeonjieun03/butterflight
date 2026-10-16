@@ -1457,6 +1457,17 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .create-memo .modal-head,.bp .modal-head{margin-inline:0;padding-inline:0}
 /* room label on a phone: just "계획 중 · 함께" */
 @media (max-width:640px){ .rl-dd{display:none} }
+
+/* idea cards: polaroids take the shape of their photo; stamp and puzzle stay one fixed size */
+.polaroid .ph{aspect-ratio:var(--ratio,4/3)}
+.perf .sc-card{padding:18px 16px 20px}
+.perf .sc-title{font-size:17px}
+.perf .ph{aspect-ratio:1}
+/* how-much-I-want stickers: a size smaller */
+body.room-mode.tab-ideas .sc .sticker.maybe{width:46px;height:37px;top:-17px;right:-14px}
+body.room-mode.tab-ideas .sc .sticker.nice{width:42px;height:42px;top:-18px;right:-14px}
+body.room-mode.tab-ideas .sc .sticker.must{width:50px;height:45px;top:-21px;right:-17px}
+@media (max-width:640px){ .perf .sc-title{font-size:19px} }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -1818,14 +1829,16 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   const LINK = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M5 7l2-2M4.2 5.6L3 6.8a1.8 1.8 0 0 0 2.5 2.5l1.2-1.2M7.8 6.4L9 5.2a1.8 1.8 0 0 0-2.5-2.5L5.3 3.9" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
 
   // every card gets a stable look and width from its id, so the board doesn't reshuffle on each visit
-  const WIDTHS = { polaroid:210, print:240, stamp:190, paper:215, sticky:190, grid:215, kraft:195, perf:216, puzzle:214 };
+  const WIDTHS = { polaroid:210, print:240, stamp:190, paper:215, sticky:190, grid:215, kraft:195, perf:176, puzzle:214 };
   function cardLook(it){
     const h = hash(it.id), tilt = TILTS[h % TILTS.length];
     if(it.template==='stamp') return { tilt, look:'perf', w: WIDTHS.perf, tape:false };
     if(it.template==='puzzle') return { tilt, look:'puzzle', w: WIDTHS.puzzle, tape:false };
     if(it.photo || it.photoPath){
       const look = ['polaroid','print','polaroid'][h % 3];
-      return { tilt, look, w: WIDTHS[look], tape: look==='print' || (look==='polaroid' && h%2===0) };
+      // the card follows the photo: tall photos make a narrow, tall card, wide photos a wide, short one
+      const r = Math.min(1.6, Math.max(0.75, it.ratio || 4/3));
+      return { tilt, look, w: Math.round(118 + 86*r) + (look==='print' ? 16 : 0), tape: look==='print' || (look==='polaroid' && h%2===0) };
     }
     const look = ['paper','sticky','grid','kraft'][h % 4];
     return { tilt, look, w: WIDTHS[look], tape: look==='paper' || look==='grid' };
