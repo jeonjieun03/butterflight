@@ -1514,7 +1514,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
     if(/jwt expired|invalid jwt|refresh token|not signed in/i.test(m)) return '로그인이 풀렸어요. 새로고침한 뒤 다시 로그인해 주세요.';
     if(/invalid login credentials/i.test(m)) return '이메일이나 비밀번호가 맞지 않아요.';
     if(/already registered|already been registered|already exists/i.test(m)) return '이미 가입한 이메일이에요. 로그인해 주세요.';
-    if(/password.*(6|least)/i.test(m)) return '비밀번호는 6자 이상으로 정해 주세요.';
+    if(/password.*(\d|least)/i.test(m)) return '비밀번호는 8자 이상으로 정해 주세요.';
     if(/email.*not.*confirmed/i.test(m)) return '이메일 확인이 아직 안 됐어요. 메일함을 확인해 주세요.';
     if(/invalid.*email|email.*invalid|unable to validate email/i.test(m)) return '이메일 주소가 맞는지 확인해 주세요.';
     if(/rate limit|too many/i.test(m)) return '시도가 너무 많았어요. 잠시 뒤에 다시 해 주세요.';
@@ -3234,8 +3234,8 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
       +   '<p class="c-lede">'+(pendingJoin() ? '친구가 보낸 초대 링크로 왔어요. 먼저 '+(up ? '가입하면' : '로그인하면')+' 바로 그 방에 들어갈 수 있어요.' : up ? '이메일과 비밀번호만 있으면 돼요. 다른 기기에서도 같은 방이 보여요.' : '로그인하면 모아 둔 아이디어 방이 그대로 있어요.')+'</p>'
       +   '<form id="auth-form" novalidate>'
       +     '<div class="field"><label for="a-email">이메일</label><input type="email" id="a-email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="'+esc(view.email||'')+'"><p class="err" id="e-a-email" hidden></p></div>'
-      +     '<div class="field"><label for="a-pw">비밀번호</label><input type="password" id="a-pw" autocomplete="'+(up?'new-password':'current-password')+'" minlength="6">'
-      +       (up ? '<p class="hint-s">6자 이상. 비밀번호 찾기는 아직 없으니 꼭 기억해 두세요.</p>' : '')
+      +     '<div class="field"><label for="a-pw">비밀번호</label><input type="password" id="a-pw" autocomplete="'+(up?'new-password':'current-password')+'"'+(up?' minlength="8"':'')+'>'
+      +       (up ? '<p class="hint-s">8자 이상. 비밀번호 찾기는 아직 없으니 꼭 기억해 두세요.</p>' : '')
       +       '<p class="err" id="e-a-pw" hidden></p></div>'
       +     '<p class="form-err" id="form-err" hidden></p>'
       +     '<div class="actions"><p class="auth-switch">'+(up ? '이미 가입했나요? <button type="button" data-act="auth-login">로그인</button>' : '처음인가요? <button type="button" data-act="auth-signup">가입하기</button>')+'</p>'
@@ -3260,7 +3260,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
     const up = view.mode==='signup';
     const errs = {
       'a-email': !email ? '이메일을 적어 주세요.' : (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '이메일 주소가 맞는지 확인해 주세요.' : ''),
-      'a-pw': !password ? '비밀번호를 적어 주세요.' : (up && password.length < 6 ? '비밀번호는 6자 이상으로 정해 주세요.' : '')
+      'a-pw': !password ? '비밀번호를 적어 주세요.' : (up && password.length < 8 ? '비밀번호는 8자 이상으로 정해 주세요.' : '')
     };
     let first = null;
     Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
