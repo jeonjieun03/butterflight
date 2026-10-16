@@ -1390,6 +1390,73 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
 .sky-pick label:hover .sw{transform:translateY(-2px)}
 @media (max-width:420px){ .sky-pick{gap:6px} .sky-pick b{font-size:11px} }
 .sky-pick{margin-top:12px;padding-top:4px}
+
+/* ===== mobile fixes (friends' feedback) ===== */
+/* keep phone browsers / in-app browsers from inflating text on their own */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* 1. window card: never squash the destination or room name when text is bigger than expected */
+.pane>*{flex-shrink:0}
+.w-dest{min-height:1.28em}
+@media (max-width:640px){
+  .pane{padding:20% 10% 12%;gap:4px}
+  .w-dest{font-size:clamp(22px,6.6vw,30px);margin-top:2px}
+  .w-name{font-size:13.5px}
+  .w-date{margin-top:4px}
+}
+/* 2. pop-up windows (idea detail etc.): always fit inside the phone screen */
+.scrim{grid-template-columns:minmax(0,1fr)}
+.dv,.dv-social,.memo .modal{grid-template-columns:minmax(0,1fr);min-width:0}
+.memo form.cm-form input{width:0}
+.scrim>.memo{justify-self:center;min-width:0;max-width:min(520px,100%)}
+.memo .actions .right{flex-wrap:wrap;justify-content:flex-end;min-width:0}
+@media (max-width:520px){
+  .memo .actions .btn{padding-inline:14px}
+  .memo .actions .right{gap:8px}
+}
+/* 4. room menu: open toward the screen, never off its edges */
+@media (max-width:640px){
+  .rmenu{position:fixed;left:12px;right:auto;top:calc(env(safe-area-inset-top,0px) + 100px);width:min(260px,calc(100vw - 24px));z-index:30}
+}
+/* 5. idea cards: readable labels on a phone (board is drawn smaller there) */
+@media (max-width:640px){
+  .sc-kind,.perf .sc-kind{font-size:13px}
+  .sc-title{font-size:18px}
+  .perf .sc-title{font-size:20px}
+  .puzzle .sc-title{font-size:16px}
+}
+/* 3. 여행 기록 on a phone: the canister lies on top and the film runs down the page */
+@media (max-width:640px){
+  body.room-mode.tab-record{--fu:min(7.4px,calc((100vw - 64px)/43))}
+  body.room-mode.tab-record .fp-scroll{overflow:visible;-webkit-mask:none;mask:none;padding:6px 0 8px;scroll-snap-type:none}
+  body.room-mode.tab-record .fp-roll{flex-direction:column;align-items:center;width:auto;padding:0}
+  body.room-mode.tab-record .fp-can{transform:rotate(90deg);margin:calc(var(--fu)*-9.5) auto calc(var(--fu)*-9.5 - 2px)}
+  body.room-mode.tab-record .ff{width:calc(var(--fu)*29);margin:0 auto;padding:12px 17px 12px;
+    background:linear-gradient(180deg,var(--film-hole) 0 9px,transparent 9px) left 5px top 4px/7px 15px repeat-y,
+               linear-gradient(180deg,var(--film-hole) 0 9px,transparent 9px) right 5px top 4px/7px 15px repeat-y,#3C5227}
+  body.room-mode.tab-record .ff+.ff{border-top:1px dashed rgba(251,238,215,.22)}
+  body.room-mode.tab-record .ff-hit{width:100%;height:auto}
+  body.room-mode.tab-record .ff-hit .ff-film{display:none}
+  body.room-mode.tab-record .ff-win{position:relative;left:auto;top:auto;width:100%;height:auto;aspect-ratio:3/2}
+  body.room-mode.tab-record .ff-day{position:static;display:block;margin:0 0 8px;font-size:16px;white-space:normal;color:#FBEED7}
+  body.room-mode.tab-record .ff-day small{color:#E2D6BB;font-size:12px}
+  body.room-mode.tab-record .ff-cap{padding:8px 0 2px}
+  body.room-mode.tab-record .ff-cap b{color:#FBEED7;font-size:14.5px}
+  body.room-mode.tab-record .ff-cap small{color:#E2D6BB;font-size:12.5px}
+  body.room-mode.tab-record .ff-st{color:#FBEED7;font-size:12.5px}
+  body.room-mode.tab-record .ff-st.none i{box-shadow:inset 0 0 0 1.5px #E2D6BB}
+  body.room-mode.tab-record .ff-tail{width:calc(var(--fu)*29);height:56px;margin:0 auto;
+    background:linear-gradient(180deg,var(--film-hole) 0 9px,transparent 9px) left 5px top 4px/7px 15px repeat-y,
+               linear-gradient(180deg,var(--film-hole) 0 9px,transparent 9px) right 5px top 4px/7px 15px repeat-y,#3C5227;
+    -webkit-mask:linear-gradient(#000,transparent);mask:linear-gradient(#000,transparent)}
+  body.room-mode.tab-record .ff-tail svg{display:none}
+}
+
+/* detail pop-up: the sticky title bar covers the full width, so a scrolled photo never peeks out beside it */
+.memo .modal-head{margin-inline:-24px;padding-inline:24px}
+@media (max-width:520px){ .memo .modal-head{margin-inline:-16px;padding-inline:16px} }
+.create-memo .modal-head,.bp .modal-head{margin-inline:0;padding-inline:0}
+/* room label on a phone: just "계획 중 · 함께" */
+@media (max-width:640px){ .rl-dd{display:none} }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -1817,7 +1884,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
   // ---------- free canvas ----------
   const CV_PAD = 360;                          // spare room to drag into
   const cvTop = () => Math.round(130 / cvScale());   // room under the floating label, in canvas units
-  const cvScale = () => Math.min(1, Math.max(0.62, window.innerWidth / 560));
+  const cvScale = () => Math.min(1, Math.max(0.74, window.innerWidth / 500));
   let canvasRoom = null;                      // the room currently drawn on the canvas
   let pendingScroll = null;                   // keep the view where it was across re-renders
 
@@ -2021,7 +2088,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
       + '<header class="prop rlabel"><span class="tape" style="--tape-tilt:3deg"></span>'
       +   '<button type="button" class="rl-back" data-act="home" aria-label="방 목록으로">←</button>'
       +   '<div class="rl-text"><h1>'+esc(r.dest)+'</h1>'
-      +   '<p class="rl-sub"><i style="--dot:var(--dot-'+st+')"></i>'+STATUS[st]+(d?' · '+d:'')+' · '+(r.type==='group'?'함께':'혼자')+'<span class="rl-more-info"><br>'+esc(r.name)+' · '+whenText(r)+'</span></p></div>'
+      +   '<p class="rl-sub"><i style="--dot:var(--dot-'+st+')"></i>'+STATUS[st]+(d?'<span class="rl-dd"> · '+d+'</span>':'')+' · '+(r.type==='group'?'함께':'혼자')+'<span class="rl-more-info"><br>'+esc(r.name)+' · '+whenText(r)+'</span></p></div>'
       +   '<div class="rl-menu-wrap"><button type="button" class="rl-more" data-act="room-menu" aria-label="방 메뉴" aria-expanded="'+(!!view.menu)+'">⋯</button>'+menu+'</div>'
       + '</header>'
       + '<div class="prop rtools">'+(view.tab==='plan' && plansReady
