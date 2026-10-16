@@ -1362,6 +1362,31 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
 @media (min-width:641px){
   body.room-mode .rtools{top:auto;right:auto;left:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px))}
 }
+/* ===== sky outside the window: five skies (day · dawn · dusk · sunset · night) ===== */
+.pane.sky-day{background:radial-gradient(120% 40% at 50% 112%,rgba(255,255,255,.35),transparent 70%),linear-gradient(180deg,#2F86D8 0%,#5FAEE9 60%,#A9D8F6 100%)}
+.pane.sky-dawn{background:radial-gradient(120% 40% at 50% 112%,rgba(255,170,110,.55),transparent 70%),linear-gradient(180deg,#5E9CC6 0%,#E9A46A 58%,#E97A5E 100%)}
+.pane.sky-dusk{background:radial-gradient(120% 40% at 50% 112%,rgba(255,160,140,.45),transparent 70%),linear-gradient(180deg,#6B4E9E 0%,#B77AB8 50%,#E99493 100%)}
+.pane.sky-sunset{background:radial-gradient(120% 40% at 50% 112%,rgba(255,200,80,.5),transparent 70%),linear-gradient(180deg,#7E3238 0%,#D9573A 50%,#F2A23A 100%)}
+.pane.sky-night{background:radial-gradient(1.2px 1.2px at 22% 18%,#FFFFFF 98%,transparent),radial-gradient(1px 1px at 70% 12%,#FFFFFF 98%,transparent),radial-gradient(1.4px 1.4px at 82% 34%,#FFFFFF 98%,transparent),radial-gradient(1px 1px at 38% 30%,#FFFFFF 98%,transparent),radial-gradient(1.1px 1.1px at 58% 22%,#FFFFFF 98%,transparent),
+  radial-gradient(120% 40% at 50% 112%,rgba(90,140,220,.45),transparent 70%),linear-gradient(180deg,#071630 0%,#13386B 55%,#2468A8 100%)}
+.pane.sky-night .clouds{opacity:.28}
+.pane.sky-dawn>span,.pane.sky-dusk>span,.pane.sky-sunset>span,.pane.sky-day>span{text-shadow:0 1px 10px rgba(20,20,50,.45)}
+/* picker in the room form: little arched windows like the reference */
+.sky-pick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.sky-pick label{display:grid;justify-items:center;gap:6px;cursor:pointer;text-align:center}
+.sky-pick input{position:absolute;opacity:0;pointer-events:none}
+.sky-pick .sw{width:100%;max-width:64px;aspect-ratio:3/4;border-radius:999px 999px 6px 6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);transition:transform .15s ease,box-shadow .15s ease}
+.sky-pick .sw.sky-day{background:linear-gradient(180deg,#2F86D8,#5FAEE9 60%,#A9D8F6)}
+.sky-pick .sw.sky-dawn{background:linear-gradient(180deg,#5E9CC6,#E9A46A 58%,#E97A5E)}
+.sky-pick .sw.sky-dusk{background:linear-gradient(180deg,#6B4E9E,#B77AB8 50%,#E99493)}
+.sky-pick .sw.sky-sunset{background:linear-gradient(180deg,#7E3238,#D9573A 50%,#F2A23A)}
+.sky-pick .sw.sky-night{background:radial-gradient(1px 1px at 30% 25%,#fff 98%,transparent),radial-gradient(1px 1px at 65% 18%,#fff 98%,transparent),radial-gradient(1px 1px at 50% 40%,#fff 98%,transparent),linear-gradient(180deg,#071630,#13386B 55%,#2468A8)}
+.sky-pick b{font-size:12px;font-weight:600;color:var(--m-muted);line-height:1.25;word-break:keep-all}
+.sky-pick input:checked + .sw{box-shadow:0 0 0 3px var(--paper,#fff),0 0 0 5px var(--m-ink);transform:translateY(-2px)}
+.sky-pick input:checked + .sw + b{color:var(--m-ink);font-weight:700}
+.sky-pick input:focus-visible + .sw{outline:2px solid var(--m-ink);outline-offset:6px}
+.sky-pick label:hover .sw{transform:translateY(-2px)}
+@media (max-width:420px){ .sky-pick{gap:6px} .sky-pick b{font-size:11px} }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 </head>
@@ -1444,8 +1469,11 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
       likes:(d.bf_likes||[]).map(l => l.user_id),
       comments:(d.bf_comments||[]).map(c => ({ id:c.id, uid:c.user_id, body:c.body, at:ms(c.created_at) })) };
   }
+  // the sky outside each room's window (chosen when making / editing a room; 06_butterflight_sky.sql stores it)
+  const SKIES = [['day','맑은 낮'],['dawn','해 뜰 무렵'],['dusk','보랏빛 노을'],['sunset','붉은 노을'],['night','밤하늘']];
+  const SKY_IDS = SKIES.map(x => x[0]);
   function roomFromRow(d){
-    return { id:d.id, owner:d.owner_id, dest:d.dest, name:d.name, type:d.type, start:d.start_date||'', end:d.end_date||'', code:d.invite_code||'',
+    return { id:d.id, owner:d.owner_id, dest:d.dest, name:d.name, type:d.type, sky: SKY_IDS.includes(d.sky) ? d.sky : 'day', start:d.start_date||'', end:d.end_date||'', code:d.invite_code||'',
       members:(d.bf_room_members||[]).map(m => ({ uid:m.user_id, role:m.role, nick:m.nickname || (m.role==='owner' ? '방장' : '친구'), joined:ms(m.joined_at) })),
       ideas:(d.bf_ideas||[]).map(ideaFromRow), plans:(d.bf_plans||[]).map(planFromRow), createdAt:ms(d.created_at), updatedAt:ms(d.updated_at) };
   }
@@ -1528,7 +1556,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
       const label = esc(r.dest)+' 방 열기. '+STATUS[st]+(d?', '+d:'')+'. 모은 아이디어 '+r.ideas.length+'개';
       return '<li class="slide'+(i===idx?' is-active':'')+'" data-i="'+i+'">'
         + '<button type="button" class="window" data-open="'+r.id+'" aria-label="'+label+'"'+(multi?' aria-roledescription="슬라이드"':'')+'>'
-        +   '<span class="pane">' + CLOUDS
+        +   '<span class="pane sky-'+(r.sky||'day')+'">' + CLOUDS
         +     '<span class="w-status" style="--dot:var(--dot-'+st+')"><i></i>'+STATUS[st]+(d?' · '+d:'')+'</span>'
         +     '<span class="w-dest">'+esc(r.dest)+'</span>'
         +     '<span class="w-name">'+esc(r.name)+'</span>'
@@ -1655,6 +1683,9 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
       +       '<label><input type="radio" name="r-type" id="r-solo" value="solo"'+(group?'':' checked')+'><span class="body"><b>혼자</b><small>나만의 위시리스트</small></span></label>'
       +       '<label><input type="radio" name="r-type" id="r-group" value="group"'+(group?' checked':'')+'><span class="body"><b>함께</b><small>친구들과 추천 모으기</small></span></label>'
       +     '</div></fieldset>'
+      +     '<fieldset class="field"><legend>창문 밖 하늘</legend><div class="sky-pick">'
+      +       SKIES.map(([k,l]) => '<label><input type="radio" name="r-sky" value="'+k+'"'+(((ed && ed.sky) || 'day')===k ? ' checked' : '')+'><span class="sw sky-'+k+'" aria-hidden="true"></span><b>'+l+'</b></label>').join('')
+      +     '</div></fieldset>'
       +     '<fieldset class="field"><legend>여행 날짜 <span class="opt">(선택)</span></legend>'
       +       '<div class="row2"><div class="field"><label for="r-start" class="sub">가는 날</label><input type="date" id="r-start"'+val(ed&&ed.start)+'><p class="err" id="e-r-start" hidden></p></div>'
       +       '<div class="field"><label for="r-end" class="sub">오는 날</label><input type="date" id="r-end"'+val(ed&&ed.end)+'><p class="err" id="e-r-end" hidden></p></div></div>'
@@ -1677,6 +1708,7 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
     const start = document.getElementById('r-start').value;
     const end = document.getElementById('r-end').value;
     const type = document.getElementById('r-group').checked ? 'group' : 'solo';
+    const sky = (document.querySelector('input[name=r-sky]:checked') || {}).value || 'day';
     const errs = {
       'r-dest': dest ? '' : '여행지를 적어 주세요.',
       'r-start': (!start && end) ? '오는 날을 골랐다면 가는 날도 골라 주세요.' : '',
@@ -1686,23 +1718,25 @@ body.snow-screen .bp-wrap{filter:drop-shadow(0 2px 2px rgba(10,10,42,.14)) drop-
     Object.keys(errs).forEach(k => { setErr(k, errs[k]); if(errs[k] && !first) first = k; });
     if(first){ document.getElementById(first).focus(); return; }
 
-    const row = { dest, name, type, start_date: start || null, end_date: end || null };
+    const row = { dest, name, type, start_date: start || null, end_date: end || null, sky };
+    // if 06_butterflight_sky.sql hasn't been run yet, save everything else and keep the default sky
+    const saveRoom = async q => { let res = await q(row); if(res.error && /sky/i.test(res.error.message||'')){ delete row.sky; res = await q(row); if(!res.error) toast('하늘 배경은 서버에 06번 SQL을 실행하면 저장돼요.'); } return res; };
     if(ed){
       // nothing changed: just go back
-      if(ed.dest===dest && ed.name===name && ed.type===type && ed.start===(start||'') && ed.end===(end||'')){
+      if(ed.dest===dest && ed.name===name && ed.type===type && ed.start===(start||'') && ed.end===(end||'') && (ed.sky||'day')===sky){
         view = { name:'room', id:ed.id, tab: view.from || 'ideas', kind:'all' }; render(); return;
       }
       btn.disabled = true; const label = btn.textContent; btn.textContent = '저장 중…';
-      const { data, error } = await sb.from('bf_rooms').update(row).eq('id', ed.id).select().single();
+      const { data, error } = await saveRoom(r0 => sb.from('bf_rooms').update(r0).eq('id', ed.id).select().single());
       if(error || !data){ btn.disabled = false; btn.textContent = label; toast('방 정보를 고치지 못했어요. '+errText(error)); return; }
       const fresh = roomFromRow(data);
-      Object.assign(ed, { dest:fresh.dest, name:fresh.name, type:fresh.type, start:fresh.start, end:fresh.end, updatedAt:fresh.updatedAt });
+      Object.assign(ed, { dest:fresh.dest, name:fresh.name, type:fresh.type, start:fresh.start, end:fresh.end, sky:fresh.sky, updatedAt:fresh.updatedAt });
       view = { name:'room', id:ed.id, tab: view.from || 'ideas', kind:'all' }; render();
       toast('방 정보를 고쳤어요.');
       return;
     }
     btn.disabled = true; const label = btn.textContent; btn.textContent = '만드는 중…';
-    const { data, error } = await sb.from('bf_rooms').insert(row).select().single();
+    const { data, error } = await saveRoom(r0 => sb.from('bf_rooms').insert(r0).select().single());
     if(error || !data){ btn.disabled = false; btn.textContent = label; toast('방을 만들지 못했어요. '+errText(error)); return; }
     const room = roomFromRow(data);
     if(!room.members.length) room.members = [selfMember()];
